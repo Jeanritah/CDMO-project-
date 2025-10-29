@@ -23,10 +23,14 @@ constraint
 );
 
 % [3]
-constraint
-  forall(i in 1..n, p in 1..periods) (
-    sum(w in 1..weeks, s in 1..slots) ( bool2int(game[w,p,s] == i) ) <= 2
-  );
+constraint forall(p in 1..periods) (
+    global_cardinality_low_up(
+        [game[w,p,s] | w in 1..weeks, s in 1..2],
+        [i | i in 0..n-1],
+        [0 | i in 0..n-1],  % lower bound: 0 appearances
+        [2 | i in 0..n-1]   % upper bound: 2 appearances
+    )
+);
 
 constraint
   forall(w in 1..weeks, p in 1..periods) (
