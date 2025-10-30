@@ -52,6 +52,5 @@ output [
   join(",\n ",[ 
     "[" ++ join(",", [ show([game[i,j,k] | k in 1..2]) | i in 1..weeks ]) ++ "]"
     | j in 1..periods
-  ]) ++
-  "]"
+  ])
 ];

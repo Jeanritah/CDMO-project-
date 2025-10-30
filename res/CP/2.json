@@ -1,0 +1,15 @@
+{
+    "gecode": {
+        "time": 4.36,
+        "optimal": true,
+        "obj": null,
+        "sol": [
+            [
+                [
+                    1,
+                    2
+                ]
+            ]
+        ]
+    }
+}
