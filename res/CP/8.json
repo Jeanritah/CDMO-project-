@@ -1,6 +1,6 @@
 {
     "gecode": {
-        "time": 0.0007654,
+        "time": 0.0008342,
         "optimal": true,
         "obj": null,
         "sol": [
