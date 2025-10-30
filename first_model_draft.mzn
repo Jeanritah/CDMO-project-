@@ -26,7 +26,7 @@ constraint
 constraint forall(p in 1..periods) (
     global_cardinality_low_up(
         [game[w,p,s] | w in 1..weeks, s in 1..2],
-        [i | i in 0..n-1],
+        [i | i in 1..n], % these are the n teams otherwise some teams play more than once
         [0 | i in 0..n-1],  % lower bound: 0 appearances
         [2 | i in 0..n-1]   % upper bound: 2 appearances
     )
