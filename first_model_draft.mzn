@@ -7,14 +7,14 @@ int: slots = 2;
 
 array[1..weeks, 1..periods, 1..slots] of var 1..n: game;
 
-% 1
-constraint
-  forall(i, j in 1..n where i < j) (
-    sum(w in 1..weeks, p in 1..periods) (
-      bool2int( (game[w,p,1] == i /\ game[w,p,2] == j) \/
-                (game[w,p,1] == j /\ game[w,p,2] == i) )
-    ) == 1
-  );
+% [1]
+constraint forall(i in 1..n) (
+    global_cardinality_closed(
+        [game[w,p,s] | w in 1..weeks, p in 1..periods, s in 1..slots],
+        1..n,
+        [weeks | _ in 1..n]  % Each team plays exactly 'weeks' times
+    )
+);
 
 % [2]
 constraint 
@@ -47,3 +47,11 @@ constraint forall(w in 1..weeks-1) (  game[w, 1, 1] < game[w+1, 1, 1]);
 constraint forall(w in 1..weeks, p in 1..periods) (  game[w,p,1] < game[w,p,2]);
 
 solve satisfy;
+
+output [
+  join(",\n ",[ 
+    "[" ++ join(",", [ show([game[i,j,k] | k in 1..2]) | i in 1..weeks ]) ++ "]"
+    | j in 1..periods
+  ]) ++
+  "]"
+];
