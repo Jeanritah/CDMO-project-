@@ -1,6 +1,19 @@
 {
-    "gecode": {
-        "time": 4.47,
+    "gecode_draft": {
+        "time": 5.42,
+        "optimal": true,
+        "obj": null,
+        "sol": [
+            [
+                [
+                    1,
+                    2
+                ]
+            ]
+        ]
+    },
+    "gecode_paper": {
+        "time": 6.84,
         "optimal": true,
         "obj": null,
         "sol": [
