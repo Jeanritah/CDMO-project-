@@ -1,0 +1,19 @@
+{
+    "gecode_paper": {
+        "time": 0.0001185,
+        "optimal": true,
+        "obj": null,
+        "sol": [
+            [
+                [
+                    1,
+                    3
+                ],
+                [
+                    1,
+                    2
+                ]
+            ]
+        ]
+    }
+}
