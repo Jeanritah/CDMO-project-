@@ -1,5 +1,6 @@
 include "alldifferent.mzn";
 include "globals.mzn";
+include "lex_lesseq.mzn";
 
 int: n; % number of teams
 set of int: Teams = 1..n;
@@ -62,9 +63,29 @@ constraint
 
 %TODO Break more symmetries?
 
+% --- fixed lexicographic symmetry-breaking (all comprehensions have same shape) ---
+% Compare the flattened game array with week-order reversed
+constraint lex_lesseq(
+  [ game[p,w] | p in Periods, w in EWeeks ],
+  [ game[p,w] | p in Periods, w in reverse(EWeeks) ]
+);
+
+% Compare the flattened game array with period-order reversed
+constraint lex_lesseq(
+  [ game[p,w] | p in Periods, w in EWeeks ],
+  [ game[p,w] | p in reverse(Periods), w in EWeeks ]
+);
+
+% Compare the flattened game array with both period and week order reversed
+constraint lex_lesseq(
+  [ game[p,w] | p in Periods, w in EWeeks ],
+  [ game[p,w] | p in reverse(Periods), w in reverse(EWeeks) ]
+);
+
+
 % Break symmetry: 0 vs 1 is the first game of the dummy column
-constraint
-  team_home[1,n] = 1 /\ team_away[1,n] = 2;
+% constraint
+%   team_home[1,n] = 1 /\ team_away[1,n] = 2;
 % I should break symmetries also on the game table which should be easier
 
 solve
