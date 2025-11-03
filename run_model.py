@@ -3,7 +3,6 @@ import json
 import os
 from pathlib import Path
 import ast
-from datetime import timedelta
 
 def save_result(end_time, sol, file_path, obj=None, optimal=True, solver_name="gecode"):
     """
@@ -44,39 +43,44 @@ def save_result(end_time, sol, file_path, obj=None, optimal=True, solver_name="g
     with open(file_path, "w") as outfile:
         json.dump(data, outfile, indent=4)
 
-#TODO make n parameter of main method in the future
-# Load n-Queens model from file
-sts = Model("./cp_model.mzn")
-# Find the MiniZinc solver configuration for Gecode
-solver_name = "gecode"
-gecode = Solver.lookup(solver_name)
-#gecode.stdFlags = ["-s" ]
+#TODO TRANSFORM INTO A MAIN FUNCTION
 
-# Create an Instance of the n-Queens model for Gecode
-instance = Instance(gecode, sts)
-# Assign 4 to n
-n = 8
-instance["n"] = n
+# PARAMETERS
+solver = "gecode"
+values = [2, 6, 8, 10,12, 14]
 
-# Solve configuration:
-'''
-    "--restart": "luby",
-    "--restart-base": 1.5,
-    "random-seed": "50",
-    "time-limit": 300000
-''' 
+for teams in values:
+    sts = Model("./cp_model.mzn")
+    # Find the MiniZinc solver configuration for Gecode
+    solver_name = "gecode"
+    gecode = Solver.lookup(solver_name)
 
-result = instance.solve(random_seed=50, timeout=timedelta(seconds=300), all_solutions=False)
+    # Create an Instance of the sts model for Gecode
+    instance = Instance(gecode, sts)
+    instance["n"] = teams
 
-print(result)
-result = ast.literal_eval(f"{result}")
-# Output the array q
-print(result)
-#solutions = ast.literal_eval(wrapped_item)
-#print(solutions)
-# Save result to JSON
-output_dir = Path('res/CP')
-output_dir.mkdir(parents=True, exist_ok=True)
-json_file_path = output_dir / f"{n}.json"
+    # Solve configuration:
+    params = {
+        "restart": "luby",
+        "restart-base": 1.5,
+        "random-seed": 50,
+        "time-limit": 300000
+    }
 
-save_result(5, result, json_file_path, solver_name)
+    result = instance.solve(**params)
+
+    # print(result)
+
+    # Save result to JSON
+    output_dir = Path('res/CP')
+    output_dir.mkdir(parents=True, exist_ok=True)
+    json_file_path = output_dir / f"{teams}.json"
+    array_res = ast.literal_eval(str(result.solution))
+    # print(result.statistics['time'])
+    s = str(result.statistics['time'])
+    h, m, s = s.split(':')
+    seconds = float(h) * 3600 + float(m) * 60 + float(s)
+    # print(seconds)
+
+    save_result(seconds, array_res, json_file_path, solver_name)
+    print(f"Result for {teams} teams saved to {json_file_path}")
