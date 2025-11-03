@@ -1,19 +1,6 @@
 {
-    "gecode_draft": {
-        "time": 0.0001031,
-        "optimal": true,
-        "obj": null,
-        "sol": [
-            [
-                [
-                    1,
-                    2
-                ]
-            ]
-        ]
-    },
-    "gecode_slides": {
-        "time": 4.95,
+    "gecode": {
+        "time": 0.000621,
         "optimal": true,
         "obj": null,
         "sol": [

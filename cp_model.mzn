@@ -1,5 +1,7 @@
-%MY MODEL
+%%writefile "cp_model.mzn"
 include "alldifferent.mzn";
+
+%% INSTANCE VARIABLES
 
 int: n;
 int: weeks = n - 1;
@@ -9,11 +11,12 @@ int: slots = 2;
 set of int: Weeks =  1..weeks;
 set of int: Periods = 1..periods;
 
+%% DECISION VARIABLES
+
 array[Periods, Weeks, 1..slots] of var 1..n: game;
 
 % [1]
 constraint alldifferent([game[p,w,1]*n + game[p,w,2] | p in Periods, w in Weeks]);
-
 
 % [2]
 constraint 
@@ -31,32 +34,36 @@ constraint forall(p in Periods) (
     )
 );
 
-% constraint
-%   forall(w in Weeks, p in Periods) (
-%     game[p,w,1] != game[p,w,2]
-%   );
-
-% Symmetry Breaking 1
-constraint game[1, 1, 1] = 1;
-
-% Symmetry Breaking 2
-constraint forall(w in 2..weeks-1) (  game[1,w, 1] < game[1,w+1, 1]);
-
-% Symmetry Breaking 3
+% [4] implied every game must be between different teams + symmetry breaking ordering of teams in a game
 constraint forall(w in Weeks, p in Periods) (  game[p,w,1] < game[p,w,2]);
 
+%% SYMMETRY BREAKING CONSTRAINTS
+
+% [5]
+constraint game[1, 1, 1] = 1;
+
+% [6]
+constraint forall(w in 2..weeks-1) (  game[1,w, 1] < game[1,w+1, 1]);
+
+% SEARCHING STRATEGY 
+% restart + randomization to optimiza search
+
+% restart sequence type = luby
+% base for geometric restart sequence 1.5
 solve :: seq_search([
     int_search(
         [game[p,w,s] | w in Weeks, p in Periods, s in 1..slots],
-        most_constrained,   % variable with smallest domain and most constraint impact
-        indomain_split,     % splits domain to branch earlier
-        complete
+         most_constrained,   % variable with smallest domain and most constraint impact
+         indomain_random,     % splits domain to branch earlier
+         complete
     )
 ]) satisfy;
 
-output [
-  join(",\n ",[ 
+% OUTPUT FORMATTING
+
+output ["["++
+  join(",",[ 
     "[" ++ join(",", [ show([game[i,j,k] | k in 1..2]) | j in 1..weeks ]) ++ "]"
     | i in 1..periods
-  ])
+  ]) ++ "]"
 ];
