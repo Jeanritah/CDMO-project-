@@ -1,3 +1,13 @@
+  
+# How to check your output
+First save the output of your code in the folder `res/SMT` strictly following the `.json` format given by professor (you can also check mine)
+Then run in the cmd the following command:
+```bash
+solution_checker.py res/SMT/    
+```
+
+
+
   Install Z3
 Option A: Using pip (Recommended for beginners)
 bash
