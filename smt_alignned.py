@@ -1,5 +1,6 @@
 # CDMO_Project/source/SMT/smt_aligned.py
 from z3 import *
+# library parsing arguments from command line
 import argparse
 
 def create_smt_solver(n):
@@ -204,10 +205,21 @@ def save_to_json(n, model, T, weeks, periods):
     
 # Run the test when this file is executed directly
 if __name__ == "__main__":
+    # argument parsing from command line
     parser = argparse.ArgumentParser(description="SMT Aligned Model for Round-Robin Tournament Scheduling")
     parser.add_argument("--teams", type=int, default=6, help="Number of teams (n)")
     args = parser.parse_args()
     n = args.teams
     print(n)
-    print('hello')
     test_with_all_constraints(n)
+
+#TODO output for each instance needs to be saved in res/SMT as n.json (check structure of json in project requirements)
+#TODO add timing information
+#TODO the output of the SMT solver needs to be formatted in the following way:
+# [[[1, 2],[2, 4],[3, 5],[4, 6],[5, 7],[6, 9],[7, 8],[8, 12],[9, 10],[10, 11],[11, 14],[12, 13],[13, 14]],
+#  [[6, 7],[9, 12],[10, 14],[9, 11],[3, 12],[2, 10],[6, 13],[4, 5],[1, 3],[1, 8],[2, 13],[7, 14],[8, 11]],
+#  [[10, 12],[5, 11],[8, 13],[1, 13],[1, 10],[11, 12],[4, 9],[2, 14],[6, 14],[5, 9],[4, 8],[2, 3],[3, 7]],
+#  [[3, 4],[1, 14],[4, 11],[5, 14],[6, 8],[3, 13],[2, 5],[10, 13],[7, 11],[6, 12],[1, 7],[8, 9],[2, 9]],
+#  [[11, 13],[8, 10],[7, 12],[2, 12],[4, 14],[4, 7],[1, 11],[1, 6],[2, 8],[3, 14],[3, 9],[5, 10],[5, 6]],
+#  [[9, 14],[3, 6],[2, 6],[7, 10],[2, 11],[8, 14],[3, 10],[7, 9],[5, 13],[4, 13],[5, 12],[1, 4],[1, 12]],
+#  [[5, 8],[7, 13],[1, 9],[3, 8],[9, 13],[1, 5],[12, 14],[3, 11],[4, 12],[2, 7],[6, 10],[6, 11],[4, 10]]]
