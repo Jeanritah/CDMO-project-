@@ -75,6 +75,7 @@ for teams in values:
     output_dir = Path('res/CP')
     output_dir.mkdir(parents=True, exist_ok=True)
     json_file_path = output_dir / f"{teams}.json"
+    #TRANSFORM STRING INTO ARRAY
     array_res = ast.literal_eval(str(result.solution))
     # print(result.statistics['time'])
     s = str(result.statistics['time'])
