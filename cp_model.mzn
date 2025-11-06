@@ -15,16 +15,19 @@ set of int: Periods = 1..periods;
 
 array[Periods, Weeks, 1..slots] of var 1..n: game;
 
-% [1]
+% [0] n is even
+constraint n mod 2 = 0;
+
+% [1] Every team plays with every other team only once
 constraint alldifferent([game[p,w,1]*n + game[p,w,2] | p in Periods, w in Weeks]);
 
-% [2]
+% [2] Every team plays once a week
 constraint 
   forall(w in Weeks)(
     alldifferent([game[p,w,s] | p in 1..periods, s in 1..slots])
 );
 
-% [3]
+% [3] Every team plays at most twice in the same period over the tournament 
 constraint forall(p in Periods) (
     global_cardinality_low_up(
         [game[p,w,s] | w in Weeks, s in 1..slots],
@@ -54,7 +57,7 @@ solve :: seq_search([
     int_search(
         [game[p,w,s] | w in Weeks, p in Periods, s in 1..slots],
          most_constrained,   % variable with smallest domain and most constraint impact
-         indomain_random,     % splits domain to branch earlier
+         indomain_random,    % value selection: random
          complete
     )
 ]) satisfy;
