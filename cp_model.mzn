@@ -22,9 +22,17 @@ constraint n mod 2 = 0;
 constraint alldifferent([game[p,w,1]*n + game[p,w,2] | p in Periods, w in Weeks]);
 
 % [2] Every team plays once a week
-constraint 
-  forall(w in Weeks)(
-    alldifferent([game[p,w,s] | p in 1..periods, s in 1..slots])
+% constraint 
+%   forall(w in Weeks)(
+%     alldifferent([game[p,w,s] | p in 1..periods, s in 1..slots])
+% );
+%globalcardinality version is more efficient
+constraint forall(w in Weeks) (
+    global_cardinality(
+        [game[p,w,s] | p in Periods, s in 1..slots],
+        [i | i in 1..n], % these are the n teams otherwise some teams play more than once
+        [1 | i in 1..n]   % 1 appearance x week
+    )
 );
 
 % [3] Every team plays at most twice in the same period over the tournament 
