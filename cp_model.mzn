@@ -20,13 +20,20 @@ constraint n mod 2 = 0;
 
 % [1] Every team plays with every other team only once
 constraint alldifferent([game[p,w,1]*n + game[p,w,2] | p in Periods, w in Weeks]);
+%faster till n<14, why? other alternatives?
+% constraint
+%     global_cardinality_low_up(
+%         [game[p,w,1]*n + game[p,w,2] | p in Periods, w in Weeks],
+%         [i | i in 1..n*n], % these are the n teams otherwise some teams play more than once
+%         [0 | i in 1..n*n],
+%         [1 | i in 1..n*n]   % 1 appearance x week
+% );
 
 % [2] Every team plays once a week
 % constraint 
 %   forall(w in Weeks)(
 %     alldifferent([game[p,w,s] | p in 1..periods, s in 1..slots])
 % );
-%globalcardinality version is more efficient
 constraint forall(w in Weeks) (
     global_cardinality(
         [game[p,w,s] | p in Periods, s in 1..slots],
