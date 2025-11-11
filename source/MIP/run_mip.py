@@ -1,9 +1,3 @@
-#TODO# function to transform time from milliseconds to seconds
-	
-# By the definition of the floor function, the correct way to approach this problem is:
-# divide the time in milliseconds by 1000 (if your solver returns time in milliseconds)
-# apply the function floor to it
-
 """
 run_<method>.py
 ================
@@ -49,17 +43,17 @@ def main(range: tuple[float, float]):
 
     # 4️⃣ Construct the output 
 
-    result = "This is the CP runner!"
+    result = "This is the MIP runner!"
 
     lower, upper = range
-    print(f"Running CP solver on range {lower}-{upper}")
+    print(f"Running MIP solver on range {lower}-{upper}")
     # ... solver code ...
     return result
 
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="CP solver CLI")
+    parser = argparse.ArgumentParser(description="MIP solver CLI")
     parser.add_argument("--range", type=float, nargs=2, required=True, metavar=("LOWER", "UPPER"))
     args = parser.parse_args()
 

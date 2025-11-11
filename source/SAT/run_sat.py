@@ -49,17 +49,17 @@ def main(range: tuple[float, float]):
 
     # 4️⃣ Construct the output 
 
-    result = "This is the CP runner!"
+    result = "This is the SAT runner!"
 
     lower, upper = range
-    print(f"Running CP solver on range {lower}-{upper}")
+    print(f"Running SAT solver on range {lower}-{upper}")
     # ... solver code ...
     return result
 
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="CP solver CLI")
+    parser = argparse.ArgumentParser(description="SAT solver CLI")
     parser.add_argument("--range", type=float, nargs=2, required=True, metavar=("LOWER", "UPPER"))
     args = parser.parse_args()
 
