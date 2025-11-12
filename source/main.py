@@ -33,7 +33,13 @@ which:
     - n a range of instances to be solved,
     - solver's name,
     - (eventually other solver-specific parameters),
-- returns WHAAAAATTTTTTT? for now a string! #TODO decide with the group!
+- returns for each instance:
+        {
+        "instance": n,
+        "optimality": "Yes" or "No",
+        "solve_time": float,  # in seconds
+        "output": [[[1,2],[3,4], ...], ..., [[7,8]]]
+        }
 """
 
 import argparse
@@ -44,6 +50,12 @@ from MIP.run_mip import main as run_mip_main
 from SAT.run_sat import main as run_sat_main
 from SMT.run_smt import main as run_smt_main
 
+#TODO add a method that transforms single instances results into a table if the
+# number of models is > 1. The table should have the following format:
+# instance num | model_solver_name1 | model_solver_name2 |....| For each 
+# instance under the model_solver_nameN column the value will be: - in seconds 
+# if the time is <300 s - UNSAT if the model is UNSATISFIABLE for that specific 
+# instance - N/A if time >= 300s
 
 def main():
     parser = argparse.ArgumentParser(description="Main entry point for the project.")

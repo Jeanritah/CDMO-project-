@@ -32,6 +32,18 @@
 This project can be executed either **from the top-level `main.py`** 
 (recommended) or by running **individual solvers** directly.
 
+## Using virtual environment locally
+```ps
+python -m venv venv
+venv\Scripts\activate
+# library that search in the imports for modules that need to be installed
+pip install pipreqs
+pip freeze > requirements.txt
+pipreqs . --force --encoding utf-8
+pip install -r requirements.txt
+python source/main.py --mode CP SMT MIP SAT --range 1 45 --check
+```
+
 ## 1️⃣ Running All Solvers via `main.py`
 
 The `main.py` script provides a unified interface for running one or multiple

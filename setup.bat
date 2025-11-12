@@ -8,6 +8,9 @@ call venv\Scripts\activate.bat
 echo Installing pipreqs...
 pip install pipreqs
 
+echo Installing dependencies from import statements...
+pipreqs . --force --encoding utf-8
+
 echo Generating requirements.txt...
 pip freeze > requirements.txt
 

@@ -13,11 +13,11 @@ def main(input_path: str) -> dict:
 Returned Dictionary Format:
 ---------------------------
 {
-    "status": str,         # e.g. "OPTIMAL", "INFEASIBLE", "TIMEOUT"
-    "objective": float,    # Best objective value found (if applicable)
-    "solution": dict,      # Variable assignments or model output
-    "runtime": float,      # Execution time in seconds
-    "method": str          # Name of the method, e.g. "CP"
+"instance": n,
+"optimality": "Yes" or "No",
+"Status": "SAT" or "UNSAT" or "N/A",
+"solve_time": float,  # in seconds
+"output": [[[1,2],[3,4], ...], ..., [[7,8]]]
 }
 """
 #from utils.utils import save_result  # Optional helper if you have one
