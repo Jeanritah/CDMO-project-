@@ -47,6 +47,11 @@ Running just one solver without validity check:
 ```bash
 python source/main.py --mode CP --range 1 45 --check
 ```
+<span style="color: red;"><b>⚠️DO NOT RUN THE FOLLOWING COMMAND:</span>
+```bash
+cd ./source/
+python main.py --mode CP --range 1 45 --check
+```
 
 **Explanation of arguments:**
 
