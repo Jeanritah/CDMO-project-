@@ -90,7 +90,7 @@ def main():
         if args.check:
             print(f"\n=== Checking {mode} solution ===")
             subprocess.run(
-                [sys.executable, "solution_checker.py", f"../res/{mode.lower()}"],
+                [sys.executable, "source/solution_checker.py", f"./res/{mode}"],
                 check=True
             )
 

@@ -1,0 +1,11 @@
+services:
+  cdmo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cdmo_app
+    volumes:
+      - .:/CDMO-PROJECT-
+    stdin_open: true  # Keep STDIN open
+    tty: true         # Allocate a pseudo-TTY
+    command: /bin/bash  # Start with bash instead of running main.py
