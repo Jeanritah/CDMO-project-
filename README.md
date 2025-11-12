@@ -37,17 +37,15 @@ This project can be executed either **from the top-level `main.py`**
 The `main.py` script provides a unified interface for running one or multiple
 solvers and optionally checking their solutions.
 
-**Command Example (Windows):**
+**Command Example:**
 
 Running all solvers with validity check:
 ```bash
-cd CDMO-project-\source
-python main.py --mode CP SMT MIP SAT --range 1 45 --check
+python source/main.py --mode CP SMT MIP SAT --range 1 45 --check
 ```
 Running just one solver without validity check:
 ```bash
-cd CDMO-project-\source
-python main.py --mode CP --range 1 45 --check
+python source/main.py --mode CP --range 1 45 --check
 ```
 
 **Explanation of arguments:**
