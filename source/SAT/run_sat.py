@@ -5,9 +5,9 @@
 # apply the function floor to it
 
 """
-run_<method>.py
+run_<model>.py
 ================
-Solver module for the <METHOD> approach.
+Module for the <MODEL> approach.
 
 This file defines a `main()` function that is compatible with source/main.py.
 
@@ -30,7 +30,7 @@ Returned Dictionary Format:
 
 def main(range: tuple[float, float]):
     """
-    Run the <METHOD> solver on the given input.
+    Run the <MODEL> with a specific solver on the given input.
 
     Args:
         input_path (str): Path to the input file.
@@ -52,14 +52,14 @@ def main(range: tuple[float, float]):
     result = "This is the SAT runner!"
 
     lower, upper = range
-    print(f"Running SAT solver on range {lower}-{upper}")
+    print(f"Running SAT on range {lower}-{upper}")
     # ... solver code ...
     return result
 
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="SAT solver CLI")
+    parser = argparse.ArgumentParser(description="SAT CLI")
     parser.add_argument("--range", type=float, nargs=2, required=True, metavar=("LOWER", "UPPER"))
     args = parser.parse_args()
 

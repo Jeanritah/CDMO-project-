@@ -1,7 +1,7 @@
 """
-run_<method>.py
+run_<model>.py
 ================
-Solver module for the <METHOD> approach.
+Module for the <MODEL> approach.
 
 This file defines a `main()` function that is compatible with source/main.py.
 
@@ -46,14 +46,14 @@ def main(range: tuple[float, float]):
     result = "This is the MIP runner!"
 
     lower, upper = range
-    print(f"Running MIP solver on range {lower}-{upper}")
+    print(f"Running MIP on range {lower}-{upper}")
     # ... solver code ...
     return result
 
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="MIP solver CLI")
+    parser = argparse.ArgumentParser(description="MIP CLI")
     parser.add_argument("--range", type=float, nargs=2, required=True, metavar=("LOWER", "UPPER"))
     args = parser.parse_args()
 

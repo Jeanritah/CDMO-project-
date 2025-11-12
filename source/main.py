@@ -7,13 +7,13 @@ Purpose:
 --------
 - To provide a unified command-line interface (CLI) for running different 
     solving methods: CP, MIP, SAT, and SMT.
-- To ensure all solvers follow a consistent interface so they can be called 
+- To ensure all models follow a consistent interface so they can be called 
     interchangeably.
 - Optionally check solutions after solving, using `solution_checker.py`.
 
 Expected Structure:
 -------------------
-Each solver (e.g. CP, MIP, SAT, SMT) must have a file named `run_<method>.py`
+Each model (e.g. CP, MIP, SAT, SMT) must have a file named `run_<method>.py`
 inside its corresponding folder under `source/`.
 
 Example:
@@ -73,7 +73,7 @@ def main():
 
     args = parser.parse_args()
 
-    solver_functions = {
+    model_functions = {
         "CP": run_cp_main,
         "MIP": run_mip_main,
         "SAT": run_sat_main,
@@ -83,7 +83,7 @@ def main():
     results = {}
 
     for mode in args.mode:
-        result = solver_functions[mode](args.range)
+        result = model_functions[mode](args.range)
         results[mode] = result
         print(f"{mode} result:", result)
 
