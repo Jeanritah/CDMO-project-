@@ -34,12 +34,13 @@ which:
     - solver's name,
     - (eventually other solver-specific parameters),
 - returns for each instance:
-        {
-        "instance": n,
-        "optimality": "Yes" or "No",
-        "solve_time": float,  # in seconds
-        "output": [[[1,2],[3,4], ...], ..., [[7,8]]]
-        }
+{
+"instance": n,
+"optimality": "Yes" or "No",
+"Status": "SAT" or "UNSAT" or "N/A",
+"solve_time": float,  # in seconds
+"output": [[[1,2],[3,4], ...], ..., [[7,8]]]
+}
 """
 
 import argparse
@@ -56,6 +57,7 @@ from SMT.run_smt import main as run_smt_main
 # instance under the model_solver_nameN column the value will be: - in seconds 
 # if the time is <300 s - UNSAT if the model is UNSATISFIABLE for that specific 
 # instance - N/A if time >= 300s
+# make this output friendly for copying it into latex lately
 
 def main():
     parser = argparse.ArgumentParser(description="Main entry point for the project.")
