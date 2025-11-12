@@ -68,6 +68,7 @@ constraint forall(w in 2..weeks-1) (  game[1,w, 1] < game[1,w+1, 1]);
 
 % restart sequence type = luby
 % base for geometric restart sequence 1.5
+% random seed = 50
 solve :: seq_search([
     int_search(
         [game[p,w,s] | w in Weeks, p in Periods, s in 1..slots],
