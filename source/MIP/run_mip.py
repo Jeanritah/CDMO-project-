@@ -1,60 +1,101 @@
 """
-run_<model>.py
+run_mip.py
 ================
-Module for the <MODEL> approach.
+Module for the MIP approach of the Sports Tournament Scheduling problem.
 
-This file defines a `main()` function that is compatible with source/main.py.
+Usage:
+    python run_mip.py <n>
 
-Expected Function Signature:
-----------------------------
-def main(input_path: str) -> dict:
-    Reads the input file, runs the solver, and returns a dictionary with the results.
-
-Returned Dictionary Format:
----------------------------
-{
-"instance": n,
-"optimality": "Yes" or "No",
-"Status": "SAT" or "UNSAT" or "N/A",
-"solve_time": float,  # in seconds
-"output": [[[1,2],[3,4], ...], ..., [[7,8]]]
-}
+This will generate a solution for n teams and save it to ../../res/MIP/<n>.json.
 """
-#from utils.utils import save_result  # Optional helper if you have one
+import os
+import json
+import time
+from amplpy import ampl_notebook
 
-def main(range: tuple[float, float]):
-    """
-    Run the <METHOD> solver on the given input.
+def main(n: int):
+    print(f"Running MIP for n = {n}")
 
-    Args:
-        input_path (str): Path to the input file.
+    # ✅ Activate AMPL Community Edition license locally
+    license_uuid = os.environ.get("AMPL_LICENSE_UUID")
+    if not license_uuid:
+        raise RuntimeError("Please set AMPL_LICENSE_UUID environment variable")
 
-    Returns:
-        dict: A dictionary containing solver results.
-    """
+    ampl = ampl_notebook(
+        modules=["gurobi"],  # choose solvers you want
+        license_uuid=license_uuid
+    )
 
-    # 1️⃣ Parse the arguments/input data
+    # ✅ Load MIP model
+    ampl.read("mip.mod")
 
-    # 2️⃣ Build the model (this depends on your solver)
+    # ✅ Set parameters
+    ampl.getParameter("n").set(n)
+    ampl.getParameter("weeks").set(n - 1)
+    ampl.getParameter("periods").set(n // 2)
 
-    # 3️⃣ Solve the problem
-    # call save_result() to save the output to json files following project 
-    # requirements
+    # ✅ Populate sets without redeclaring them
+    ampl.getSet("TEAMS").setValues(range(1, n + 1))
+    ampl.getSet("WEEKS").setValues(range(1, n))
+    ampl.getSet("PERIODS").setValues(range(1, n // 2 + 1))
 
-    # 4️⃣ Construct the output 
+    # ✅ Set solver to Gurobi
+    ampl.setOption("solver", "gurobi")
+    
+    # ✅ Solve
+    start_time = time.time()
+    ampl.solve()
+    end_time = time.time()
 
-    result = "This is the MIP runner!"
+    # ✅ Extract solution matrix
+    x = ampl.getVariable("x")
+    sol_matrix = []
+    periods = n // 2
+    weeks = n - 1
 
-    lower, upper = range
-    print(f"Running MIP on range {lower}-{upper}")
-    # ... solver code ...
+    for p in range(1, periods + 1):
+        week_row = []
+        for w in range(1, weeks + 1):
+            match_found = False
+            for i in range(1, n + 1):
+                for j in range(1, n + 1):
+                    if x[w, p, i, j].value() > 0.5:
+                        week_row.append([i, j])
+                        match_found = True
+                        break
+                if match_found:
+                    break
+        sol_matrix.append(week_row)
+
+    # ✅ Construct JSON result
+    result = {
+        "gurobi": {
+            "time": int(end_time - start_time),
+            "optimal": ampl.getValue("solve_result") == 0,
+            "obj": 0,  # dummy objective
+            "sol": sol_matrix
+        }
+    }
+
+    # ✅ Save results
+    out_dir = os.path.abspath("../../res/MIP")
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(out_dir, f"{n}.json")
+    with open(out_path, "w") as f:
+        json.dump(result, f, indent=4)
+
+    print(f"Results saved to {out_path}")
     return result
 
+
 if __name__ == "__main__":
-    import argparse
+    import sys
+    if len(sys.argv) != 2:
+        print("Usage: python run_mip.py <n>")
+        sys.exit(1)
 
-    parser = argparse.ArgumentParser(description="MIP CLI")
-    parser.add_argument("--range", type=float, nargs=2, required=True, metavar=("LOWER", "UPPER"))
-    args = parser.parse_args()
-
-    main(args.range)
+    n = int(sys.argv[1])
+    
+    # Run main only for even numbers starting from 6 up to n
+    for i in range(6, n + 1, 2):
+        main(i)
