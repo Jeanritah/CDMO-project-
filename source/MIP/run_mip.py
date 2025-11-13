@@ -39,9 +39,10 @@ def main(n: int):
     ampl.getSet("WEEKS").setValues(range(1, n))
     ampl.getSet("PERIODS").setValues(range(1, n // 2 + 1))
 
-    # ✅ Set solver to Gurobi
+    # ✅ Set solver to Gurobi with 300-second time limit
     ampl.setOption("solver", "gurobi")
-    
+    ampl.setOption("gurobi_options", "TimeLimit=300")  # 300 seconds max
+
     # ✅ Solve
     start_time = time.time()
     ampl.solve()
@@ -67,11 +68,19 @@ def main(n: int):
                     break
         sol_matrix.append(week_row)
 
+    # ✅ Compute runtime and handle timeout
+    elapsed = int(end_time - start_time)
+    if elapsed >= 300:  # reached time limit
+        elapsed = 300
+        optimal = False
+    else:
+        optimal = ampl.getValue("solve_result") == 0
+
     # ✅ Construct JSON result
     result = {
         "gurobi": {
-            "time": int(end_time - start_time),
-            "optimal": ampl.getValue("solve_result") == 0,
+            "time": elapsed,
+            "optimal": optimal,
             "obj": 0,  # dummy objective
             "sol": sol_matrix
         }
@@ -96,6 +105,9 @@ if __name__ == "__main__":
 
     n = int(sys.argv[1])
     
+    """  #RUNS FOR ALL NUMBERS FROM 6 TO N
     # Run main only for even numbers starting from 6 up to n
     for i in range(6, n + 1, 2):
         main(i)
+    """
+    main(n)
