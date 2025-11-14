@@ -98,33 +98,39 @@ constraint forall(p in Periods) (
 % ------------------------------
 array[1..n] of var 0..weeks: home_count;
 array[1..n] of var 0..weeks: deviation;
+var 0..weeks: max_deviation;
 
 constraint
   forall(i in 1..n) (
     home_count[i] = sum(w in Weeks, p in Periods)( bool2int(game[p,w,1] = i) )
   );
 
+% deviation[i] = |2*home_count[i] - weeks|
 constraint
   forall(i in 1..n) (
-    deviation[i] = abs(2 * home_count[i] - weeks)
+    deviation[i] = abs(2*home_count[i] - weeks)
   );
 
-var 0..n*weeks: total_imbalance = sum(i in 1..n)(deviation[i]);
-
+constraint max_deviation = max(i in 1..n)(deviation[i]);
 % ------------------------------
 % Search: include swap vars so the objective can improve early
 % You can also remove this 'solve :: seq_search(...)' and let Chuffed free-search.
 % ------------------------------
 % solve :: seq_search(
 %   [
-%     int_search([ bool2int(swap[p,w]) | p in Periods ], first_fail, indomain_min),
-%     int_search([ perm[w,p] | p in Periods ], first_fail, indomain_min)
-%   | w in Weeks ]
-% ) minimize total_imbalance;
-solve minimize total_imbalance;
+%     int_search([ bool2int(swap[p,w]) | w in Weeks, p in Periods ], first_fail, indomain_min),
+%     int_search([ perm[w,p] | w in Weeks, p in Periods ], first_fail, indomain_min)
+%   ]
+% ) minimize max_deviation;
+solve minimize max_deviation;
+% solve :: seq_search(
+%   [ int_search([perm[w,p] | p in Periods], first_fail, indomain_min) | w in Weeks ]
+% ) minimize max_deviation;
 
 output [
-  "total_imbalance=" ++ show(total_imbalance) ++ "\n" ++
+"objective=max_deviation\n",
+  "max_deviation=" ++ show(max_deviation) ++ "\n" ++
+  "deviation_by_team=" ++ show([fix(deviation[i]) | i in 1..n]) ++ "\n" ++
   "[" ++
     join(",\n", [
       "[" ++ join(",", [show([game[i,j,k] | k in 1..2]) | j in Weeks]) ++ "]"

@@ -1,5 +1,3 @@
-$${\mathrm{home}}_i ;=; \sum_{w \in W};\sum_{p \in P} \mathbf{1}!\left[,\text{game}_{p,w,1}=i,\right], \quad \forall i \in T.$
-
 # Introduction
 
 Given $n$ the number of teams we defined the following instance variables:
@@ -32,6 +30,26 @@ In addition we added the following decision variables for the optimization versi
 
 - [away = weeks - home (since each team plays exactly once per week)] &rarr; implied variable, not really defined in the minizinc code
 
-- f. $deviation_i = |2*homeCount_i - (n-1 - homeCount)|$&rarr; 
+- f. $deviation_i = |2*homeCount_i - (n-1)|$ &rarr; 
+- g. $maxDeviation$ 
 
+## Objective Function
+<!-- % home = times team appears in position 1 across all weeks/periods
+% away = weeks - home (since each team plays exactly once per week)
+% deviation[i] = |home[i] - away[i]| = |2*home[i] - weeks|
+% max_deviation = max(i in 1..n)(deviation[i]); -->
 
+$\texttt{minimize}( \max_{i \in T}|h_i - a_i|)$
+
+## Constraints
+
+- C1 n mod 2 = 0 &rarr; n must be positive
+- C2 "canonical week" following the @vanhenteryck_1999 paper, copy mathematical formula here
+- C3 "transition rule" following @vanhenteryck_1999
+- C4 alldifferent on periods permutations
+- C5 anchoring week 1 for symmetry breaking
+- C6 channelling constraint? that connects the three variables together (four in the case of the objective function)
+- C7 Each team plays exactly once per week
+- C8 Each team plays at most twice per period across all weeks
+
+## Validation
