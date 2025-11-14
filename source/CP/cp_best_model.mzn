@@ -41,7 +41,6 @@ constraint
         else pairings[p,w-1,2] + 1 endif )
   );
 
-% remaining model omitted here for brevity (perm/game/constraints/search)
 % ------------------------------
 % Permutation of period slots each week
 % ------------------------------

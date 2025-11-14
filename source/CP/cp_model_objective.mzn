@@ -1,5 +1,5 @@
 % Fixed transition-rule implementation (use 'elseif', not 'else if')
-%TODO: adjust code, and check n limit or best search strategy
+%TODO: adjust code, and check n limit or best search
 include "globals.mzn";
 
 int: n;
