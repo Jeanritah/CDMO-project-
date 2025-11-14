@@ -39,9 +39,11 @@ def main(n: int):
     ampl.getSet("WEEKS").setValues(range(1, n))
     ampl.getSet("PERIODS").setValues(range(1, n // 2 + 1))
 
-    # ✅ Set solver to Gurobi with 300-second time limit
+    # ✅ Set solver to Gurobi with 300-second time limit and sequential
     ampl.setOption("solver", "gurobi")
     ampl.setOption("gurobi_options", "TimeLimit=300")  # 300 seconds max
+    ampl.setOption('gurobi_options', 'threads=1')
+
 
     # ✅ Solve
     start_time = time.time()
