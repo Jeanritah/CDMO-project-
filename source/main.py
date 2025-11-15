@@ -34,13 +34,7 @@ which:
     - solver's name,
     - (eventually other solver-specific parameters),
 - returns for each instance:
-{
-"instance": n,
-"optimality": "Yes" or "No",
-"Status": "SAT" or "UNSAT" or "N/A",
-"solve_time": float,  # in seconds
-"output": [[[1,2],[3,4], ...], ..., [[7,8]]]
-}
+output: "Result saved to {output_path}"
 """
 
 import argparse

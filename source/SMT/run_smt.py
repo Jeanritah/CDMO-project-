@@ -16,15 +16,7 @@ Expected Function Signature:
 def main(input_path: str) -> dict:
     Reads the input file, runs the solver, and returns a dictionary with the results.
 
-Returned Dictionary Format:
----------------------------
-{
-"instance": n,
-"optimality": "Yes" or "No",
-"Status": "SAT" or "UNSAT" or "N/A",
-"solve_time": float,  # in seconds
-"output": [[[1,2],[3,4], ...], ..., [[7,8]]]
-}
+output: "Result saved to {output_path}"
 """
 #from utils.utils import save_result  # Optional helper if you have one
 
