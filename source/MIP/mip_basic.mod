@@ -1,5 +1,5 @@
 # ------------------------------
-# mip.mod
+# Basic project constraints
 # ------------------------------
 
 # Parameters
@@ -39,9 +39,6 @@ s.t. one_pair_match {i in TEAMS, j in TEAMS: i < j}:
 s.t. max_two_per_period {i in TEAMS, p in PERIODS}:
     sum {w in WEEKS, j in TEAMS} (x[w,p,i,j] + x[w,p,j,i]) <= 2;
 
-# [6] Symmetry breaking
-s.t. fix_first_match:
-    x[1,1,1,2] = 1;
 
 # Dummy objective
 maximize dummy_obj: 0;

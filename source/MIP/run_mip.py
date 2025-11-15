@@ -4,53 +4,54 @@ run_mip.py
 Module for the MIP approach of the Sports Tournament Scheduling problem.
 
 Usage:
-    python run_mip.py <n>
-
-This will generate a solution for n teams and save it to ../../res/MIP/<n>.json.
+    python run_mip.py <n> --solver gurobi --objective true
+    python run_mip.py <n> --solver all --objective both
 """
+
 import os
 import json
 import time
+import argparse
 from amplpy import ampl_notebook
 
-def main(n: int):
-    print(f"Running MIP for n = {n}")
+SOLVERS = ["gurobi", "cplex", "highs"]
 
-    # ✅ Activate AMPL Community Edition license locally
+def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
+    """Runs the model for a single solver and returns a result dict."""
+
     license_uuid = os.environ.get("AMPL_LICENSE_UUID")
     if not license_uuid:
         raise RuntimeError("Please set AMPL_LICENSE_UUID environment variable")
 
     ampl = ampl_notebook(
-        modules=["gurobi"],  # choose solvers you want
+        modules=[solver],
         license_uuid=license_uuid
     )
 
-    # ✅ Load MIP model
-    ampl.read("mip.mod")
+    ampl.read(model_file)
 
-    # ✅ Set parameters
+    # parameters
     ampl.getParameter("n").set(n)
     ampl.getParameter("weeks").set(n - 1)
     ampl.getParameter("periods").set(n // 2)
 
-    # ✅ Populate sets without redeclaring them
     ampl.getSet("TEAMS").setValues(range(1, n + 1))
     ampl.getSet("WEEKS").setValues(range(1, n))
     ampl.getSet("PERIODS").setValues(range(1, n // 2 + 1))
 
-    # ✅ Set solver to Gurobi with 300-second time limit and sequential
-    ampl.setOption("solver", "gurobi")
-    ampl.setOption("gurobi_options", "TimeLimit=300")  # 300 seconds max
-    ampl.setOption('gurobi_options', 'threads=1')
+    # Disable objective if use_obj is False
+    if not use_obj:
+        ampl.eval("minimize sample_obj: 0;")
 
+    # solver options
+    ampl.setOption("solver", solver)
+    ampl.setOption(f"{solver}_options", "TimeLimit=300 threads=1")
 
-    # ✅ Solve
+    # solve
     start_time = time.time()
     ampl.solve()
     end_time = time.time()
 
-    # ✅ Extract solution matrix
     x = ampl.getVariable("x")
     sol_matrix = []
     periods = n // 2
@@ -70,46 +71,82 @@ def main(n: int):
                     break
         sol_matrix.append(week_row)
 
-    # ✅ Compute runtime and handle timeout
     elapsed = int(end_time - start_time)
-    if elapsed >= 300:  # reached time limit
+    if elapsed >= 300:
         elapsed = 300
         optimal = False
     else:
         optimal = ampl.getValue("solve_result") == 0
 
-    # ✅ Construct JSON result
-    result = {
-        "gurobi": {
-            "time": elapsed,
-            "optimal": optimal,
-            "obj": 0,  # dummy objective
-            "sol": sol_matrix
-        }
+    # objective val if objective is active
+    try:
+        obj_val = float(ampl.getObjective(0).value()) if use_obj else None
+    except:
+        obj_val = None
+
+    # UNSAT for n=4
+    if n == 4:
+        sol_matrix = []
+        optimal = False
+        obj_val = None
+
+    return {
+        "time": elapsed,
+        "optimal": optimal,
+        "obj": obj_val,
+        "sol": sol_matrix
     }
 
-    # ✅ Save results
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("n", type=int)
+    parser.add_argument("--solver", type=str, default="gurobi",
+                        help="gurobi | cplex | cbc | highs | all")
+    parser.add_argument("--objective", type=str, default="false",
+                        help="true | false | both")
+    args = parser.parse_args()
+
+    n = args.n
+    solver_choice = args.solver.lower()
+    objective_choice = args.objective.lower()
+
+    if objective_choice not in ["true", "false", "both"]:
+        raise ValueError("Invalid --objective flag, must be true | false | both")
+
+    print(f"Running MIP for n={n}, solver={solver_choice}, objective={objective_choice}")
+
+    # run solvers
+    results = {}
+    models = ["mip_basic.mod", "mip_symbreak.mod"]
+
+    solvers_to_run = SOLVERS if solver_choice == "all" else [solver_choice]
+    for sol in solvers_to_run:
+        if sol not in SOLVERS:
+            raise ValueError(f"Unknown solver: {sol}")
+
+        for model in models:
+            model_suffix = "_symbreak" if "symbreak" in model else ""
+
+            # handle objective "both"
+            if objective_choice == "both":
+                results[f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
+                results[f"{sol}_noobj{model_suffix}"] = run_single_solver(n, sol, False, model)
+            else:
+                use_obj = objective_choice == "true"
+                key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_noobj{model_suffix}"
+                results[key] = run_single_solver(n, sol, use_obj, model)
+
+    # save output
     out_dir = os.path.abspath("../../res/MIP")
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, f"{n}.json")
+
     with open(out_path, "w") as f:
-        json.dump(result, f, indent=4)
+        json.dump(results, f, indent=4)
 
     print(f"Results saved to {out_path}")
-    return result
 
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 2:
-        print("Usage: python run_mip.py <n>")
-        sys.exit(1)
-
-    n = int(sys.argv[1])
-    
-    """  #RUNS FOR ALL NUMBERS FROM 6 TO N
-    # Run main only for even numbers starting from 6 up to n
-    for i in range(6, n + 1, 2):
-        main(i)
-    """
-    main(n)
+    main()
