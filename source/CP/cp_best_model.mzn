@@ -2,88 +2,94 @@
 
 include "globals.mzn";
 
+% INSTANCE VARIABLES------------------------------------------------------------
+
 int: n;
-constraint n mod 2 = 0;
 
 int: weeks = n - 1;
 int: periods = n div 2;
+int: slots = 2;
 
+set of int: Teams = 1..n;
 set of int: Weeks = 1..weeks;
 set of int: Periods = 1..periods;
+set of int: Slots = 1..slots;
 
-array[Periods, Weeks, 1..2] of var 1..n: pairings;
+% DECISION VARIABLES------------------------------------------------------------
+array[Periods, Weeks, Slots] of var Teams: srr;
+array[Weeks, Periods] of var 1..periods: perm;
+array[Periods, Weeks, Slots] of var Teams: team;
 
-% week 1 seed (example, keep your seed or adapt)
+% CONSTRAINTS-------------------------------------------------------------------
+
+% C1 n must be even
+constraint n mod 2 = 0;
+
+% C2
+%TODO or redundant? or just in the basic model?
+
+% C3 every team plays once a week
+constraint
+  forall(w in Weeks) (
+    alldifferent([ team[p,w,s] | p in Periods, s in Slots ])
+  );
+
+% C4 every team plays at most twice in the same period over the tournament
+constraint forall(p in Periods) (
+    global_cardinality_low_up(
+        [team[p,w,s] | w in Weeks, s in Slots],
+        [i | i in Teams],
+        [0 | i in Teams],
+        [2 | i in Teams]
+    )
+);
+
+% C5 Fixed round-robin schedule
+% C5.1 Fixing the set of teams in the first week
 constraint
   forall(p in Periods) (
     if p = 1 then
-      pairings[p,1,1] = 1 /\
-      pairings[p,1,2] = 2
+      srr[p,1,1] = 1 /\
+      srr[p,1,2] = 2
     else
-      pairings[p,1,1] = p + 1 /\
-      pairings[p,1,2] = n - p + 2
+      srr[p,1,1] = p + 1 /\
+      srr[p,1,2] = n - p + 2
     endif
   );
 
-% ------------------------------
-% Transition rule to compute subsequent weeks:
-% f' = 1 if f=1; 2 if f=n; else f+1.
-% s' = 2 if s=n; else s+1.
-% ------------------------------
+% C5.2 Generating the subsequent weeks from the previous weeks 
 constraint
   forall(w in 2..weeks, p in Periods) (
-    pairings[p,w,1] =
-      ( if pairings[p,w-1,1] = 1 then 1
-        elseif pairings[p,w-1,1] = n then 2
-        else pairings[p,w-1,1] + 1 endif ) /\
-    pairings[p,w,2] =
-      ( if pairings[p,w-1,2] = n then 2
-        else pairings[p,w-1,2] + 1 endif )
+    srr[p,w,1] =
+      ( if srr[p,w-1,1] = 1 then 1
+        elseif srr[p,w-1,1] = n then 2
+        else srr[p,w-1,1] + 1 endif ) /\
+    srr[p,w,2] =
+      ( if srr[p,w-1,2] = n then 2
+        else srr[p,w-1,2] + 1 endif )
   );
 
 % ------------------------------
 % Permutation of period slots each week
 % ------------------------------
-array[Weeks, Periods] of var 1..periods: perm;
-
+% C6
 constraint
   forall(w in Weeks) (
     alldifferent([perm[w,p] | p in Periods])
   );
 
-% Anchor week 1 permutation to identity
+% C7
 constraint
   forall(p in Periods) ( perm[1,p] = p );
 
-% game[period,week,1..2] is the actual schedule after placing pairs into permuted slots
-array[Periods, Weeks, 1..2] of var 1..n: game;
-
+% C8
 constraint
   forall(w in Weeks, p in Periods) (
-    game[perm[w,p], w, 1] = pairings[p,w,1] /\
-    game[perm[w,p], w, 2] = pairings[p,w,2]
+    team[perm[w,p], w, 1] = srr[p,w,1] /\
+    team[perm[w,p], w, 2] = srr[p,w,2]
   );
 
-% ------------------------------
-% Required constraints:
-% 1) Each team plays exactly once per week.
-% 2) Each team plays at most twice per period across all weeks.
-% ------------------------------
-constraint
-  forall(w in Weeks) (
-    alldifferent([ game[p,w,s] | p in Periods, s in 1..2 ])
-  );
-
-constraint forall(p in Periods) (
-    global_cardinality_low_up(
-        [game[p,w,s] | w in Weeks, s in 1..2],
-        [i | i in 1..n],
-        [0 | i in 1..n],
-        [2 | i in 1..n]
-    )
-);
-
-
+% Search strategy --------------------------------------------------------------
 % ------------------------------
 % Search: search only the perm variables, week-by-week
 % ------------------------------
@@ -94,11 +100,11 @@ solve :: seq_search(
 output [
   "[" ++
     join(",\n", [
-      "[" ++ join(",", [show([game[i,j,k] | k in 1..2]) | j in Weeks]) ++ "]"
+      "[" ++ join(",", [show([team[i,j,k] | k in Slots]) | j in Weeks]) ++ "]"
       | i in Periods
     ]) ++
   "]"
 ];
 
 %best model, works with chuffed until n <=16
-% config random seed =42, restart type luby
+% config random seed =42, restart type geometric
