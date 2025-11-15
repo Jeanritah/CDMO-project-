@@ -1,8 +1,18 @@
-cffi==1.17.1
-cryptography==43.0.3
-packaging==24.1
-pycparser==2.22
-wheel @ file:///opt/homebrew/Cellar/python%403.13/3.13.0_1/libexec/wheel-0.44.0-py3-none-any.whl#sha256=f49b82715dce6365f75eddcb0a9bb47d0d46feaf14bbc739dfcbd677b7073f5b
-
-# For AMPL Python API
-amplpy==0.8.0
+ampl-module-base==20250901
+ampl-module-cbc==20251015
+ampl-module-cplex==20251015
+ampl-module-gurobi==20251021
+ampl-module-highs==20251015
+ampl-module-scip==20251021
+amplpy==0.15.2
+ampltools==0.7.5
+boto==2.49.0
+certifi==2025.11.12
+charset-normalizer==3.4.4
+docopt==0.6.2
+idna==3.11
+pipreqs==0.4.13
+requests==2.32.5
+urllib3==2.5.0
+yarg==0.1.10
+z3-solver==4.15.4.0
