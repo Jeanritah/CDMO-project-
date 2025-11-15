@@ -110,6 +110,7 @@ constraint
   forall(i in 1..n) (
     deviation[i] = abs(2*home_count[i] - weeks)
   );
+  %TODO check if you can take the floor of weeks/2 to improve performance
 
 constraint max_deviation = max(i in 1..n)(deviation[i]);
 % ------------------------------
