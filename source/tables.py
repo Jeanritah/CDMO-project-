@@ -107,23 +107,22 @@ def build_table_for_solver_mode(
     total_columns = 1 + num_groups * num_strategy  # first column for team size
 
     # Start LaTeX table
-    alignment = "l" + "c" * (total_columns - 1)  # first column left, rest center
+    alignment = "l|" + "c" * (total_columns - 1)  # first column left, rest center
     header_lines = []
 
     # First header row: solver+SBFlag groups using multicolumn
-    top_header_cells = ["Teams"]
+    top_header_cells = [" "]
     for flag in sb_flags:
         group_title = f"{solver}+{flag}"
         top_header_cells.append(f"\\multicolumn{{{num_strategy}}}{{c}}{{{group_title}}}")
     header_lines.append(" & ".join(top_header_cells) + r" \\")
-    header_lines.append(r"\cmidrule(lr){2-" + f"{total_columns}" + "}")  # optional: a rule under all groups
+    header_lines.append("Teams ")  # optional: a rule under all groups
 
     # Second header row: search strategies repeated per group
     second_row_cells = [" "]
     for _flag in sb_flags:
         second_row_cells.extend(search_strategies)
     header_lines.append(" & ".join(second_row_cells) + r" \\")
-    header_lines.append(r"\midrule")
 
     # Body rows
     body_lines = []
@@ -144,10 +143,9 @@ def build_table_for_solver_mode(
         lines.append(r"\begin{table}[ht]")
         lines.append(r"\centering")
     lines.append(r"\begin{tabular}{" + alignment + "}")
-    lines.append(r"\toprule")
     lines.extend(header_lines)
+    lines.append(r"\hline")
     lines.extend(body_lines)
-    lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
     if caption:
         lines.append(f"\\caption{{{caption}}}")
