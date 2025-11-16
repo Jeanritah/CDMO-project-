@@ -44,6 +44,18 @@ pip install -r requirements.txt
 python source/main.py --mode CP SMT MIP SAT --range 1 45 --check
 ```
 
+# How to update requirements.txt with your working environment
+```ps
+python -m venv venv
+venv\Scripts\activate
+# install the requirement file from the main branch
+pip install -r requirements.txt
+# run your code to understand which libraries are missing in venv
+#install with pip install
+pip freeze > requirements.txt
+#commit your changes to the requirement file
+```
+
 ## 1️⃣ Running All Solvers via `main.py`
 
 The `main.py` script provides a unified interface for running one or multiple
