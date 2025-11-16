@@ -89,13 +89,15 @@ constraint
     team[perm[w,p], w, 2] = srr[p,w,2]
   );
 
-% Search strategy --------------------------------------------------------------
-% ------------------------------
-% Search: search only the perm variables, week-by-week
-% ------------------------------
+
 solve :: seq_search(
-  [ int_search([perm[w,p] | p in Periods], first_fail, indomain_min) | w in Weeks ]
-) satisfy;
+  [ int_search([perm[w,p] | p in Periods], 
+  dom_w_deg, 
+  indomain_min,
+  complete) 
+  | w in Weeks ]
+) ::restart_luby(100)
+satisfy;
 
 output [
   "[" ++
