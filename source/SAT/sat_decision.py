@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1fhTUZKu_ozmVCFIwNuI1AJO2qyyUNmvF
 """
 
-!pip install z3-solver --quiet
+#!pip install z3-solver --quiet
 from z3 import *
 import os
 import time
