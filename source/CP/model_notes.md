@@ -1,5 +1,9 @@
 ## ⚙️ PARAMETERS AND SETUP
 
+notes about my model
+%best model, works with chuffed until n <=16
+% config random seed =42, restart type geometric
+
 Let:
 
 * $n$: number of teams (even, $n \ge 6 $)

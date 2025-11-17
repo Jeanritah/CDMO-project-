@@ -1,5 +1,4 @@
-% Fixed transition-rule implementation (use 'elseif', not 'else if')
-
+% indomain_random is not supported by chuffed
 include "globals.mzn";
 
 % INSTANCE VARIABLES------------------------------------------------------------

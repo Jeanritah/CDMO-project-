@@ -1,5 +1,3 @@
-% Fixed transition-rule implementation (use 'elseif', not 'else if')
-
 include "globals.mzn";
 
 % INSTANCE VARIABLES------------------------------------------------------------

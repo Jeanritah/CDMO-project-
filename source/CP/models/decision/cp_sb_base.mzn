@@ -90,6 +90,3 @@ output [
     ]) ++
   "]"
 ];
-
-%best model, works with chuffed until n <=16
-% config random seed =42, restart type geometric

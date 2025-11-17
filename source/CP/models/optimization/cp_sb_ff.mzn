@@ -1,133 +1,111 @@
 include "globals.mzn";
-%TODO da completare
+
+% INSTANCE VARIABLES------------------------------------------------------------
 int: n;
-constraint n mod 2 = 0;
 
 int: weeks = n - 1;
 int: periods = n div 2;
+int: slots = 2;
 
+set of int: Teams = 1..n;
 set of int: Weeks = 1..weeks;
 set of int: Periods = 1..periods;
+set of int: Slots = 1..slots;
 
-array[Periods, Weeks, 1..2] of var 1..n: pairings;
+% DECISION VARIABLES------------------------------------------------------------
+array[Periods, Weeks, Slots] of var Teams: srr;
+array[Weeks, Periods] of var Periods: perm;
+array[Periods, Weeks, Slots] of var Teams: team;
+array[Periods, Weeks] of var bool: swap;
+array[Teams] of var 0..weeks: home_count;
+var 0..weeks: max_deviation;
 
-% week 1 seed (example, keep your seed or adapt)
+% CONSTRAINTS-------------------------------------------------------------------
+
+% C1 n must be even
+constraint n mod 2 = 0;
+
+% C3 every team plays once a week 
+constraint
+  forall(w in Weeks) (
+    alldifferent([ team[p,w,s] | p in Periods, s in Slots ])
+  );
+
+% C4 every team plays at most twice in the same period over the tournament
+constraint forall(p in Periods) (
+    global_cardinality_low_up(
+        [team[p,w,s] | w in Weeks, s in Slots],
+        [i | i in Teams],
+        [0 | i in Teams],
+        [2 | i in Teams]
+    )
+);
+
+% C5
+% C5.1 Fixing the set of teams in the first week
 constraint
   forall(p in Periods) (
     if p = 1 then
-      pairings[p,1,1] = 1 /\
-      pairings[p,1,2] = 2
+      srr[p,1,1] = 1 /\
+      srr[p,1,2] = 2
     else
-      pairings[p,1,1] = p + 1 /\
-      pairings[p,1,2] = n - p + 2
+      srr[p,1,1] = p + 1 /\
+      srr[p,1,2] = n - p + 2
     endif
   );
 
-% ------------------------------
-% Transition rule to compute subsequent weeks:
-% f' = 1 if f=1; 2 if f=n; else f+1.
-% s' = 2 if s=n; else s+1.
-% ------------------------------
+% C5.2 Generating the subsequent weeks from the previous weeks 
 constraint
   forall(w in 2..weeks, p in Periods) (
-    pairings[p,w,1] =
-      ( if pairings[p,w-1,1] = 1 then 1
-        elseif pairings[p,w-1,1] = n then 2
-        else pairings[p,w-1,1] + 1 endif ) /\
-    pairings[p,w,2] =
-      ( if pairings[p,w-1,2] = n then 2
-        else pairings[p,w-1,2] + 1 endif )
+    srr[p,w,1] =
+      ( if srr[p,w-1,1] = 1 then 1
+        elseif srr[p,w-1,1] = n then 2
+        else srr[p,w-1,1] + 1 endif ) /\
+    srr[p,w,2] =
+      ( if srr[p,w-1,2] = n then 2
+        else srr[p,w-1,2] + 1 endif )
   );
 
-% ------------------------------
-% Permutation of period slots each week
-% ------------------------------
-array[Weeks, Periods] of var 1..periods: perm;
-
+% C6 Each period from srr[p,w,s] is mapped to a single period in team[p,w,s]
 constraint
   forall(w in Weeks) (
     alldifferent([perm[w,p] | p in Periods])
   );
 
-% Anchor week 1 permutation to identity
+% C7 Break period symmetries
 constraint
   forall(p in Periods) ( perm[1,p] = p );
 
-% ------------------------------
-% Orientation (home/away flip) per match
-% swap[p,w] = true means flip the order of the two teams for that match
-% ------------------------------
-array[Periods, Weeks] of var bool: swap;
-
-% game[period,week,1..2] is the actual schedule after placing (and optionally flipping) pairs
-array[Periods, Weeks, 1..2] of var 1..n: game;
-
+% C8 Channelling constraints 
 constraint
   forall(w in Weeks, p in Periods) (
-    game[perm[w,p], w, 1] = (if swap[p,w] then pairings[p,w,2] else pairings[p,w,1] endif) /\
-    game[perm[w,p], w, 2] = (if swap[p,w] then pairings[p,w,1] else pairings[p,w,2] endif)
+    team[perm[w,p], w, 1] = (if swap[p,w] then srr[p,w,2] else srr[p,w,1] endif) /\
+    team[perm[w,p], w, 2] = (if swap[p,w] then srr[p,w,1] else srr[p,w,2] endif)
   );
 
-% ------------------------------
-% Required constraints:
-% 1) Each team plays exactly once per week.
-% 2) Each team plays at most twice per period across all weeks.
-% ------------------------------
+% C9 Home count for each team
 constraint
-  forall(w in Weeks) (
-    alldifferent([ game[p,w,s] | p in Periods, s in 1..2 ])
+  forall(i in Teams) (
+    home_count[i] = sum(w in Weeks, p in Periods)( bool2int(team[p,w,1] = i) )
   );
 
-constraint forall(p in Periods) (
-    global_cardinality_low_up(
-        [game[p,w,s] | w in Weeks, s in 1..2],
-        [i | i in 1..n],
-        [0 | i in 1..n],
-        [2 | i in 1..n]
-    )
-);
+% C10 Max_deviation
+constraint max_deviation = max(i in Teams)(
+  abs(2*home_count[i] - (n-1))
+ );
 
-% ------------------------------
-% Optional optimization: balance home vs away per team
-% home = times team appears in position 1 across all weeks/periods
-% away = weeks - home (since each team plays exactly once per week)
-% deviation[i] = |home[i] - away[i]| = |2*home[i] - weeks|
-% Objective: minimize total imbalance = sum_i deviation[i]
-% ------------------------------
-array[1..n] of var 0..weeks: home_count;
-array[1..n] of var 0..weeks: deviation;
-var 0..weeks: max_deviation;
-
-constraint
-  forall(i in 1..n) (
-    home_count[i] = sum(w in Weeks, p in Periods)( bool2int(game[p,w,1] = i) )
-  );
-
-% deviation[i] = |2*home_count[i] - weeks|
-constraint
-  forall(i in 1..n) (
-    deviation[i] = abs(2*home_count[i] - weeks)
-  );
-  %TODO check if you can take the floor of weeks/2 to improve performance
-
-constraint max_deviation = max(i in 1..n)(deviation[i]);
-% ------------------------------
-% Search: include swap vars so the objective can improve early
-% You can also remove this 'solve :: seq_search(...)' and let Chuffed free-search.
-% ------------------------------
-% solve :: seq_search(
-%   [
-%     int_search([ bool2int(swap[p,w]) | w in Weeks, p in Periods ], first_fail, indomain_min),
-%     int_search([ perm[w,p] | w in Weeks, p in Periods ], first_fail, indomain_min)
-%   ]
-% ) minimize max_deviation;
-solve minimize max_deviation;
+solve :: int_search(
+  [ team[p,w,s] | p in Periods, w in Weeks, s in Slots ] ++
+  [ perm[w,p]     | w in Weeks, p in Periods ] ++
+  [ srr[p,w,s]    | p in Periods, w in Weeks, s in Slots ],
+  first_fail, indomain_min, complete)
+minimize max_deviation;
 
 output [
   "max_deviation=" ++ show(max_deviation) ++ "\n" ++
   "[" ++
     join(",\n", [
-      "[" ++ join(",", [show([game[i,j,k] | k in 1..2]) | j in Weeks]) ++ "]"
+      "[" ++ join(",", [show([team[i,j,k] | k in Slots]) | j in Weeks]) ++ "]"
       | i in Periods
     ]) ++
   "]"

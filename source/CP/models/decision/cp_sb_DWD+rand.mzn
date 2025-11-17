@@ -1,5 +1,4 @@
-% Fixed transition-rule implementation (use 'elseif', not 'else if')
-
+% indomain_rand is not supported by chuffed
 include "globals.mzn";
 
 % INSTANCE VARIABLES------------------------------------------------------------
@@ -107,6 +106,3 @@ output [
     ]) ++
   "]"
 ];
-
-%best model, works with chuffed until n <=16
-% config random seed =42, restart type geometric
