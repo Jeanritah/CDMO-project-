@@ -16,11 +16,17 @@ Expected Function Signature:
 def main(input_path: str) -> dict:
     Reads the input file, runs the solver, and returns a dictionary with the results.
 
-output: "Result saved to {output_path}"
+output: None
 """
-#from utils.utils import save_result  # Optional helper if you have one
+from typing import List
+from utils.utils import save_result
+from minizinc import Instance, Model, Solver
+import json
+import os
+from pathlib import Path
+import ast
 
-def main(range: tuple[float, float]):
+def main(teams: List[int], solver_name="gecode",) -> None:
     """
     Run the <MODEL> with a specific solver on the given input.
 
@@ -31,22 +37,52 @@ def main(range: tuple[float, float]):
         dict: A dictionary containing solver results.
     """
 
-    # 1️⃣ Parse the arguments/input data
+    for t in teams:
+        #TODO how to load the correct file based on all possible parameters?
+        '''
+        Possible parameters to consider:
+        - solver name: for chuffed certain models cannot be runned (we already know this)
+        - sb = True/False
+        - search strategy: which one? base, ff, DWD+min, DWD+rand
+        REMBER you should be able to run just one model with one search strategy
+        and solver, or all models with all search strategies,
+        think of a modular solution
+        '''
+        file_name = "./cp_model.mzn"
+        sts = Model(file_name)
+        # Find the MiniZinc solver configuration for Gecode
+        solver = Solver.lookup(solver_name)
 
-    # 2️⃣ Build the model (this depends on your solver)
+        # Create an Instance of the sts model for Gecode
+        instance = Instance(solver, sts)
+        instance["n"] = t
 
-    # 3️⃣ Solve the problem
-    # call save_result() to save the output to json files following project 
-    # requirements
+        # Solve configuration:
+        params = {
+            "time-limit": 300000
+        }
 
-    # 4️⃣ Construct the output 
+        result = instance.solve(**params)
 
-    result = "This is the CP runner!"
+        # Save result to JSON---------------------------------------------------
+        
+        #TODO: check if this methods works also for the optimization version of 
+        # the model, otherwise modify it accordingly
+        output_dir = Path('res/CP')
+        output_dir.mkdir(parents=True, exist_ok=True)
+        json_file_path = output_dir / f"{t}.json"
 
-    lower, upper = range
-    print(f"Running CP on range {lower}-{upper}")
-    # ... solver code ...
-    return result
+        # convert team schedule to an array 
+        array_res = ast.literal_eval(str(result.solution))
+
+        # convert time into seconds
+        s = str(result.statistics['time'])
+        h, m, s = s.split(':')
+        seconds = float(h) * 3600 + float(m) * 60 + float(s)
+
+        save_result(seconds, array_res, json_file_path, solver_name)
+        print(f"Result saved to {json_file_path}")
+
 
 if __name__ == "__main__":
     import argparse

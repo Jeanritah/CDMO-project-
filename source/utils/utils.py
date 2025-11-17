@@ -1,6 +1,7 @@
 import ast
 import json
 import os
+from typing import List, Tuple
 
 
 def save_result(tot_time:int, sol:str, file_path:str, obj=None, solver_name="gecode"):
@@ -48,3 +49,13 @@ def save_result(tot_time:int, sol:str, file_path:str, obj=None, solver_name="gec
     # Write back to file
     with open(file_path, "w") as outfile:
         json.dump(data, outfile, indent=4)
+
+def convert_to_range(value_range: Tuple[int, int]) -> List[int]:
+    """
+    Convert (lower, upper) bounds to an inclusive list of even integers.
+    Ensures both bounds are even, then steps by 2.
+    """
+    lower, upper = value_range
+    lower = lower + (lower % 2)     # ensure even
+    upper = upper - (upper % 2)     # ensure even
+    return list(range(lower, upper + 1, 2))

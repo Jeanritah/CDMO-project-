@@ -1,16 +1,7 @@
 import os
 import json
-from typing import List, Tuple, Sequence, Optional
-
-def convert_to_range(value_range: Tuple[int, int]) -> List[int]:
-    """
-    Convert (lower, upper) bounds to an inclusive list of even integers.
-    Ensures both bounds are even, then steps by 2.
-    """
-    lower, upper = value_range
-    lower = lower + (lower % 2)     # ensure even
-    upper = upper - (upper % 2)     # ensure even
-    return list(range(lower, upper + 1, 2))
+from typing import Tuple, Sequence, Optional
+from utils.utils import convert_to_range
 
 
 def load_instance_data(mode: str, team_size: int, base_dir: str = "res") -> Optional[dict]:

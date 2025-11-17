@@ -44,6 +44,7 @@ from CP.run_cp import main as run_cp_main
 from MIP.run_mip import main as run_mip_main
 from SAT.run_sat import main as run_sat_main
 from SMT.run_smt import main as run_smt_main
+from utils.utils import convert_to_range
 
 #TODO add a method that transforms single instances results into a table if the
 # number of models is > 1. The table should have the following format:
@@ -91,7 +92,8 @@ def main():
     results = {}
 
     for mode in args.mode:
-        result = model_functions[mode](args.range)
+        teams = convert_to_range(args.range)
+        result = model_functions[mode](teams)
         results[mode] = result
         print(f"{mode} result:", result)
 
