@@ -1,9 +1,3 @@
-#TODO# function to transform time from milliseconds to seconds
-	
-# By the definition of the floor function, the correct way to approach this problem is:
-# divide the time in milliseconds by 1000 (if your solver returns time in milliseconds)
-# apply the function floor to it
-
 """
 run_<model>.py
 ================
@@ -19,6 +13,8 @@ def main(input_path: str) -> dict:
 output: None
 """
 
+import array
+import math
 from pyexpat import model
 from typing import List
 from minizinc import Instance, Model, Solver
@@ -79,7 +75,6 @@ def main(teams: List[int], symbreak: str, objective: str = "FALSE",
                         continue
 
                     model_path = os.path.join(os.path.join(dir_path, f"{obj}"), f"cp_{sb}_{strategy}.mzn")
-                    print(f"Running model: {model_path} with solver: {s_name}")
                     for t in teams:
                         '''
                         Possible parameters to consider:
@@ -106,22 +101,40 @@ def main(teams: List[int], symbreak: str, objective: str = "FALSE",
 
                         result = instance.solve(**params)
 
-                        # Save result to JSON---------------------------------------------------
-                        
-                        #TODO what happens to array_res when solution is UNSAT? what when solotion is NAN?
                         output_dir = Path('res/CP')
                         output_dir.mkdir(parents=True, exist_ok=True)
                         json_file_path = output_dir / f"{t}.json"
 
-                        # convert team schedule to an array 
-                        array_res = ast.literal_eval(str(result.solution))
+                        print(result.statistics)
+                        #TODO guarda come catturare UNSAT e UNKNOWN per settare variabile 
+                        # con il valore giusto
 
-                        # convert time into seconds
-                        s = str(result.statistics['time'])
-                        h, m, s = s.split(':')
-                        seconds = float(h) * 3600 + float(m) * 60 + float(s)
+                        # Save result to JSON---------------------------------------------------
+                        if f"{result}" == "None":
+                            seconds = 0
+                            array_res = [] 
+                            obj_value = None
 
-                        utils.save_result(seconds, array_res, json_file_path, solver_name=f"{s_name}_{obj}_{sb}_{strategy}")
+                        else:
+                            if obj == "optimization":
+                                tokens = f'{result.solution}'.split('\n')
+                                obj_value = tokens[0].split('=')[1].strip()
+                                print(type(tokens[1:]))
+                                array_res = '\n'.join(tokens[1:]).strip() 
+                                array_res = ast.literal_eval(array_res)
+                            else:
+                            # convert team schedule to an array 
+                                obj_value = None
+                                array_res = ast.literal_eval(str(result.solution))
+
+                            # convert time into seconds
+                            s = str(result.statistics['time'])
+                            h, m, s = s.split(':')
+                            seconds = float(h) * 3600 + float(m) * 60 + float(s)
+                            seconds = math.floor(seconds)
+
+                        # object field need to be modified after each execution
+                        utils.save_result(seconds, array_res, json_file_path, obj=obj_value, solver_name=f"{s_name}_{obj}_{sb}_{strategy}")
                         print(f"Result saved to {json_file_path}")
 
 
@@ -129,22 +142,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="CP CLI")
     parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"))
+
     args = parser.parse_args()
+
     teams = utils.convert_to_range((args.range[0], args.range[1]))
 
     #TODO modify with parameters from command line
-    main(teams,objective="TRUE", symbreak="FALSE", search_strategies=["base"], solver_names=["gecode"])
-
-'''
-{
-    "gecode": {
-        "time": 0.29,
-        "optimal": true,
-        "obj": "gecode",
-        "sol": [
-'''
-#TODO gecode assigned to obj instead of the actual objective value
-
-## Basically, if something is UNSAT within the time limit, then optimal = true 
-# and true time in seconds reported, otherwise it will be N/A.  @Esther Giuliano 
-# it can help you for the table too
+    main(teams, objective="FALSE", symbreak="FALSE", search_strategies=["base"], solver_names=["gecode"])

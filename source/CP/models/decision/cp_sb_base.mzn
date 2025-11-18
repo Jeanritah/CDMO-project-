@@ -84,7 +84,7 @@ solve satisfy;
 
 output [
   "[" ++
-    join(",\n", [
+    join(",", [
       "[" ++ join(",", [show([team[i,j,k] | k in Slots]) | j in Weeks]) ++ "]"
       | i in Periods
     ]) ++

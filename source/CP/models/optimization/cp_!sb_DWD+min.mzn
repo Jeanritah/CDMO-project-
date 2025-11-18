@@ -55,7 +55,7 @@ minimize max_deviation;
 output [
   "max_deviation=" ++ show(max_deviation) ++ "\n" ++
   "[" ++
-    join(",\n", [
+    join(",", [
       "[" ++ join(",", [show([team[i,j,k] | k in Slots]) | j in Weeks]) ++ "]"
       | i in Periods
     ]) ++
