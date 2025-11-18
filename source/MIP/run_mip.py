@@ -102,7 +102,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("n", type=int)
     parser.add_argument("--solver", type=str, default="gurobi",
-                        help="gurobi | cplex | cbc | highs | all")
+                        help="gurobi | cplex | highs | all")
     parser.add_argument("--objective", type=str, default="false",
                         help="true | false | both")
     args = parser.parse_args()
@@ -118,7 +118,7 @@ def main():
 
     # run solvers
     results = {}
-    models = ["mip_basic.mod", "mip_symbreak.mod"]
+    models = ["mip_base.mod", "mip_sb.mod"]
 
     solvers_to_run = SOLVERS if solver_choice == "all" else [solver_choice]
     for sol in solvers_to_run:
@@ -126,15 +126,15 @@ def main():
             raise ValueError(f"Unknown solver: {sol}")
 
         for model in models:
-            model_suffix = "_symbreak" if "symbreak" in model else ""
+            model_suffix = "_sb" if "sb" in model else "_!sb"
 
             # handle objective "both"
             if objective_choice == "both":
                 results[f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
-                results[f"{sol}_noobj{model_suffix}"] = run_single_solver(n, sol, False, model)
+                results[f"{sol}_!obj{model_suffix}"] = run_single_solver(n, sol, False, model)
             else:
                 use_obj = objective_choice == "true"
-                key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_noobj{model_suffix}"
+                key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_!obj{model_suffix}"
                 results[key] = run_single_solver(n, sol, use_obj, model)
 
     # save output

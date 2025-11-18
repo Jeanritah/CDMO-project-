@@ -1,5 +1,5 @@
 {
-    "gurobi_obj": {
+    "gurobi_obj_!sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -72,7 +72,7 @@
             ]
         ]
     },
-    "gurobi_noobj": {
+    "gurobi_!obj_!sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -145,7 +145,7 @@
             ]
         ]
     },
-    "gurobi_obj_symbreak": {
+    "gurobi_obj_sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -218,7 +218,7 @@
             ]
         ]
     },
-    "gurobi_noobj_symbreak": {
+    "gurobi_!obj_sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -291,7 +291,7 @@
             ]
         ]
     },
-    "cplex_obj": {
+    "cplex_obj_!sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -364,7 +364,7 @@
             ]
         ]
     },
-    "cplex_noobj": {
+    "cplex_!obj_!sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -437,7 +437,7 @@
             ]
         ]
     },
-    "cplex_obj_symbreak": {
+    "cplex_obj_sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -510,7 +510,7 @@
             ]
         ]
     },
-    "cplex_noobj_symbreak": {
+    "cplex_!obj_sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -583,7 +583,7 @@
             ]
         ]
     },
-    "highs_obj": {
+    "highs_obj_!sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -656,7 +656,7 @@
             ]
         ]
     },
-    "highs_noobj": {
+    "highs_!obj_!sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -729,7 +729,7 @@
             ]
         ]
     },
-    "highs_obj_symbreak": {
+    "highs_obj_sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
@@ -802,7 +802,7 @@
             ]
         ]
     },
-    "highs_noobj_symbreak": {
+    "highs_!obj_sb": {
         "time": 0,
         "optimal": false,
         "obj": null,
