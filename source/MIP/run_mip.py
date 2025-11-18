@@ -12,7 +12,7 @@ import os
 import json
 import time
 import argparse
-from amplpy import ampl_notebook
+from amplpy import ampl_notebook # type: ignore
 
 SOLVERS = ["gurobi", "cplex", "cbc"]
 
@@ -46,9 +46,19 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     # solver options
     ampl.setOption("solver", solver)
     solver_opts = "TimeLimit=300"
-    if solver.lower() in ["gurobi", "cplex"]:
-        solver_opts += " threads=1"  # sequential mode for solvers that support it
+
+    if solver.lower() == "cplex":
+        # Feasibility first in CPLEX
+        solver_opts += " MIPEmphasis=1"  # 1 = feasibility, 0 = balance, 2 = optimality
+        solver_opts += " threads=1"
+    elif solver.lower() == "gurobi":
+        # Feasibility first in Gurobi
+        solver_opts += " MIPFocus=1"    # 0 = default, 1 = feasibility, 2 = optimality, 3 = best bound
+        solver_opts += " Threads=1"
+
+
     ampl.setOption(f"{solver}_options", solver_opts)
+
 
     # solve
     start_time = time.time()
