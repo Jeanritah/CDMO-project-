@@ -3,6 +3,8 @@ import json
 from typing import Tuple, Sequence, Optional
 from utils.utils import convert_to_range
 
+# oject name structure inside of json file {s_name}_{obj}_{sb}_{strategy}
+
 
 def load_instance_data(mode: str, team_size: int, base_dir: str = "res") -> Optional[dict]:
     """

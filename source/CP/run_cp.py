@@ -29,6 +29,7 @@ import ast
 from source.utils import utils
 import argparse
 
+# delegate responsibility to main ----------------------------------------------
 def extract_sb_flags(sb: str) -> str:
     sb = sb.upper()
     if sb == "TRUE":
@@ -48,12 +49,12 @@ def extract_obj_flags(objective: str) -> str:
     else:  # objective == "FALSE"
         flags = ["decision"]
     return flags
-    
+#-------------------------------------------------------------------------------   
 
-def main(teams: List[int], sb: str, search_strategies: List[str] = ["base", "ff", "DWD+min", "DWD+rand"],
-         objective: List[str] = False, solver_names:List[str]=["gecode", "chuffed"]) -> None:
+def main(teams: List[int], symbreak: str, objective: str = "FALSE", 
+        search_strategies: List[str] = ["base", "ff", "DWD+min", "DWD+rand"],
+        solver_names:List[str]=["gecode", "chuffed"]) -> None:
     """
-
     Args:
         teams (List[int]): list of teams to run the model on
         sb (str): whtether to use models with symmetry breaking (TRUE) or not 
@@ -63,13 +64,12 @@ def main(teams: List[int], sb: str, search_strategies: List[str] = ["base", "ff"
     """
 
     dir_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "models")
-    # print(model_base_path)
 
     ## TODO delegate responsibility to the main method so that there are less
     # if else statements in the code of every single model
-    # 
-    sb_flags = extract_sb_flags(sb)
+    sb_flags = extract_sb_flags(symbreak)
     obj_flags = extract_obj_flags(objective)
+    # --------------------------------------------------------------------------
 
     for s_name in solver_names:
         for obj in obj_flags:
@@ -81,7 +81,6 @@ def main(teams: List[int], sb: str, search_strategies: List[str] = ["base", "ff"
                     model_path = os.path.join(os.path.join(dir_path, f"{obj}"), f"cp_{sb}_{strategy}.mzn")
                     print(f"Running model: {model_path} with solver: {s_name}")
                     for t in teams:
-                        #TODO how to load the correct file based on all possible parameters?
                         '''
                         Possible parameters to consider:
                         - solver name: for chuffed certain models cannot be runned (we already know this)
@@ -109,8 +108,7 @@ def main(teams: List[int], sb: str, search_strategies: List[str] = ["base", "ff"
 
                         # Save result to JSON---------------------------------------------------
                         
-                        #TODO: check if this methods works also for the optimization version of 
-                        # the model, otherwise modify it accordingly
+                        #TODO what happens to array_res when solution is UNSAT? what when solotion is NAN?
                         output_dir = Path('res/CP')
                         output_dir.mkdir(parents=True, exist_ok=True)
                         json_file_path = output_dir / f"{t}.json"
@@ -123,7 +121,7 @@ def main(teams: List[int], sb: str, search_strategies: List[str] = ["base", "ff"
                         h, m, s = s.split(':')
                         seconds = float(h) * 3600 + float(m) * 60 + float(s)
 
-                        utils.save_result(seconds, array_res, json_file_path, s_name)
+                        utils.save_result(seconds, array_res, json_file_path, solver_name=f"{s_name}_{obj}_{sb}_{strategy}")
                         print(f"Result saved to {json_file_path}")
 
 
@@ -135,7 +133,7 @@ if __name__ == "__main__":
     teams = utils.convert_to_range((args.range[0], args.range[1]))
 
     #TODO modify with parameters from command line
-    main(teams,objective="FALSE", sb="FALSE", search_strategies=["base"], solver_names=["gecode"])
+    main(teams,objective="TRUE", symbreak="FALSE", search_strategies=["base"], solver_names=["gecode"])
 
 '''
 {
@@ -145,3 +143,4 @@ if __name__ == "__main__":
         "obj": "gecode",
         "sol": [
 '''
+#TODO gecode assigned to obj instead of the actual objective value

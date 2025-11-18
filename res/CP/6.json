@@ -1,8 +1,8 @@
 {
-    "gecode": {
-        "time": 0.29,
+    "gecode_decision_!sb_base": {
+        "time": 0.21,
         "optimal": true,
-        "obj": "gecode",
+        "obj": null,
         "sol": [
             [
                 [
