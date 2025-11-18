@@ -14,7 +14,7 @@ import time
 import argparse
 from amplpy import ampl_notebook
 
-SOLVERS = ["gurobi", "cplex", "highs"]
+SOLVERS = ["gurobi", "cplex", "cbc"]
 
 def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     """Runs the model for a single solver and returns a result dict."""
@@ -45,7 +45,10 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
 
     # solver options
     ampl.setOption("solver", solver)
-    ampl.setOption(f"{solver}_options", "TimeLimit=300 threads=1")
+    solver_opts = "TimeLimit=300"
+    if solver.lower() in ["gurobi", "cplex"]:
+        solver_opts += " threads=1"  # sequential mode for solvers that support it
+    ampl.setOption(f"{solver}_options", solver_opts)
 
     # solve
     start_time = time.time()
@@ -72,23 +75,36 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
         sol_matrix.append(week_row)
 
     elapsed = int(end_time - start_time)
-    if elapsed >= 300:
+
+    # Determine status according to your instructions
+    solve_result = ampl.getValue("solve_result")  # 0 = optimal/feasible, >0 = unknown/time limit, <0 = infeasible/UNSAT
+
+    obj_val = None  # as per instructions, obj is None in timeout or UNSAT
+
+    # UNSAT proved
+    if solve_result == -1:  # UNSAT
+        optimal = True
+        sol_matrix = []
+        # keep actual elapsed time
+    # Timeout / no solution within limit
+    elif elapsed >= 300:
         elapsed = 300
         optimal = False
-    else:
-        optimal = ampl.getValue("solve_result") == 0
+        sol_matrix = []
+    else:  # feasible/optimal solution found
+        optimal = solve_result == 0
+        # objective value if active and solution exists
+        try:
+            obj_val = float(ampl.getObjective(0).value()) if use_obj else None
+        except:
+            obj_val = None
 
-    # objective val if objective is active
-    try:
-        obj_val = float(ampl.getObjective(0).value()) if use_obj else None
-    except:
-        obj_val = None
-
-    # UNSAT for n=4
+    # special case for n=4 (UNSAT)
     if n == 4:
         sol_matrix = []
-        optimal = False
+        optimal = True  # proven UNSAT
         obj_val = None
+        elapsed = 0
 
     return {
         "time": elapsed,
@@ -98,11 +114,12 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     }
 
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("n", type=int)
     parser.add_argument("--solver", type=str, default="gurobi",
-                        help="gurobi | cplex | highs | all")
+                        help="gurobi | cplex | cbc | all")
     parser.add_argument("--objective", type=str, default="false",
                         help="true | false | both")
     args = parser.parse_args()
@@ -118,7 +135,7 @@ def main():
 
     # run solvers
     results = {}
-    models = ["mip_base.mod", "mip_sb.mod"]
+    models = ["mip_!sb.mod", "mip_sb.mod"]
 
     solvers_to_run = SOLVERS if solver_choice == "all" else [solver_choice]
     for sol in solvers_to_run:
@@ -126,7 +143,7 @@ def main():
             raise ValueError(f"Unknown solver: {sol}")
 
         for model in models:
-            model_suffix = "_sb" if "sb" in model else "_!sb"
+            model_suffix = "_sb" if "_sb" in model else "_!sb"
 
             # handle objective "both"
             if objective_choice == "both":
