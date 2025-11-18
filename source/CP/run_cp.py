@@ -144,3 +144,7 @@ if __name__ == "__main__":
         "sol": [
 '''
 #TODO gecode assigned to obj instead of the actual objective value
+
+## Basically, if something is UNSAT within the time limit, then optimal = true 
+# and true time in seconds reported, otherwise it will be N/A.  @Esther Giuliano 
+# it can help you for the table too
