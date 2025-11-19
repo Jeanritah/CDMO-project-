@@ -25,7 +25,7 @@ import ast
 from source.utils import utils
 import argparse
 
-# delegate responsibility to main ----------------------------------------------
+# import in main before calling main method ------------------------------------
 def extract_sb_flags(sb: str) -> str:
     sb = sb.upper()
     if sb == "TRUE":
@@ -47,7 +47,7 @@ def extract_obj_flags(objective: str) -> str:
     return flags
 #-------------------------------------------------------------------------------   
 
-def main(teams: List[int], symbreak: str, objective: str = "FALSE", 
+def main(teams: List[int], sb_flags: List[str], obj_flags: List[str], 
         search_strategies: List[str] = ["base", "ff", "DWD+min", "DWD+rand"],
         solver_names:List[str]=["gecode", "chuffed"]) -> None:
     """
@@ -63,8 +63,7 @@ def main(teams: List[int], symbreak: str, objective: str = "FALSE",
 
     ## TODO delegate responsibility to the main method so that there are less
     # if else statements in the code of every single model
-    sb_flags = extract_sb_flags(symbreak)
-    obj_flags = extract_obj_flags(objective)
+    
     # --------------------------------------------------------------------------
 
     for s_name in solver_names:
@@ -142,10 +141,20 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="CP CLI")
     parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"))
+    parser.add_argument("--solver", type=List[str], default=["gecode", "chuffed"],
+                        help="gecode | chuffed")
+    parser.add_argument("--obj", type=str, default="BOTH",
+                        help="true | false | both |")
+    parser.add_argument("--sb", type=str, default="BOTH",
+                        help="true | false | both")
+    parser.add_argument("--search", type=str, default=["base", "ff", "DWD+min", "DWD+rand"],
+                        help="base | ff | DWD+min | DWD+rand")
 
     args = parser.parse_args()
 
     teams = utils.convert_to_range((args.range[0], args.range[1]))
 
-    #TODO modify with parameters from command line
-    main(teams, objective="FALSE", symbreak="FALSE", search_strategies=["base"], solver_names=["gecode"])
+    sb_flags = extract_sb_flags(args.sb)
+    obj_flags = extract_obj_flags(args.obj)
+
+    main(teams, objective=args.obj, symbreak=sb_flags, search_strategies=args.search, solver_names=args.solver)
