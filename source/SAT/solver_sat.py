@@ -1,4 +1,3 @@
-!pip install z3-solver --quiet
 from z3 import *
 import os
 import time
