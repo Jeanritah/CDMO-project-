@@ -9,7 +9,8 @@ def ensure_folders():
 
 def json_write(n, data):
     ensure_folders()
-    with open(path, "w") as f:
+     file_path = f"res/SAT/{n}.json"
+     with open(file_path, "w") as f:
         json.dump(data, f, indent=4)
         
 def create_vars(n):
