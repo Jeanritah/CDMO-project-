@@ -17,8 +17,7 @@ def main(range_vals: tuple[float, float]):
         data = solve_all(n)
 
         # Save JSON
-        path = f"res/SAT/{n}.json"
-        json_write(path, data)
+        json_write(n, data)
 
         print(f"saved: {path}")
 
