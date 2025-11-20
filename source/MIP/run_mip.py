@@ -12,7 +12,7 @@ def main(input_path: str) -> dict:
 
 output: "Result saved to {output_path}"
 """
-#from utils.utils import save_result  # Optional helper if you have one
+from ..utils.utils import save_result  # Optional helper if you have one
 
 def main(range: tuple[float, float]):
     """

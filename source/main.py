@@ -40,8 +40,8 @@ output: "Result saved to {output_path}"
 import argparse
 import subprocess
 import sys
-from CP.run_cp import main as run_cp_main
-from MIP.run_mip import main as run_mip_main
+from source.run_cp import main as run_cp_main
+from source.MIP.run_mip import main as run_mip_main
 from SAT.run_sat import main as run_sat_main
 from SMT.run_smt import main as run_smt_main
 from utils.utils import convert_to_range

@@ -1,3 +1,15 @@
+import array
+import math
+from pyexpat import model
+from typing import List
+from minizinc import Instance, Model, Solver
+import json
+import os
+from pathlib import Path
+import ast
+from utils import utils
+import argparse
+
 """
 run_<model>.py
 ================
@@ -12,18 +24,6 @@ def main(input_path: str) -> dict:
 
 output: None
 """
-
-import array
-import math
-from pyexpat import model
-from typing import List
-from minizinc import Instance, Model, Solver
-import json
-import os
-from pathlib import Path
-import ast
-from source.utils import utils
-import argparse
 
 # import in main before calling main method ------------------------------------
 def extract_sb_flags(sb: str) -> str:
@@ -59,7 +59,8 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
         solver_names (List[str], optional): Default solvers when running all instances = ["gecode", "chuffed"].
     """
 
-    dir_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "models")
+    dir_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "CP/models")
+    # print(f"Model path: {dir_path}")
 
     ## TODO delegate responsibility to the main method so that there are less
     # if else statements in the code of every single model
@@ -84,7 +85,7 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
                         and solver, or all models with all search strategies,
                         think of a modular solution
                         '''
-                        print()
+                        #print()
                         sts = Model(model_path)
                         # Find the MiniZinc solver configuration for Gecode
                         solver = Solver.lookup(s_name)
@@ -104,7 +105,7 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
                         output_dir.mkdir(parents=True, exist_ok=True)
                         json_file_path = output_dir / f"{t}.json"
 
-                        print(result.statistics)
+                        # print(result.statistics)
                         #TODO guarda come catturare UNSAT e UNKNOWN per settare variabile 
                         # con il valore giusto
 
@@ -157,4 +158,4 @@ if __name__ == "__main__":
     sb_flags = extract_sb_flags(args.sb)
     obj_flags = extract_obj_flags(args.obj)
 
-    main(teams, objective=args.obj, symbreak=sb_flags, search_strategies=args.search, solver_names=args.solver)
+    main(teams, obj_flags=obj_flags, sb_flags=sb_flags, search_strategies=args.search, solver_names=args.solver)

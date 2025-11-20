@@ -1,0 +1,18 @@
+services:
+  cdmo:
+    build:
+      context: .            # Build only if Dockerfile or context changes
+      dockerfile: Dockerfile
+    image: cdmo-env:latest  # Keeps the built image cached so it is not rebuilt every time
+
+    container_name: cdmo-dev
+
+    # Mount your working directory so edits on Windows show up inside the container
+    volumes:
+      - ./:/CDMO                     # Sync project folder
+      - ./res:/CDMO/res              # Persist results
+      - ./source:/CDMO/source        # Persist model/code
+
+    # Enable interactive bash by default
+    tty: true
+    stdin_open: true
