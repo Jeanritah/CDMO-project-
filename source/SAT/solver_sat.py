@@ -98,10 +98,8 @@ def add_base_constraints(s, n, home, per):
     # Each period houses exactly 2 teams
     for w in range(1, W+1):
         for p in range(1, P+1):
-            s.add(exactly1([per[(i,w,p)] for i in range(1, n+1)]) * 2)
-
-            # Actually exactly 2:
-            s.add(PbEq([(per[(i,w,p)],1) for i in range(1,n+1)], 2))
+            slots = [(per[(i, w, p)], 1) for i in range(1, n+1)]
+            s.add(PbEq(slots,2))
 
     # Period limit ≤ 2
     for i in range(1, n+1):
