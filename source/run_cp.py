@@ -105,17 +105,33 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
                         output_dir.mkdir(parents=True, exist_ok=True)
                         json_file_path = output_dir / f"{t}.json"
 
+                        print(result.status)
+                        # SATISFIED
+                        # UNSATISFIABLE
+
+
                         # print(result.statistics)
                         #TODO guarda come catturare UNSAT e UNKNOWN per settare variabile 
                         # con il valore giusto
 
                         # Save result to JSON---------------------------------------------------
-                        if f"{result}" == "None":
+                        if f"{result.status}" == "UNSATISFIABLE":
                             seconds = 0
                             array_res = [] 
                             obj_value = None
 
-                        else:
+                        elif f"{result.status}" == "UNKNOWN":
+                            seconds = 300
+                            array_res = [] 
+                            obj_value = None
+
+                        else: # SATISFIED
+                            # convert time into seconds
+                            s = str(result.statistics['time'])
+                            h, m, s = s.split(':')
+                            seconds = float(h) * 3600 + float(m) * 60 + float(s)
+                            seconds = math.floor(seconds)
+
                             if obj == "optimization":
                                 tokens = f'{result.solution}'.split('\n')
                                 obj_value = tokens[0].split('=')[1].strip()
@@ -126,13 +142,7 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
                             # convert team schedule to an array 
                                 obj_value = None
                                 array_res = ast.literal_eval(str(result.solution))
-
-                            # convert time into seconds
-                            s = str(result.statistics['time'])
-                            h, m, s = s.split(':')
-                            seconds = float(h) * 3600 + float(m) * 60 + float(s)
-                            seconds = math.floor(seconds)
-
+                            
                         # object field need to be modified after each execution
                         utils.save_result(seconds, array_res, json_file_path, obj=obj_value, solver_name=f"{s_name}_{obj}_{sb}_{strategy}")
                         print(f"Result saved to {json_file_path}")
