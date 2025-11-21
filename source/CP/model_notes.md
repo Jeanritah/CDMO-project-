@@ -21,7 +21,7 @@
     table example for the report
     ![alt text](image.png)
 
-- [ ] OPTIONAL connect table to main (if you think it's useful), or make it runnable with arguments from the command line
+- [ ] check table_v2 output is correct and check the naming of the output file cause I think there's an error!
 
 Ideating the right prompt to connect my main to run_cp and making a scalable framework also for the other team members or just so I will know how to connect their methods to the main method
 I might want to use an external file to specify all possible parameters so that the configuration is as easy as possible

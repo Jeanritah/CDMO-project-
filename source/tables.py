@@ -2,9 +2,7 @@ import os
 import json
 from typing import Tuple, Sequence, Optional
 from utils.utils import convert_to_range
-
-
-
+import argparse
 
 def load_instance_data(mode: str, team_size: int, base_dir: str = "res") -> Optional[dict]:
     """
@@ -59,14 +57,13 @@ def extract_cell_value(entry: dict,
         return "-"
 
 
-def determine_metric(decision_vs_optimization: str) -> str:
+def determine_metric(decision: bool) -> str:
     """
     Map problem type to metric field.
     decision -> 'time'
     optimization -> 'obj'
     """
-    decision_vs_optimization = decision_vs_optimization.lower()
-    if decision_vs_optimization.startswith("dec"):
+    if decision:
         return "time"
     return "obj"
 
@@ -77,7 +74,7 @@ def build_table_for_solver_mode(
     sb_flags: Sequence[str],
     search_strategies: Sequence[str],
     teams_range: Tuple[int, int],
-    decision_vs_optimization: str,
+    decision: bool,
     output_dir: str = "output",
     base_res_dir: str = "res",
     caption: Optional[str] = None,
@@ -91,7 +88,7 @@ def build_table_for_solver_mode(
     """
     os.makedirs(output_dir, exist_ok=True)
 
-    metric = determine_metric(decision_vs_optimization)
+    metric = determine_metric(decision)
     teams = convert_to_range(teams_range)
 
     # Number of columns: row label + groups
@@ -164,7 +161,7 @@ def generate_all_tables(
     sb_flags: Sequence[str],
     search_strategies: Sequence[str],
     teams_range: Tuple[int, int],
-    decision_vs_optimization: str,
+    decision: bool,
     output_dir: str = "output",
     base_res_dir: str = "res"
 ):
@@ -172,7 +169,7 @@ def generate_all_tables(
     Generate tables for every (solver, mode) pair.
     """
     for mode in modes: # mode = CP, SAT, ...
-        caption = f"Results for {solver} on mode {mode} ({decision_vs_optimization})"
+        caption = f"Results for {solver} on mode {mode} ({decision})"
         label = f"tab:{solver}_{mode}"
         build_table_for_solver_mode(
             solver=solver,
@@ -180,7 +177,7 @@ def generate_all_tables(
             sb_flags=sb_flags,
             search_strategies=search_strategies,
             teams_range=teams_range,
-            decision_vs_optimization=decision_vs_optimization,
+            decision=decision,
             output_dir=output_dir,
             base_res_dir=base_res_dir,
             caption=caption,
@@ -189,22 +186,42 @@ def generate_all_tables(
 
 
 if __name__ == "__main__":
+    ## ADAPT TO THIS CLASS --------------------------
+
+
+    parser = argparse.ArgumentParser(description="CP CLI")
+    parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"))
+    parser.add_argument("--models", type=str, nargs="+", default=["CP", "SAT", "MIP", "SMT"],
+                        choices=["CP", "SAT", "MIP", "SMT"], help="CP | SAT | MIP | SMT")
+    parser.add_argument("--obj", type=bool, default=True,
+                        help="True | false")
+    parser.add_argument("--sb", type=str, nargs="*", default=['true', "false"],
+                        choices= ['true', "false"], help="true | false")
+    parser.add_argument("--search", nargs="+", type=str, default=["base", "ff", "DWD+min", "DWD+rand"],
+                        choices=["base", "ff", "DWD+min", "DWD+rand"],
+                        help="base | ff | DWD+min | DWD+rand")
+
+    args = parser.parse_args()
+
+    # ADD RANGE CONVERTER HERE
+    # ========================================
+
     # Example usage; replace with your actual lists.
     solvers = ["gecode", "chuffed"]
-    modes = ["CP", "SAT"]
+    modeLs = ["CP", "SAT"]
     sb_flags = ["SB", "!SB"]
     search_strategies = ["FF", "BFS"]
     teams_range = (2, 16)  # inclusive, even range
-    decision_vs_optimization = "optimization"  # or "decision"
+    decision = True  # or False
 
     for solver in solvers:
         generate_all_tables(
             solver=solver,
-            modes=modes,
+            modeLs=modeLs,
             sb_flags=sb_flags,
             search_strategies=search_strategies,
             teams_range=teams_range,
-            decision_vs_optimization=decision_vs_optimization
+            decision=decision
         )
 
 ## solvers and modes are not coupled together

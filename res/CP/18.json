@@ -10,5 +10,29 @@
         "optimal": false,
         "obj": null,
         "sol": []
+    },
+    "gecode_decision_sb_DWD+min": {
+        "time": 300,
+        "optimal": false,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_sb_DWD+rand": {
+        "time": 300,
+        "optimal": false,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_!sb_base": {
+        "time": 300,
+        "optimal": false,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_!sb_ff": {
+        "time": 300,
+        "optimal": false,
+        "obj": null,
+        "sol": []
     }
 }
