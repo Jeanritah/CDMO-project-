@@ -1,0 +1,14 @@
+{
+    "gecode_decision_sb_base": {
+        "time": 300,
+        "optimal": false,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_sb_ff": {
+        "time": 300,
+        "optimal": false,
+        "obj": null,
+        "sol": []
+    }
+}

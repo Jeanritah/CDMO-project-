@@ -4,5 +4,59 @@
         "optimal": true,
         "obj": null,
         "sol": []
+    },
+    "gecode_decision_sb_base": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_sb_ff": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_sb_DWD+min": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_sb_DWD+rand": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_!sb_ff": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_!sb_DWD+min": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_decision_!sb_DWD+rand": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_optimization_sb_base": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_optimization_sb_ff": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
     }
 }

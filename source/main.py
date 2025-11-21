@@ -93,6 +93,9 @@ def main():
 
     for mode in args.mode:
         teams = convert_to_range(args.range)
+        # this function should call also other parameters, but parameters change depending on the model...
+        # how to solve this? 
+        # If no additional parameter is added the model is run on all possible configurations for that model
         result = model_functions[mode](teams)
         results[mode] = result
         print(f"{mode} result:", result)

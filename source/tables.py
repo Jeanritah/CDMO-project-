@@ -3,7 +3,7 @@ import json
 from typing import Tuple, Sequence, Optional
 from utils.utils import convert_to_range
 
-# oject name structure inside of json file {s_name}_{obj}_{sb}_{strategy}
+
 
 
 def load_instance_data(mode: str, team_size: int, base_dir: str = "res") -> Optional[dict]:
@@ -20,7 +20,7 @@ def load_instance_data(mode: str, team_size: int, base_dir: str = "res") -> Opti
     except Exception:
         return None
 
-
+# oject name structure inside of json file {s_name}_{obj}_{sb}_{strategy}
 def extract_cell_value(entry: dict,
                        metric: str,
                        bold_if_optimal: bool = True) -> str:
@@ -171,7 +171,7 @@ def generate_all_tables(
     """
     Generate tables for every (solver, mode) pair.
     """
-    for mode in modes:
+    for mode in modes: # mode = CP, SAT, ...
         caption = f"Results for {solver} on mode {mode} ({decision_vs_optimization})"
         label = f"tab:{solver}_{mode}"
         build_table_for_solver_mode(
@@ -206,3 +206,12 @@ if __name__ == "__main__":
             teams_range=teams_range,
             decision_vs_optimization=decision_vs_optimization
         )
+
+## solvers and modes are not coupled together
+# Pro: we have a table for every solver for every mode (decision vs optimization?)
+# Con: we have many tables that are not interesting (e.g., MIP solver for SAT mode)
+# Alternative: have a mapping of which solvers apply to which modes and generate only those tables
+# e.g., solver_mode_map = {"gecode": ["CP", "SAT"], "gurobi": ["MIP"], ...}
+# Then loop over that mapping to generate only relevant tables.
+# user can choose for which models to generate the tables and whether he wants both the decision and
+# optimization tables or just one of the two, but not which solver, those will be predefined for each model

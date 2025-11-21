@@ -85,7 +85,7 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
                         and solver, or all models with all search strategies,
                         think of a modular solution
                         '''
-                        #print()
+                        # print(model_path)
                         sts = Model(model_path)
                         # Find the MiniZinc solver configuration for Gecode
                         solver = Solver.lookup(s_name)
@@ -105,9 +105,10 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
                         output_dir.mkdir(parents=True, exist_ok=True)
                         json_file_path = output_dir / f"{t}.json"
 
-                        print(result.status)
+                        # print(result.status)
                         # SATISFIED
                         # UNSATISFIABLE
+                        # UNKNOWN
 
 
                         # print(result.statistics)
@@ -135,7 +136,7 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
                             if obj == "optimization":
                                 tokens = f'{result.solution}'.split('\n')
                                 obj_value = tokens[0].split('=')[1].strip()
-                                print(type(tokens[1:]))
+                                #print(type(tokens[1:]))
                                 array_res = '\n'.join(tokens[1:]).strip() 
                                 array_res = ast.literal_eval(array_res)
                             else:
@@ -152,13 +153,14 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="CP CLI")
     parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"))
-    parser.add_argument("--solver", type=List[str], default=["gecode", "chuffed"],
-                        help="gecode | chuffed")
+    parser.add_argument("--solver", type=str, nargs="+", default=["gecode", "chuffed"],
+                        choices=["gecode", "chuffed"], help="gecode | chuffed")
     parser.add_argument("--obj", type=str, default="BOTH",
                         help="true | false | both |")
     parser.add_argument("--sb", type=str, default="BOTH",
                         help="true | false | both")
-    parser.add_argument("--search", type=str, default=["base", "ff", "DWD+min", "DWD+rand"],
+    parser.add_argument("--search", nargs="+", type=str, default=["base", "ff", "DWD+min", "DWD+rand"],
+                        choices=["base", "ff", "DWD+min", "DWD+rand"],
                         help="base | ff | DWD+min | DWD+rand")
 
     args = parser.parse_args()
