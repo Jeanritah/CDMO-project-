@@ -89,5 +89,18 @@
                 ]
             ]
         ]
+    },
+    "gecode_decision_!sb_DWD+rand": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": [
+            [
+                [
+                    1,
+                    2
+                ]
+            ]
+        ]
     }
 }
