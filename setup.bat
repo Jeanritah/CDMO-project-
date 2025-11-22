@@ -1,0 +1,9 @@
+@echo off
+echo Building Docker image...
+docker-compose build
+
+echo Starting container...
+docker-compose up -d
+
+echo Entering container...
+docker exec -it cdmo-dev bash
