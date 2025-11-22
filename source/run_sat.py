@@ -1,58 +1,44 @@
-#TODO# function to transform time from milliseconds to seconds
-	
-# By the definition of the floor function, the correct way to approach this problem is:
-# divide the time in milliseconds by 1000 (if your solver returns time in milliseconds)
-# apply the function floor to it
+import argparse
+import sys
+import os
+from SAT.solver_sat import ensure_folders, solve_all, json_write
 
-"""
-run_<model>.py
-================
-Module for the <MODEL> approach.
-
-This file defines a `main()` function that is compatible with source/main.py.
-
-Expected Function Signature:
-----------------------------
-def main(input_path: str) -> dict:
-    Reads the input file, runs the solver, and returns a dictionary with the results.
-
-output: "Result saved to {output_path}"
-"""
-#from utils.utils import save_result  # Optional helper if you have one
-
-def main(range: tuple[float, float]):
-    """
-    Run the <MODEL> with a specific solver on the given input.
-
-    Args:
-        input_path (str): Path to the input file.
-
-    Returns:
-        dict: A dictionary containing solver results.
-    """
-
-    # 1️⃣ Parse the arguments/input data
-
-    # 2️⃣ Build the model (this depends on your solver)
-
-    # 3️⃣ Solve the problem
-    # call save_result() to save the output to json files following project 
-    # requirements
-
-    # 4️⃣ Construct the output 
-
-    result = "This is the SAT runner!"
-
-    lower, upper = range
+def main(range_values: tuple[float, float]):
+    lower, upper = range_values
     print(f"Running SAT on range {lower}-{upper}")
-    # ... solver code ...
-    return result
+
+    results = {}
+
+    for n in range(6, 18, 2):
+        if not (lower <= n <= upper):
+            continue
+
+        print(f"Running SAT for n = {n} ...")
+
+        data = solve_all(n)
+
+        json_write(n, data)
+
+        print(f"Saved result for n={n}")   # ← FIXED (replaces print(path))
+
+        results[n] = data
+
+    return results
+
+
 
 if __name__ == "__main__":
-    import argparse
-
     parser = argparse.ArgumentParser(description="SAT CLI")
-    parser.add_argument("--range", type=float, nargs=2, required=True, metavar=("LOWER", "UPPER"))
+    parser.add_argument(
+        "--range",
+        type=float,
+        nargs=2,
+        required=False,
+        metavar=("LOWER", "UPPER"),
+        help="(ignored) Range required by main.py"
+    )
     args = parser.parse_args()
-
-    main(args.range)
+    if args.range is None:
+        main((0.0, 1.0))
+    else:
+        main(tuple(args.range))
