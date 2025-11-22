@@ -40,10 +40,10 @@ output: "Result saved to {output_path}"
 import argparse
 import subprocess
 import sys
-from CP.run_cp import main as run_cp_main
-from MIP.run_mip import main as run_mip_main
-from SAT.run_sat import main as run_sat_main
-from SMT.run_smt import main as run_smt_main
+from source.run_cp import main as run_cp_main
+from source.run_mip import main as run_mip_main
+from source.run_sat import main as run_sat_main
+from source.run_smt import main as run_smt_main
 
 #TODO add a method that transforms single instances results into a table if the
 # number of models is > 1. The table should have the following format:
