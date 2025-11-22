@@ -40,11 +40,11 @@ output: "Result saved to {output_path}"
 import argparse
 import subprocess
 import sys
-from source.run_cp import main as run_cp_main
-from source.MIP.run_mip import main as run_mip_main
-from SAT.run_sat import main as run_sat_main
-from SMT.run_smt import main as run_smt_main
-from utils.utils import convert_to_range
+from run_cp import main as run_cp_main
+from run_mip import main as run_mip_main
+from run_sat import main as run_sat_main
+from run_smt import main as run_smt_main
+from utils import utils
 
 #TODO add a method that transforms single instances results into a table if the
 # number of models is > 1. The table should have the following format:
@@ -67,7 +67,7 @@ def main():
 
     parser.add_argument(
         "--range",
-        type=float,
+        type=int,
         nargs=2,
         metavar=('LOWER', 'UPPER'),
         required=True,
@@ -92,10 +92,11 @@ def main():
     results = {}
 
     for mode in args.mode:
-        teams = convert_to_range(args.range)
+        teams = utils.convert_to_range(args.range)
         # this function should call also other parameters, but parameters change depending on the model...
         # how to solve this? 
         # If no additional parameter is added the model is run on all possible configurations for that model
+        
         result = model_functions[mode](teams)
         results[mode] = result
         print(f"{mode} result:", result)

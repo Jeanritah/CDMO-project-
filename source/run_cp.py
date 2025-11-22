@@ -47,7 +47,7 @@ def extract_obj_flags(objective: str) -> str:
     return flags
 #-------------------------------------------------------------------------------   
 
-def main(teams: List[int], sb_flags: List[str], obj_flags: List[str], 
+def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[str]=["decision", "optimization"], 
         search_strategies: List[str] = ["base", "ff", "DWD+min", "DWD+rand"],
         solver_names:List[str]=["gecode", "chuffed"]) -> None:
     """
