@@ -39,7 +39,7 @@ def extract_sb_flags(sb: str) -> str:
 def extract_obj_flags(objective: str) -> str:
     objective = objective.upper()
     if objective == "TRUE":
-        flags = ["optimization"]
+        flags = ["obj"]
     elif objective == "BOTH":
         flags = ["decision", "optimization"]
     else:  # objective == "FALSE"
@@ -75,6 +75,7 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
                         continue
 
                     model_path = os.path.join(os.path.join(dir_path, f"{obj}"), f"cp_{sb}_{strategy}.mzn")
+                    print(f"Running model with solver: {s_name} for obj: {obj}, sb: {sb}, strategy: {strategy}")
                     for t in teams:
                         '''
                         Possible parameters to consider:
@@ -145,8 +146,16 @@ def main(teams: List[int], sb_flags: List[str], obj_flags: List[str],
                                 array_res = ast.literal_eval(str(result.solution))
                             
                         # object field need to be modified after each execution
-                        utils.save_result(seconds, array_res, json_file_path, obj=obj_value, solver_name=f"{s_name}_{obj}_{sb}_{strategy}")
+                        utils.save_result(seconds, array_res, json_file_path, obj=obj_value, solver_name=f"{s_name}_{convert_obj_to_flag(obj)}_{sb}_{strategy}")
                         print(f"Result saved to {json_file_path}")
+
+def convert_obj_to_flag(obj: str) -> str:
+    obj = obj.upper()
+    if obj == "OPTIMIZATION":
+        flag = "obj"
+    else:  # obj == "BOTH"
+        flag = "!obj"
+    return flag
 
 
 if __name__ == "__main__":
