@@ -139,7 +139,8 @@ This checks:
 
 
 
- Project Overview — SMT Model for Sports Tournament Scheduling
+# Project Overview
+SMT Model for Sports Tournament Scheduling
 
 The Sports Tournament Scheduling (STS) problem consists of generating a valid round-robin tournament in which every team plays every other team exactly once, subject to additional fairness and structural constraints.
 This problem is combinatorial and grows rapidly in complexity as the number of teams increases, making it a classical benchmark for constraint programming and SMT solving.
@@ -187,12 +188,4 @@ SMT is well-suited for STS because:
 This makes SMT an effective and transparent approach for small- and medium-sized tournament sizes.
 
 
-
-
-
-
-
-
-
-# Project Overview
 
