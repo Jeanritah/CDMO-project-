@@ -1,130 +1,79 @@
-# CDMO_Project/source/SMT/smt_experiments.py
-from z3 import *
+# smt_experiments.py
+# Read SMT JSON results from res/SMT and print a summary table.
+
 import json
 import os
-import time
-from smt_aligned import create_smt_solver
+from math import comb
+
+
+def load_smt_result(n, key="z3_smt_decision"):
+    base_dir = os.path.dirname(__file__)
+    res_dir = os.path.join(base_dir, "res", "SMT")
+    filename = os.path.join(res_dir, f"{n}.json")
+
+    if not os.path.exists(filename):
+        print(f"[WARN] Missing file for n={n}: {filename}")
+        return None, None, None
+
+    with open(filename, "r") as f:
+        data = json.load(f)
+
+    entry = data.get(key)
+    if entry is None:
+        print(f"[WARN] Key '{key}' not found in {filename}")
+        return None, None, None
+
+    return entry.get("time"), entry.get("optimal"), entry.get("sol")
+
+
+def analyze_solution(n, sol):
+    if not sol:
+        return 0, comb(n, 2)
+
+    games = []
+    for period in sol:
+        for game in period:
+            if isinstance(game, list) and len(game) == 2:
+                games.append(tuple(game))
+
+    uniq = len(set(games))
+    expected = comb(n, 2)
+    return uniq, expected
+
+
+def classify_status(time_val, optimal, sol):
+    if time_val is None or optimal is None:
+        return "MISSING"
+
+    if not optimal and time_val == 300:
+        return "TIMEOUT"
+    if optimal and (not sol or sol == []):
+        return "UNSAT"
+    if optimal and sol:
+        return "SAT"
+    return "UNKNOWN"
+
 
 def run_smt_experiments():
-    """Run SMT experiments on multiple instance sizes"""
-    
-    # Test the same sizes as your friend's CP model
-    test_sizes = [6, 8, 10, 12, 14]
-    
-    print("=== SMT EXPERIMENTS ===")
-    print("Comparing with CP results...")
-    print(f"{'n':>3} | {'Time (s)':>8} | {'Status':>10} | {'Unique Games':>12}")
-    print("-" * 50)
-    
+    test_sizes = [4, 6, 8, 10, 12]
+
+    print("=== SMT EXPERIMENTS (decision model) ===")
+    print(f"{'n':>3} | {'time(s)':>8} | {'status':>8} | {'uniq':>6} | {'expected':>8}")
+    print("-" * 45)
+
     for n in test_sizes:
-        # Set a timeout of 5 minutes (300 seconds) like the project requires
-        solver, T, weeks, periods = create_smt_solver(n)
-        solver.set("timeout", 300 * 1000)  # 300 seconds in milliseconds
-        
-        start_time = time.time()
-        result = solver.check()
-        end_time = time.time()
-        solve_time = end_time - start_time
-        
-        if result == sat:
-            model = solver.model()
-            # Count unique games to verify
-            all_pairs = set()
-            for p in range(periods):
-                for w in range(weeks):
-                    home_val = model[T[p][w][0]].as_long()
-                    away_val = model[T[p][w][1]].as_long()
-                    all_pairs.add((home_val, away_val))
-            
-            unique_games = len(all_pairs)
-            expected_games = n * (n - 1) // 2
-            
-            status = "✅ SAT" if unique_games == expected_games else "❌ INVALID"
-            print(f"{n:3} | {solve_time:8.3f} | {status:>10} | {unique_games:4}/{expected_games:4}")
-            
-            # Save solution
-            save_solution(n, model, T, weeks, periods, solve_time)
-            
-        elif result == unsat:
-            print(f"{n:3} | {solve_time:8.3f} | {'❌ UNSAT':>10} | {'N/A':>12}")
-        else:
-            print(f"{n:3} | {solve_time:8.3f} | {'⏰ TIMEOUT':>10} | {'N/A':>12}")
-            # Save timeout result
-            save_timeout(n, solve_time)
+        time_val, optimal, sol = load_smt_result(n)
 
-def save_solution(n, model, T, weeks, periods, solve_time):
-    """Save a valid solution to JSON"""
-    solution = []
-    for w in range(weeks):
-        week_games = []
-        for p in range(periods):
-            home_val = model[T[p][w][0]].as_long()
-            away_val = model[T[p][w][1]].as_long()
-            week_games.append([home_val, away_val])
-        solution.append(week_games)
-    
-    result = {
-        "z3_smt": {
-            "time": int(solve_time),  # Floor as required
-            "optimal": True,
-            "obj": None,
-            "sol": solution
-        }
-    }
-    
-    os.makedirs("../../res/SMT", exist_ok=True)
-    filename = f"../../res/SMT/{n}.json"
-    with open(filename, 'w') as f:
-        json.dump(result, f, indent=2)
+        if time_val is None:
+            print(f"{n:3} | {'-':>8} | {'MISSING':>8} | {'-':>6} | {'-':>8}")
+            continue
 
-def save_timeout(n, solve_time):
-    """Save timeout result"""
-    result = {
-        "z3_smt": {
-            "time": 300,  # As required: time=300 means timeout
-            "optimal": False,
-            "obj": None,
-            "sol": []
-        }
-    }
-    
-    os.makedirs("../../res/SMT", exist_ok=True)
-    filename = f"../../res/SMT/{n}.json"
-    with open(filename, 'w') as f:
-        json.dump(result, f, indent=2)
+        status = classify_status(time_val, optimal, sol)
+        uniq, expected = analyze_solution(n, sol)
+        t_str = f"{time_val:.0f}" if isinstance(time_val, (int, float)) else str(time_val)
 
-def compare_with_cp():
-    """Compare SMT results with your friend's CP results"""
-    print("\n" + "="*60)
-    print("COMPARISON: SMT vs CP")
-    print("="*60)
-    print(f"{'n':>3} | {'SMT Time':>8} | {'CP Time':>8} | {'Ratio':>6}")
-    print("-" * 40)
-    
-    # Your friend's CP results from the PDF
-    cp_times = {
-        6: 0.003,
-        8: 0.004, 
-        10: 0.541,
-        12: 9.546,
-        14: 241.026
-    }
-    
-    for n in [6, 8, 10, 12, 14]:
-        smt_file = f"../../res/SMT/{n}.json"
-        if os.path.exists(smt_file):
-            with open(smt_file, 'r') as f:
-                data = json.load(f)
-                smt_time = data["z3_smt"]["time"]
-                cp_time = cp_times.get(n, "N/A")
-                
-                if smt_time != 300 and cp_time != "N/A":  # Not timeout
-                    ratio = smt_time / cp_time
-                    print(f"{n:3} | {smt_time:8.3f} | {cp_time:8.3f} | {ratio:6.1f}x")
-                else:
-                    status = "TIMEOUT" if smt_time == 300 else "N/A"
-                    print(f"{n:3} | {smt_time:8} | {cp_time:8} | {status:>6}")
+        print(f"{n:3} | {t_str:>8} | {status:>8} | {uniq:6} | {expected:8}")
+
 
 if __name__ == "__main__":
     run_smt_experiments()
-    compare_with_cp()
