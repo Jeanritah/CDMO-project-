@@ -13,6 +13,8 @@
 - [ ] adjust tables for ashmi
 - [ ] adjust tables for angela
 - [ ] end your report part!
+- [ ] check that the docker works for every part of the project
+- [ ] adjust the final readme
 - [x] check how to save time/capture messages from the solver when result is
     - [x] UNKNOWN
     - [x] UNSAT

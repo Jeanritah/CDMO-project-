@@ -1,15 +1,13 @@
-import array
 import math
-from pyexpat import model
 from typing import List
 from minizinc import Instance, Model, Solver
-import json
 import os
 from pathlib import Path
 import ast
 from utils import utils
 import argparse
 
+#TODO docstring
 """
 run_<model>.py
 ================
@@ -25,7 +23,6 @@ def main(input_path: str) -> dict:
 output: None
 """
 
-# import in main before calling main method ------------------------------------
 def extract_sb_flags(sb: str) -> str:
     sb = sb.upper()
     if sb == "TRUE":
@@ -45,7 +42,6 @@ def extract_obj_flags(objective: str) -> str:
     else:  # objective == "FALSE"
         flags = ["decision"]
     return flags
-#-------------------------------------------------------------------------------   
 
 def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[str]=["decision", "optimization"], 
         search_strategies: List[str] = ["base", "ff", "DWD+min", "DWD+rand"],
@@ -61,11 +57,6 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
 
     dir_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "CP/models")
     # print(f"Model path: {dir_path}")
-
-    ## TODO delegate responsibility to the main method so that there are less
-    # if else statements in the code of every single model
-    
-    # --------------------------------------------------------------------------
 
     for s_name in solver_names:
         for obj in obj_flags:
@@ -113,8 +104,6 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
 
 
                         # print(result.statistics)
-                        #TODO guarda come catturare UNSAT e UNKNOWN per settare variabile 
-                        # con il valore giusto
 
                         # Save result to JSON---------------------------------------------------
                         if f"{result.status}" == "UNSATISFIABLE":
