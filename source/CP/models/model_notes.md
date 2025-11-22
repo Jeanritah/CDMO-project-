@@ -6,12 +6,18 @@
   - restart type geometric
 
 # TODOS
+- [ ] connect jean part
+- [ ] connect ashmi part
+- [ ] connect angela's part
+- [ ] adjust tables for jean
+- [ ] adjust tables for ashmi
+- [ ] adjust tables for angela
+- [ ] end your report part!
 - [x] check how to save time/capture messages from the solver when result is
     - [x] UNKNOWN
     - [x] UNSAT
 - [x] URGENT: there's an error with search_strategy flags and solver choice both from command line and code itself, error was related to how command line arguments were parsed
 - [x] connect run_cp to main method, pay attention to manage well all the optional arguments &rarr; actually there's no need to connect again run_cp.py with main, the actual connnection is fine, but must be tested. You just need to write clear instruction for the professor on how to run the project and clear instructions for the github repo so it can be used for curriculum one day. Remember to fork/clone this repo in github one day!
-- [ ] end your report part!
 - [x] print which kind of combination you're trying to solve at each moment
 
 - [x] create table from a limited number of instances
