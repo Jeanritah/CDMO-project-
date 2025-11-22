@@ -42,7 +42,7 @@ import subprocess
 import sys
 from run_cp import main as run_cp_main
 from run_mip import main as run_mip_main
-from run_sat import main as run_sat_main
+#from run_sat import main as run_sat_main
 from run_smt import main as run_smt_main
 from utils import utils
 
@@ -57,11 +57,12 @@ from utils import utils
 def main():
     parser = argparse.ArgumentParser(description="Main entry point for the project.")
 
+    #TODO add SAT to default when you are sure that it works
     parser.add_argument(
         "--mode",
         choices=["CP", "MIP", "SAT", "SMT"],
         nargs="+",
-        default=["CP", "MIP", "SAT", "SMT"],
+        default=["CP", "MIP",  "SMT"],
         help="Choose one or more solving methods to run (e.g. --mode CP SMT)."
     )
 
@@ -85,7 +86,7 @@ def main():
     model_functions = {
         "CP": run_cp_main,
         "MIP": run_mip_main,
-        "SAT": run_sat_main,
+     #   "SAT": run_sat_main,
         "SMT": run_smt_main,
     }
 
