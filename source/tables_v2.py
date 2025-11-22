@@ -105,7 +105,7 @@ def extract_cell_value(entry: Optional[dict],
         t = entry.get("time", None)
         if t is None:
             return "-"
-        return f"{t:.3f}"
+        return f"{t}"
     elif metric == "obj":
         obj = entry.get("obj", None)
         if obj is None:
@@ -181,6 +181,7 @@ def build_table_for_solver_mode(
                 print("key:", key)
                 entry = data.get(key) if data else None
                 cell = extract_cell_value(entry, metric)
+                print("cell:", type(cell))
                 row_cells.append(cell)
         body_lines.append(" & ".join(row_cells) + r" \\")
 
