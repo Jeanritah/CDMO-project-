@@ -4,5 +4,11 @@
     "optimal": false,
     "obj": null,
     "sol": []
+  },
+  "z3_smt_opt": {
+    "time": 300,
+    "optimal": false,
+    "obj": null,
+    "sol": []
   }
 }

@@ -1,128 +1,142 @@
-# CDMO_Project/source/SMT/smt_optimized.py
+# smt_optimized.py
+# SMT optimization model for the STS problem
+# Objective: minimize the maximum home/away imbalance over all teams.
+
 from z3 import *
-import json
-import os
+import argparse
 import time
 
-def create_optimized_smt_solver(n):
+# Reuse model-building + JSON utilities from the decision file
+from smt_aligned import create_smt_solver, extract_solution, save_to_json
+
+
+def create_optimized_model(n):
     """
-    Optimized SMT solver with better strategies
+    Build an Optimize() model starting from the decision constraints
+    in create_smt_solver(n), and then add the home/away balance
+    objective: minimize max_i |2*h_i - (n-1)|.
+
+    Returns:
+        opt      : Optimize object
+        T        : 3D array of game variables (same as in smt_aligned)
+        weeks    : number of weeks
+        periods  : number of periods
+        D        : Z3 Int, the max imbalance variable
     """
-    print(f"Creating OPTIMIZED SMT solver for n={n} teams...")
-    
-    # Create solver with better tactics
-    s = Solver()
-    
-    # Use different solving strategy
-    s.set("timeout", 300 * 1000)
-    s.set("auto_config", False)
-    s.set("smt.phase_selection", 5)  # Random phase selection
-    
-    weeks = n - 1
-    periods = n // 2
-    
-    # Create variables (same structure)
-    T = []
-    for p in range(periods):
-        period_games = []
-        for w in range(weeks):
-            home_var = Int(f'T_{p}_{w}_home')
-            away_var = Int(f'T_{p}_{w}_away')
-            period_games.append([home_var, away_var])
-        T.append(period_games)
-    
-    # Domain constraints
-    for p in range(periods):
-        for w in range(weeks):
-            home, away = T[p][w]
-            s.add(home >= 1, home <= n)
-            s.add(away >= 1, away <= n)
-            s.add(home != away)
-            s.add(home < away)  # Symmetry breaking
-    
-    # Fix first game
-    if periods > 0 and weeks > 0:
-        s.add(T[0][0][0] == 1)
-        s.add(T[0][0][1] == 2)
-    
-    # OPTIMIZATION 1: More efficient weekly constraints
-    for w in range(weeks):
-        week_teams = []
+    print(f"Creating OPTIMIZED SMT model for n={n} teams...")
+
+    # First, build the plain decision model (constraints only)
+    base_solver, T, weeks, periods = create_smt_solver(n)
+
+    # Create an Optimize instance and copy all decision constraints
+    opt = Optimize()
+    for c in base_solver.assertions():
+        opt.add(c)
+
+    # --- Objective modelling ---
+
+    # h_i = number of home matches for team i
+    home_vars = []
+    for team in range(1, n + 1):
+        h = Int(f"h_{team}")
+        home_count_terms = []
+
         for p in range(periods):
-            week_teams.append(T[p][w][0])
-            week_teams.append(T[p][w][1])
-        s.add(Distinct(week_teams))
-    
-    # OPTIMIZATION 2: Alternative unique games encoding
-    all_games = []
-    for p in range(periods):
-        for w in range(weeks):
-            home, away = T[p][w]
-            # Use simpler encoding
-            all_games.append(home * 100 + away)  # Assuming n < 100
-    
-    s.add(Distinct(all_games))
-    
-    # OPTIMIZATION 3: More efficient period constraints
-    for team in range(1, n+1):
-        for p in range(periods):
-            period_appearances = []
             for w in range(weeks):
                 home, away = T[p][w]
-                period_appearances.append(If(Or(home == team, away == team), 1, 0))
-            s.add(sum(period_appearances) <= 2)
-    
-    return s, T, weeks, periods
+                home_count_terms.append(If(home == team, 1, 0))
 
-def run_optimized_experiments():
-    """Run experiments with optimized model"""
-    
-    test_sizes = [6, 8, 10, 12]
-    
-    print("=== OPTIMIZED SMT EXPERIMENTS ===")
-    print(f"{'n':>3} | {'Time (s)':>8} | {'Status':>10}")
-    print("-" * 30)
-    
-    for n in test_sizes:
-        solver, T, weeks, periods = create_optimized_smt_solver(n)
-        
-        start_time = time.time()
-        result = solver.check()
-        end_time = time.time()
-        solve_time = end_time - start_time
-        
-        if result == sat:
-            print(f"{n:3} | {solve_time:8.3f} | {'✅ SAT':>10}")
-            save_optimized_solution(n, solver.model(), T, weeks, periods, solve_time)
-        elif result == unsat:
-            print(f"{n:3} | {solve_time:8.3f} | {'❌ UNSAT':>10}")
-        else:
-            print(f"{n:3} | {solve_time:8.3f} | {'⏰ TIMEOUT':>10}")
+        opt.add(h == Sum(home_count_terms))
+        home_vars.append(h)
 
-def save_optimized_solution(n, model, T, weeks, periods, solve_time):
-    """Save optimized solution"""
-    solution = []
-    for w in range(weeks):
-        week_games = []
-        for p in range(periods):
-            home_val = model[T[p][w][0]].as_long()
-            away_val = model[T[p][w][1]].as_long()
-            week_games.append([home_val, away_val])
-        solution.append(week_games)
-    
-    result = {
-        "z3_smt_optimized": {
-            "time": int(solve_time),
-            "optimal": True,
-            "obj": None,
-            "sol": solution
-        }
-    }
-    
-    os.makedirs("../../res/SMT", exist_ok=True)
-    filename = f"../../res/SMT/{n}_optimized.json"
-    with open(filename, 'w') as f:
-        json.dump(result, f, indent=2)
+    # For each team, diff_i >= |2*h_i - (n-1)|
+    # and D >= diff_i, and minimize D.
+    D = Int("D")
+    opt.add(D >= 0)
+
+    for team in range(1, n + 1):
+        h = home_vars[team - 1]
+        expr = 2 * h - (n - 1)       # 2*h_i - (n-1)
+        diff = Int(f"diff_{team}")
+        opt.add(diff >= expr)
+        opt.add(diff >= -expr)
+        opt.add(diff >= 0)
+        opt.add(D >= diff)
+
+    # Objective: minimize the maximum imbalance D
+    opt.minimize(D)
+
+    print("✅ Optimization model created (same constraints as decision + objective)")
+    return opt, T, weeks, periods, D
+
+
+def run_optimized(n):
+    """
+    Run the optimization model for n teams and save results to JSON
+    under key 'z3_smt_opt'.
+    """
+    print(f"\n=== SMT OPTIMIZATION MODEL for n={n} ===")
+
+    if n % 2 != 0 or n < 2:
+        raise ValueError("Number of teams n must be an even integer >= 2")
+
+    opt, T, weeks, periods, D = create_optimized_model(n)
+
+    # Timeout: 300 seconds
+    opt.set(timeout=300000)
+
+    print("\n🔍 Solving (with objective)...")
+    start = time.time()
+    result = opt.check()
+    end = time.time()
+    runtime = end - start
+
+    print(f"⏱ Runtime: {runtime:.3f} seconds")
+
+    result_key = "z3_smt_opt"
+
+    if result == sat:
+        print("✅ SAT - Feasible solution found (objective minimized).")
+        model = opt.model()
+
+        # Objective value (more robust)
+        try:
+            D_val = model[D].as_long()
+        except Exception:
+            D_val = None
+        print(f"🎯 Max home/away imbalance D* = {D_val}")
+
+        # Pretty-print schedule by weeks
+        print("\n🏆 OPTIMAL SCHEDULE (grouped by weeks)")
+        print("=" * 50)
+        for w in range(weeks):
+            print(f"Week {w+1}: ", end="")
+            for p in range(periods):
+                home_val = model[T[p][w][0]].as_long()
+                away_val = model[T[p][w][1]].as_long()
+                print(f"{home_val}vs{away_val} ", end="")
+            print()
+
+        sol = extract_solution(n, model, T, weeks, periods)
+        # optimal=True because Optimize found a model for the formulated objective
+        save_to_json(n, result_key, runtime, True, D_val, sol)
+
+    elif result == unsat:
+        print("❌ UNSAT - No solution exists (this should not happen for valid instances).")
+        save_to_json(n, result_key, runtime, True, None, [])
+
+    else:
+        print("⏰ UNKNOWN - Timeout or indeterminate (no proven optimum).")
+        # We treat this as non-optimal; no schedule stored
+        save_to_json(n, result_key, 300, False, None, [])
+
 
 if __name__ == "__main__":
-    run_optimized_experiments()
+    parser = argparse.ArgumentParser(
+        description="SMT Optimization Model for Round-Robin Scheduling"
+    )
+    parser.add_argument("--teams", type=int, required=True,
+                        help="Number of teams (even n)")
+    args = parser.parse_args()
+
+    run_optimized(args.teams)
