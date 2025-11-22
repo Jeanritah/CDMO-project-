@@ -16,6 +16,8 @@
 - [ ] create table from a limited number of instances
 - [ ] correct table.py so that it understands from the json whether the instance was UNSAT or UNKNOWN and outputs the correct keywords in the table:
 
+- [ ] generazione files .json no decision optimization bensì obj e !obj
+
     json output example
     ![alt text](<WhatsApp Image 2025-11-18 at 12.18.41_2b41fce7.jpg>)
     table example for the report

@@ -1,5 +1,5 @@
 {
-    "gecode_decision_sb_base": {
+    "gecode_!obj_sb_base": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -282,7 +282,7 @@
             ]
         ]
     },
-    "gecode_decision_sb_ff": {
+    "gecode_!obj_sb_ff": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -565,7 +565,7 @@
             ]
         ]
     },
-    "gecode_decision_sb_DWD+min": {
+    "gecode_!obj_sb_DWD+min": {
         "time": 3,
         "optimal": true,
         "obj": null,
@@ -848,7 +848,7 @@
             ]
         ]
     },
-    "gecode_decision_sb_DWD+rand": {
+    "gecode_!obj_sb_DWD+rand": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -1131,19 +1131,19 @@
             ]
         ]
     },
-    "gecode_decision_!sb_base": {
+    "gecode_!obj_!sb_base": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "gecode_decision_!sb_ff": {
+    "gecode_!obj_!sb_ff": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "gecode_decision_!sb_DWD+min": {
+    "gecode_!obj_!sb_DWD+min": {
         "time": 7,
         "optimal": true,
         "obj": null,
@@ -1426,7 +1426,7 @@
             ]
         ]
     },
-    "gecode_decision_!sb_DWD+rand": {
+    "gecode_!obj_!sb_DWD+rand": {
         "time": 45,
         "optimal": true,
         "obj": null,
@@ -1709,19 +1709,19 @@
             ]
         ]
     },
-    "gecode_optimization_sb_DWD+rand": {
+    "gecode_obj_sb_DWD+rand": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "gecode_optimization_!sb_DWD+rand": {
+    "gecode_obj_!sb_DWD+rand": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "chuffed_decision_sb_base": {
+    "chuffed_!obj_sb_base": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -2004,7 +2004,7 @@
             ]
         ]
     },
-    "chuffed_decision_sb_ff": {
+    "chuffed_!obj_sb_ff": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -2287,7 +2287,7 @@
             ]
         ]
     },
-    "chuffed_decision_sb_DWD+min": {
+    "chuffed_!obj_sb_DWD+min": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -2570,7 +2570,7 @@
             ]
         ]
     },
-    "chuffed_decision_!sb_base": {
+    "chuffed_!obj_!sb_base": {
         "time": 38,
         "optimal": true,
         "obj": null,
@@ -2853,7 +2853,7 @@
             ]
         ]
     },
-    "chuffed_decision_!sb_ff": {
+    "chuffed_!obj_!sb_ff": {
         "time": 12,
         "optimal": true,
         "obj": null,
@@ -3136,13 +3136,13 @@
             ]
         ]
     },
-    "chuffed_decision_!sb_DWD+min": {
+    "chuffed_!obj_!sb_DWD+min": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "chuffed_optimization_sb_base": {
+    "chuffed_obj_sb_base": {
         "time": 9,
         "optimal": true,
         "obj": "1",
@@ -3425,7 +3425,7 @@
             ]
         ]
     },
-    "chuffed_optimization_sb_ff": {
+    "chuffed_obj_sb_ff": {
         "time": 20,
         "optimal": true,
         "obj": "1",
@@ -3708,19 +3708,19 @@
             ]
         ]
     },
-    "chuffed_optimization_sb_DWD+min": {
+    "chuffed_obj_sb_DWD+min": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "chuffed_optimization_!sb_base": {
+    "chuffed_obj_!sb_base": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "chuffed_optimization_!sb_ff": {
+    "chuffed_obj_!sb_ff": {
         "time": 0,
         "optimal": true,
         "obj": "1",
@@ -4003,7 +4003,7 @@
             ]
         ]
     },
-    "chuffed_optimization_!sb_DWD+min": {
+    "chuffed_obj_!sb_DWD+min": {
         "time": 300,
         "optimal": false,
         "obj": null,

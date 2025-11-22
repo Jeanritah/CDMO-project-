@@ -178,6 +178,7 @@ def build_table_for_solver_mode(
         for sb_flag in sb_flags:
             for strategy in search_strategies:
                 key = f"{solver}_{obj_flag}_{sb_flag}_{strategy}"
+                print("key:", key)
                 entry = data.get(key) if data else None
                 cell = extract_cell_value(entry, metric)
                 row_cells.append(cell)
@@ -226,7 +227,7 @@ def generate_tables_for_models(
         if model_cfg is None:
             print(f"Skipping unknown model '{model}'")
             continue
-        sb_flags = model_cfg.get("sb_flags", ["SB", "!SB"])
+        sb_flags = model_cfg.get("sb_flags", ["sb", "!sb"])
         solvers_cfg: Dict[str, Sequence[str]] = model_cfg.get("solvers", {})
 
         for solver, strategies in solvers_cfg.items():
@@ -267,8 +268,7 @@ def main():
     parser.add_argument("--models", type=str, nargs="+", default=["CP", "SAT", "MIP", "SMT"],
                         choices=["CP", "SAT", "MIP", "SMT"],
                         help="Models to generate tables for.")
-    parser.add_argument("--obj", type=bool, default=True,
-                        help="True (optimization, objective enabled) | False (decision, no objective).")
+    parser.add_argument("--obj", action="store_true", help="optimization enabled")
     parser.add_argument("--res-dir", type=str, default="res",
                         help="Base directory containing result JSON files (default ./res).")
     parser.add_argument("--out-dir", type=str, default="output",
@@ -277,8 +277,8 @@ def main():
     args = parser.parse_args()
 
     teams_range = parse_range(args.range)
-    has_objective = bool(args.obj)
-    obj_flag = "obj" if has_objective else "!obj"
+    obj_flag = "obj" if args.obj else "!obj"
+    print("obj_flag:", obj_flag)
 
     # Predefined mapping of models to solvers and their strategies
     model_definitions = {
@@ -316,7 +316,7 @@ def main():
         models=args.models,
         teams_range=teams_range,
         obj_flag=obj_flag,
-        has_objective=has_objective,
+        has_objective=args.obj,
         output_dir=args.out_dir,
         base_res_dir=args.res_dir,
         model_definitions=model_definitions
