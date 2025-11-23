@@ -6,16 +6,19 @@
   - restart type geometric
 
 # TODOS
-- [x] connect jean part
+
+- [ ] finish connecting jean's part
 - [ ] connect ashmi part
 - [ ] connect angela's part
-- [ ] adjust jean's part so that result in json is saved following the general naming rules
-- [ ] adjust tables for jean, why no result is printed
 - [ ] adjust tables for ashmi
 - [ ] adjust tables for angela
 - [ ] end your report part!
 - [ ] check that the docker works for every part of the project
 - [ ] adjust the final readme
+
+- [x] connect jean part
+- [x] adjust jean's part so that result in json is saved following the general naming rules
+- [x] adjust tables for jean, why no result is printed
 - [x] check how to save time/capture messages from the solver when result is
     - [x] UNKNOWN
     - [x] UNSAT

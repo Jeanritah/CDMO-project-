@@ -1,8 +1,8 @@
 {
   "z3_!obj_smt": {
     "time": 0,
-    "objimal": true,
-    "!obj": null,
+    "optimal": true,
+    "obj": null,
     "sol": [
       [
         [
