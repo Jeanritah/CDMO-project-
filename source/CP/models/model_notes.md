@@ -6,10 +6,11 @@
   - restart type geometric
 
 # TODOS
-- [ ] connect jean part
+- [x] connect jean part
 - [ ] connect ashmi part
 - [ ] connect angela's part
-- [ ] adjust tables for jean
+- [ ] adjust jean's part so that result in json is saved following the general naming rules
+- [ ] adjust tables for jean, why no result is printed
 - [ ] adjust tables for ashmi
 - [ ] adjust tables for angela
 - [ ] end your report part!

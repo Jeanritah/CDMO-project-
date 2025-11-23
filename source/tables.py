@@ -177,7 +177,10 @@ def build_table_for_solver_mode(
         data = load_instance_data(mode, team_size, base_dir=base_res_dir)
         for sb_flag in sb_flags:
             for strategy in search_strategies:
-                key = f"{solver}_{obj_flag}_{sb_flag}_{strategy}"
+                if strategy == "default":
+                    key = f"{solver}_{obj_flag}_{sb_flag}"
+                else:
+                    key = f"{solver}_{obj_flag}_{sb_flag}_{strategy}"
                 print("key:", key)
                 entry = data.get(key) if data else None
                 cell = extract_cell_value(entry, metric)
@@ -306,10 +309,9 @@ def main():
         },
         "SMT": {
             "solvers": {
-                "z3": ["default", "ff"],
-                "cvc5": ["default"]
+                "z3": ["default"],
             },
-            "sb_flags": ["SB", "!SB"]
+            "sb_flags": ["sb", "!sb"]
         }
     }
 

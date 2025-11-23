@@ -1,7 +1,7 @@
 {
-  "z3_smt_decision": {
+  "z3_smt_!obj": {
     "time": 0,
-    "optimal": true,
+    "objimal": true,
     "obj": null,
     "sol": [
       [
@@ -72,9 +72,9 @@
       ]
     ]
   },
-  "z3_smt_opt": {
+  "z3_smt_obj": {
     "time": 1,
-    "optimal": true,
+    "objimal": true,
     "obj": 5,
     "sol": [
       [
