@@ -1,6 +1,3 @@
-#TODO call from here the different files jean created for SMT
-#TODO print(f"Running model with solver: {s_name} for obj: {obj}, sb: {sb}, strategy: {strategy}")
-#TODO after dinner
 """
 run_<model>.py
 ================
@@ -17,16 +14,14 @@ output: "Result saved to {output_path}"
 """
 import argparse
 from typing import List
-from SMT.smt_decision_sb import decision_sb
-#TODO import missing models without dying
-# from SMT.smt_optimization_sb import optimization_sb
+from SMT.models.smt_decision_sb import decision_sb
+from SMT.models.smt_optimization_sb import optimization_sb
 from utils import utils
-#from utils.utils import save_result  # ptional helper if you have one
 
 # TODO add missing models
 model_functions = {
-    "smt_decision_sb": decision_sb,
-   # "smt_optimization_sb": optimization_sb,
+   "smt_decision_sb": decision_sb,
+   "smt_optimization_sb": optimization_sb,
     }
 
 def main(teams: List[int], obj_flags: List[str]=["decision", "optimization"], sb_flags: List[str]= ["sb", "!sb"]):

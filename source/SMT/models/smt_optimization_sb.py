@@ -2,14 +2,12 @@
 # SMT optimization model for the STS problem
 # Objective: minimize the maximum home/away imbalance over all teams.
 
-#TODO print(f"Running model with solver: {s_name} for obj: {obj}, sb: {sb}, strategy: {strategy}")
-
 from z3 import *
 import argparse
 import time
 
 # Reuse model-building + JSON utilities from the decision file
-from smt_decision_sb import create_smt_solver, extract_solution, save_to_json
+from SMT.models.smt_decision_sb import create_smt_solver, extract_solution, save_to_json
 
 
 def create_optimized_model(n):

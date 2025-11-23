@@ -1,7 +1,7 @@
 import argparse
 import sys
 import os
-from SAT.solver_sat import ensure_folders, solve_all, json_write
+#from SAT.solver_sat import ensure_folders, solve_all, json_write
 
 def main(range_values: tuple[float, float]):
     lower, upper = range_values
@@ -15,15 +15,15 @@ def main(range_values: tuple[float, float]):
 
         print(f"Running SAT for n = {n} ...")
 
-        data = solve_all(n)
+        #data = solve_all(n)
 
-        json_write(n, data)
+        #json_write(n, data)
 
         print(f"Saved result for n={n}")   # ← FIXED (replaces print(path))
 
-        results[n] = data
+        #results[n] = data
 
-    return results
+    return 0
 
 
 

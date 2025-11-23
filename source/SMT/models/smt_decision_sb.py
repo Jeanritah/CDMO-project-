@@ -123,7 +123,7 @@ def save_to_json(n, result_key, time_sec, optimal, obj_value, solution):
     # print(base_dir)
     # res_dir = os.path.join(base_dir, "res", "SMT")
     res_dir = Path('res/SMT')
-    print(res_dir)
+    # print(res_dir)
     os.makedirs(res_dir, exist_ok=True)
 
     filename = os.path.join(res_dir, f"{n}.json")
@@ -145,8 +145,7 @@ def save_to_json(n, result_key, time_sec, optimal, obj_value, solution):
     with open(filename, "w") as f:
         json.dump(data, f, indent=2)
 
-    print(f"Result saved to res\\SMT\\{n}.json")
-    print(filename)
+    print(f"Result saved to {filename}")
     # print(f"Result saved under key '{result_key}' in: {filename}")
 
 
