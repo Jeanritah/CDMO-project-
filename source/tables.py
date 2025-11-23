@@ -181,10 +181,10 @@ def build_table_for_solver_mode(
                     key = f"{solver}_{obj_flag}_{sb_flag}"
                 else:
                     key = f"{solver}_{obj_flag}_{sb_flag}_{strategy}"
-                print("key:", key)
+                # print("key:", key)
                 entry = data.get(key) if data else None
                 cell = extract_cell_value(entry, metric)
-                print("cell:", type(cell))
+                # print("cell:", cell)
                 row_cells.append(cell)
         body_lines.append(" & ".join(row_cells) + r" \\")
 

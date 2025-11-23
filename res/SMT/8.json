@@ -1,5 +1,5 @@
 {
-  "z3_smt_!obj": {
+  "z3_!obj_smt": {
     "time": 0,
     "objimal": true,
     "obj": null,
@@ -126,7 +126,7 @@
       ]
     ]
   },
-  "z3_smt_obj": {
+  "z3_obj_smt": {
     "time": 300,
     "objimal": false,
     "obj": null,
