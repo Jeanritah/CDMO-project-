@@ -3,9 +3,6 @@
 # Objective: minimize the maximum home/away imbalance over all teams.
 
 #TODO print(f"Running model with solver: {s_name} for obj: {obj}, sb: {sb}, strategy: {strategy}")
-#TODO print(f"Result saved to {output_path}")
-
-#TODO check res folder path in save_to_json function
 
 from z3 import *
 import argparse
@@ -75,7 +72,7 @@ def create_optimized_model(n):
     return opt, T, weeks, periods, D
 
 
-def run_optimized(n):
+def optimization_sb(n):
     """
     Run the optimization model for n teams and save results to JSON
     under key 'z3_smt_opt'.
@@ -136,12 +133,12 @@ def run_optimized(n):
         save_to_json(n, result_key, 300, False, None, [])
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="SMT Optimization Model for Round-Robin Scheduling"
-    )
-    parser.add_argument("--teams", type=int, required=True,
-                        help="Number of teams (even n)")
-    args = parser.parse_args()
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser(
+#         description="SMT Optimization Model for Round-Robin Scheduling"
+#     )
+#     parser.add_argument("--teams", type=int, required=True,
+#                         help="Number of teams (even n)")
+#     args = parser.parse_args()
 
-    run_optimized(args.teams)
+#     optimization_sb(args.teams)

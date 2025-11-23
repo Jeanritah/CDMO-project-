@@ -60,3 +60,31 @@ def convert_to_range(value_range: Tuple[int, int]) -> List[int]:
     lower = lower + (lower % 2)     # ensure even
     upper = upper - (upper % 2)     # ensure even
     return list(range(lower, upper + 1, 2))
+
+def extract_sb_flags(sb: str) -> str:
+    sb = sb.upper()
+    if sb == "TRUE":
+        flags = ["sb"]
+    elif sb == "BOTH":
+        flags = ["sb", "!sb"]
+    else:  # sb == "FALSE"
+        flags = ["!sb"]
+    return flags
+
+def extract_obj_flags(objective: str) -> str:
+    objective = objective.upper()
+    if objective == "TRUE":
+        flags = ["obj"]
+    elif objective == "BOTH":
+        flags = ["decision", "optimization"]
+    else:  # objective == "FALSE"
+        flags = ["decision"]
+    return flags
+
+def convert_obj_to_flag(obj: str) -> str:
+    obj = obj.upper()
+    if obj == "OPTIMIZATION":
+        flag = "obj"
+    else:  # obj == "BOTH"
+        flag = "!obj"
+    return flag

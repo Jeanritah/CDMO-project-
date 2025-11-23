@@ -23,26 +23,6 @@ def main(input_path: str) -> dict:
 output: None
 """
 
-def extract_sb_flags(sb: str) -> str:
-    sb = sb.upper()
-    if sb == "TRUE":
-        flags = ["sb"]
-    elif sb == "BOTH":
-        flags = ["sb", "!sb"]
-    else:  # sb == "FALSE"
-        flags = ["!sb"]
-    return flags
-
-def extract_obj_flags(objective: str) -> str:
-    objective = objective.upper()
-    if objective == "TRUE":
-        flags = ["obj"]
-    elif objective == "BOTH":
-        flags = ["decision", "optimization"]
-    else:  # objective == "FALSE"
-        flags = ["decision"]
-    return flags
-
 def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[str]=["decision", "optimization"], 
         search_strategies: List[str] = ["base", "ff", "DWD+min", "DWD+rand"],
         solver_names:List[str]=["gecode", "chuffed"]) -> None:
@@ -135,17 +115,8 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
                                 array_res = ast.literal_eval(str(result.solution))
                             
                         # object field need to be modified after each execution
-                        utils.save_result(seconds, array_res, json_file_path, obj=obj_value, solver_name=f"{s_name}_{convert_obj_to_flag(obj)}_{sb}_{strategy}")
+                        utils.save_result(seconds, array_res, json_file_path, obj=obj_value, solver_name=f"{s_name}_{utils.convert_obj_to_flag(obj)}_{sb}_{strategy}")
                         print(f"Result saved to {json_file_path}")
-
-def convert_obj_to_flag(obj: str) -> str:
-    obj = obj.upper()
-    if obj == "OPTIMIZATION":
-        flag = "obj"
-    else:  # obj == "BOTH"
-        flag = "!obj"
-    return flag
-
 
 if __name__ == "__main__":
 
@@ -165,7 +136,7 @@ if __name__ == "__main__":
 
     teams = utils.convert_to_range((args.range[0], args.range[1]))
 
-    sb_flags = extract_sb_flags(args.sb)
-    obj_flags = extract_obj_flags(args.obj)
+    sb_flags = utils.extract_sb_flags(args.sb)
+    obj_flags = utils.extract_obj_flags(args.obj)
 
     main(teams, obj_flags=obj_flags, sb_flags=sb_flags, search_strategies=args.search, solver_names=args.solver)

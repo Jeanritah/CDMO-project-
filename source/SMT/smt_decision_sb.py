@@ -3,9 +3,6 @@
 # Round-robin with constraints C1–C4, no optimization.
 
 #TODO print(f"Running model with solver: {s_name} for obj: {obj}, sb: {sb}, strategy: {strategy}")
-#TODO print(f"Result saved to {output_path}")
-
-#TODO wrong res folder path in save_to_json function
 
 
 from z3 import *
@@ -13,6 +10,7 @@ import argparse
 import json
 import os
 import time
+from pathlib import Path
 
 
 def create_smt_solver(n):
@@ -121,8 +119,11 @@ def save_to_json(n, result_key, time_sec, optimal, obj_value, solution):
     Save (or update) JSON file for instance n under res/SMT/n.json.
     result_key: name of this configuration, e.g. "z3_smt_decision".
     """
-    base_dir = os.path.dirname(__file__)
-    res_dir = os.path.join(base_dir, "res", "SMT")
+    # base_dir = os.path.dirname(__file__)
+    # print(base_dir)
+    # res_dir = os.path.join(base_dir, "res", "SMT")
+    res_dir = Path('res/SMT')
+    print(res_dir)
     os.makedirs(res_dir, exist_ok=True)
 
     filename = os.path.join(res_dir, f"{n}.json")
@@ -145,10 +146,11 @@ def save_to_json(n, result_key, time_sec, optimal, obj_value, solution):
         json.dump(data, f, indent=2)
 
     print(f"Result saved to res\\SMT\\{n}.json")
+    print(filename)
     # print(f"Result saved under key '{result_key}' in: {filename}")
 
 
-def test_with_all_constraints(n):
+def decision_sb(n):
     """
     Build solver, solve, print solution (if any),
     and save JSON under res/SMT/n.json using key 'z3_smt_decision'.
@@ -210,12 +212,12 @@ def test_with_all_constraints(n):
         save_to_json(n, result_key, 300, False, None, [])
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="SMT Decision Model for Round-Robin Scheduling"
-    )
-    parser.add_argument("--teams", type=int, required=True,
-                        help="Number of teams (even n)")
-    args = parser.parse_args()
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser(
+#         description="SMT Decision Model for Round-Robin Scheduling"
+#     )
+#     parser.add_argument("--teams", type=int, required=True,
+#                         help="Number of teams (even n)")
+#     args = parser.parse_args()
 
-    test_with_all_constraints(args.teams)
+#     decision_sb(args.teams)
