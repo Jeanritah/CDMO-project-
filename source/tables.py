@@ -155,7 +155,7 @@ def build_table_for_solver_mode(
     num_groups = len(sb_flags)
     total_columns = 1 + num_groups * num_strategy  # first column for team size
 
-    alignment = "l|" + "c" * (total_columns - 1)
+    alignment = "l|" + "c" * ((total_columns - 1)//2) + "|" + "c" * (total_columns - 1 - (total_columns - 1)//2)
 
     header_lines: List[str] = []
     # Top header row
@@ -190,7 +190,7 @@ def build_table_for_solver_mode(
 
     lines: List[str] = []
     if float_env:
-        lines.append(r"\begin{table}[ht]")
+        lines.append(r"\begin{table}[h!]")
         lines.append(r"\centering")
     lines.append(r"\begin{tabular}{" + alignment + "}")
     lines.extend(header_lines)
