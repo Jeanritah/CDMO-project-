@@ -298,14 +298,15 @@ def main():
                 "kissat": ["base", "phase-saving"],
                 "cadical": ["base"]
             },
-            "sb_flags": ["SB", "!SB"]
+            "sb_flags": ["sb", "!sb"]
         },
         "MIP": {
             "solvers": {
                 "gurobi": ["default"],
                 "cplex": ["default"]
+
             },
-            "sb_flags": ["SB", "!SB"]
+            "sb_flags": ["sb", "!sb"]
         },
         "SMT": {
             "solvers": {
