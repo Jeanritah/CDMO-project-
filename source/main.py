@@ -53,7 +53,7 @@ def main():
         "--mode",
         choices=["CP", "MIP", "SAT", "SMT"],
         nargs="+",
-        default=["CP", "MIP",  "SMT"],
+        default=["CP", "MIP", "SMT"],
         help="Choose one or more solving methods to run (e.g. --mode CP SMT)."
     )
 
