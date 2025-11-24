@@ -5,7 +5,7 @@
 #TODO print(f"Running model with solver: {s_name} for obj: {obj}, sb: {sb}, strategy: {strategy}")
 
 
-from z3 import *
+from z3 import Solver, Int, Distinct, If, Or, Sum, sat, unsat
 import argparse
 import json
 import os

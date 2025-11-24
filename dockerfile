@@ -37,9 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgpg-error0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PuLP and numpy
-#TODO check if we are using this z3 solver
-# RUN pip install pulp numpy z3-solver PySMT
+RUN pip install --no-cache-dir z3-solver
 
 # Install cvc5 - download binary from release page
 # Install cvc5 - choose binary matching container architecture, fallback if needed
