@@ -7,22 +7,6 @@ import ast
 from utils import utils
 import argparse
 
-#TODO docstring
-"""
-run_<model>.py
-================
-Module for the <MODEL> approach.
-
-This file defines a `main()` function that is compatible with source/main.py.
-
-Expected Function Signature:
-----------------------------
-def main(input_path: str) -> dict:
-    Reads the input file, runs the solver, and returns a dictionary with the results.
-
-output: None
-"""
-
 def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[str]=["decision", "optimization"], 
         search_strategies: List[str] = ["base", "ff", "DWD+min", "DWD+rand"],
         solver_names:List[str]=["gecode", "chuffed"]) -> None:

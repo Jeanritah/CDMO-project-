@@ -5,7 +5,7 @@
   - config random seed =42
   - restart type geometric
 
-# TODOS
+# MISSING TASKS
 
 - [ ] finish connecting jean's part
 - [ ] connect ashmi part
@@ -13,7 +13,9 @@
 - [ ] adjust tables for ashmi
 - [ ] adjust tables for angela
 - [ ] end your report part!
-- [ ] check that the docker works for every part of the project
+- [ ] check that the docker works for jean's part
+- [ ] check that the docker works for Ashmi's part
+- [ ] check that the docker works for Angela's part
 - [ ] adjust the final readme
 
 - [x] connect jean part

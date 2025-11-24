@@ -46,18 +46,9 @@ from run_sat import main as run_sat_main
 from run_smt import main as run_smt_main
 from utils import utils
 
-#TODO add a method that transforms single instances results into a table if the
-# number of models is > 1. The table should have the following format:
-# instance num | model_solver_name1 | model_solver_name2 |....| For each 
-# instance under the model_solver_nameN column the value will be: - in seconds 
-# if the time is <300 s - UNSAT if the model is UNSATISFIABLE for that specific 
-# instance - N/A if time >= 300s
-# make this output friendly for copying it into latex lately
-
 def main():
     parser = argparse.ArgumentParser(description="Main entry point for the project.")
 
-    #TODO add SAT to default when you are sure that it works
     parser.add_argument(
         "--mode",
         choices=["CP", "MIP", "SAT", "SMT"],
@@ -94,10 +85,7 @@ def main():
 
     for mode in args.mode:
         teams = utils.convert_to_range(args.range)
-        # this function should call also other parameters, but parameters change depending on the model...
-        # how to solve this? 
-        # If no additional parameter is added the model is run on all possible configurations for that model
-        
+          
         result = model_functions[mode](teams)
         results[mode] = result
         print(f"{mode} result:", result)

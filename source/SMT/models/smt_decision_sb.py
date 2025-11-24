@@ -2,9 +2,6 @@
 # Decision SMT model for the Sports Tournament Scheduling (STS) problem.
 # Round-robin with constraints C1–C4, no optimization.
 
-#TODO print(f"Running model with solver: {s_name} for obj: {obj}, sb: {sb}, strategy: {strategy}")
-
-
 from z3 import Solver, Int, Distinct, If, Or, Sum, sat, unsat
 import argparse
 import json
