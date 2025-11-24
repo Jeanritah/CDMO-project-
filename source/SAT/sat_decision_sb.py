@@ -82,11 +82,11 @@ def solve_tournament_sat_noopt(n):
 
     # Symmetry breaking
 
-    # SB1: Fix match (1,n) in week 0, team 1 home ---
+    # SB1: Fix match (1,n) in week 0, team 1 home
     s.add(home[0][n-1][0] == True)
     s.add(home[n-1][0][0] == False)
 
-    # SB2: Fix all week 0 pairings (1,n), (2,n-1), ... ---
+    # SB2: Fix all week 0 pairings (1,n), (2,n-1),...
     for i in range(1, n//2):
         j = n - 1 - i
 
