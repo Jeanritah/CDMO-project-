@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     image: cdmo-env:latest  # Keeps the built image cached so it is not rebuilt every time
 
-    container_name: cdmo_dev
+    container_name: cdmo-dev
 
     # Mount your working directory so edits on Windows show up inside the container
     volumes:
