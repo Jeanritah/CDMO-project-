@@ -3,8 +3,14 @@ run_mip.py
 ================
 Module for the MIP approach of the Sports Tournament Scheduling problem.
 
-Usage:
-    python run_mip.py --range 6 10 --solver gurobi --objective both
+Two entry points:
+-----------------
+1. CLI:
+       python run_mip.py --range 6 10 --solver gurobi --objective both
+
+2. Programmatic interface (used by main.py):
+       from run_mip import main
+       result = main([6,7,8])
 """
 
 import os
@@ -17,6 +23,16 @@ from utils import utils
 
 SOLVERS = ["gurobi", "cplex", "cbc"]
 
+# ------------------------------------------------------------
+# FIX: Absolute model directory for Docker & local consistency
+# ------------------------------------------------------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))    # source/
+MODEL_DIR = os.path.join(BASE_DIR, "MIP")                # source/MIP/
+
+
+# ------------------------------------------------------------
+# INTERNAL FUNCTION: solve for one solver/model/obj setting
+# ------------------------------------------------------------
 def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     """Runs the model for a single solver and returns a result dict."""
 
@@ -43,9 +59,8 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     if not use_obj:
         ampl.eval("minimize sample_obj: 0;")
 
-    # solver options
     ampl.setOption("solver", solver)
-    ampl.setOption("quiet", True)  # reduces AMPL output
+    ampl.setOption("quiet", True)
 
     solver_opts = "TimeLimit=300"
     if solver.lower() == "cplex":
@@ -116,47 +131,85 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     }
 
 
-def main():
+# ------------------------------------------------------------
+# SHARED LOGIC used by CLI *and* main.py
+# ------------------------------------------------------------
+def run_mip_logic(teams, solver_list, objective_choice):
+    """
+    Runs the MIP solver for all n in 'teams'.
+    solver_list: list of solver names
+    objective_choice: "true", "false", or "both"
+    """
+    results = {}
+
+    models = [
+        os.path.join(MODEL_DIR, "mip_!sb.mod"),
+        os.path.join(MODEL_DIR, "mip_sb.mod"),
+    ]
+
+    for n in teams:
+        results[n] = {}
+
+        for sol in solver_list:
+            for model in models:
+                model_suffix = "_sb" if model.endswith("_sb.mod") else "_!sb"
+
+                if objective_choice == "both":
+                    results[n][f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
+                    results[n][f"{sol}_!obj{model_suffix}"] = run_single_solver(n, sol, False, model)
+                else:
+                    use_obj = (objective_choice == "true")
+                    key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_!obj{model_suffix}"
+                    results[n][key] = run_single_solver(n, sol, use_obj, model)
+
+    return results
+
+
+# ------------------------------------------------------------
+# PROGRAMMATIC ENTRY POINT (used by main.py)
+# ------------------------------------------------------------
+def main(teams):
+    """
+    main.py will import THIS function.
+    teams: list of ints (team sizes)
+    Returns results for all n in a dict.
+    """
+    solver_list = ["gurobi"]      # default for integration
+    objective_choice = "false"    # default
+
+    return run_mip_logic(teams, solver_list, objective_choice)
+
+
+# ------------------------------------------------------------
+# CLI ENTRY POINT
+# ------------------------------------------------------------
+def main_cli():
     parser = argparse.ArgumentParser(description="MIP CLI")
-    parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"),
-                        help="Range of team sizes to run (inclusive)")
+    parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"))
     parser.add_argument("--solver", type=str, nargs="+", default=["gurobi"], choices=SOLVERS + ["all"])
     parser.add_argument("--objective", type=str, default="false",
                         choices=["true", "false", "both"])
     args = parser.parse_args()
 
     teams = utils.convert_to_range((args.range[0], args.range[1]))
-    solver_choice = args.solver
+    solver_choice = SOLVERS if "all" in args.solver else args.solver
     objective_choice = args.objective.lower()
 
-    models = ["MIP/mip_!sb.mod", "MIP/mip_sb.mod"]
+    print(f"\nRunning MIP for teams={teams}, solvers={solver_choice}, objective={objective_choice}\n")
 
-    for n in teams:
-        print(f"Running MIP for n={n}, solvers={solver_choice}, objective={objective_choice}")
-        results = {}
+    results = run_mip_logic(teams, solver_choice, objective_choice)
 
-        solvers_to_run = SOLVERS if "all" in solver_choice else solver_choice
-        for sol in solvers_to_run:
-            for model in models:
-                model_suffix = "_sb" if "_sb" in model else "_!sb"
-
-                if objective_choice == "both":
-                    results[f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
-                    results[f"{sol}_!obj{model_suffix}"] = run_single_solver(n, sol, False, model)
-                else:
-                    use_obj = objective_choice == "true"
-                    key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_!obj{model_suffix}"
-                    results[key] = run_single_solver(n, sol, use_obj, model)
-
-        out_dir = os.path.abspath("../res/MIP")
-        os.makedirs(out_dir, exist_ok=True)
+    # Save full results to res/MIP/
+    out_dir = os.path.abspath("../res/MIP")
+    os.makedirs(out_dir, exist_ok=True)
+    for n, data in results.items():
         out_path = os.path.join(out_dir, f"{n}.json")
-
         with open(out_path, "w") as f:
-            json.dump(results, f, indent=4)
+            json.dump(data, f, indent=4)
+        print(f"Saved MIP result to res/MIP/{n}.json")
 
-        print(f"Results saved to res/MIP/{n}.json")
+    print("\nDone.\n")
 
 
 if __name__ == "__main__":
-    main()
+    main_cli()
