@@ -47,14 +47,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Make python3 point to python3.11
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
 
-# Install Python packages
-RUN pip install --no-cache-dir z3-solver
-
 # Copy project files
 COPY . /CDMO
 
-# Install Python requirements
+# Install Python requirements (including amplpy)
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Install licensed solvers inside Docker using amplpy modules
+# License key is read from environment variable
+ARG AMPL_LICENSE_UUID
+ENV AMPL_LICENSE_UUID=${AMPL_LICENSE_UUID}
+RUN python3 -m amplpy.modules install gurobi \
+    && python3 -m amplpy.modules install cbc \
+    && python3 -m amplpy.modules install cplex \
+    && python3 -m amplpy.modules activate $AMPL_LICENSE_UUID
 
 # Volumes for code and results
 VOLUME ["/CDMO/res"]

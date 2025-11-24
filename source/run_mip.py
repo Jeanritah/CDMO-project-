@@ -1,3 +1,5 @@
+
+
 """
 run_mip.py
 ================
@@ -21,7 +23,7 @@ import sys
 from amplpy import ampl_notebook  # type: ignore
 from utils import utils
 
-SOLVERS = ["gurobi", "cplex", "cbc"]
+SOLVERS = ["gurobi", "cplex"]
 
 # ------------------------------------------------------------
 # FIX: Absolute model directory for Docker & local consistency
