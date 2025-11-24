@@ -26,9 +26,11 @@ SOLVERS = ["gurobi", "cplex", "cbc"]
 # ------------------------------------------------------------
 # FIX: Absolute model directory for Docker & local consistency
 # ------------------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))    # source/
-MODEL_DIR = os.path.join(BASE_DIR, "MIP")                # source/MIP/
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))    # source/
+CONTAINER_DIR = os.path.join(BASE_DIR,"..")                 #root
+MODEL_DIR = os.path.join(BASE_DIR, "MIP")                # source/MIP/
+RESULTS_DIR = os.path.join(CONTAINER_DIR,"res/MIP")   #directory to store jsons
 
 # ------------------------------------------------------------
 # INTERNAL FUNCTION: solve for one solver/model/obj setting
@@ -155,14 +157,26 @@ def run_mip_logic(teams, solver_list, objective_choice):
                 model_suffix = "_sb" if model.endswith("_sb.mod") else "_!sb"
 
                 if objective_choice == "both":
+
                     results[n][f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
                     results[n][f"{sol}_!obj{model_suffix}"] = run_single_solver(n, sol, False, model)
                 else:
+
                     use_obj = (objective_choice == "true")
                     key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_!obj{model_suffix}"
                     results[n][key] = run_single_solver(n, sol, use_obj, model)
 
     return results
+
+def save_results(results):
+
+    out_dir = RESULTS_DIR
+    os.makedirs(out_dir, exist_ok=True)
+    for n, data in results.items():
+        out_path = os.path.join(out_dir, f"{n}.json")
+        with open(out_path, "w") as f:
+            json.dump(data, f, indent=4)
+        print(f"Saved MIP result to {out_path}")
 
 
 # ------------------------------------------------------------
@@ -174,10 +188,14 @@ def main(teams):
     teams: list of ints (team sizes)
     Returns results for all n in a dict.
     """
-    solver_list = ["gurobi"]      # default for integration
-    objective_choice = "false"    # default
+    solver_list = SOLVERS     # runs all
+    objective_choice = "both"    # runs both with and without optimization
+    print(f"\nRunning MIP for teams={teams}, solvers={solver_list}, objective={objective_choice}\n")
 
-    return run_mip_logic(teams, solver_list, objective_choice)
+    results = run_mip_logic(teams, solver_list, objective_choice)
+    save_results(results)
+    
+    
 
 
 # ------------------------------------------------------------
@@ -199,16 +217,7 @@ def main_cli():
 
     results = run_mip_logic(teams, solver_choice, objective_choice)
 
-    # Save full results to res/MIP/
-    out_dir = os.path.abspath("../res/MIP")
-    os.makedirs(out_dir, exist_ok=True)
-    for n, data in results.items():
-        out_path = os.path.join(out_dir, f"{n}.json")
-        with open(out_path, "w") as f:
-            json.dump(data, f, indent=4)
-        print(f"Saved MIP result to res/MIP/{n}.json")
-
-    print("\nDone.\n")
+    save_results(results)
 
 
 if __name__ == "__main__":
