@@ -4,15 +4,16 @@ run_mip.py
 Module for the MIP approach of the Sports Tournament Scheduling problem.
 
 Usage:
-    python run_mip.py <n> --solver gurobi --objective true
-    python run_mip.py <n> --solver all --objective both
+    python run_mip.py --range 6 10 --solver gurobi --objective both
 """
 
 import os
 import json
 import time
 import argparse
-from amplpy import ampl_notebook # type: ignore
+import sys
+from amplpy import ampl_notebook  # type: ignore
+from utils import utils
 
 SOLVERS = ["gurobi", "cplex", "cbc"]
 
@@ -39,30 +40,29 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     ampl.getSet("WEEKS").setValues(range(1, n))
     ampl.getSet("PERIODS").setValues(range(1, n // 2 + 1))
 
-    # Disable objective if use_obj is False
     if not use_obj:
         ampl.eval("minimize sample_obj: 0;")
 
     # solver options
     ampl.setOption("solver", solver)
+    ampl.setOption("quiet", True)  # reduces AMPL output
+
     solver_opts = "TimeLimit=300"
-
     if solver.lower() == "cplex":
-        # Feasibility first in CPLEX
-        solver_opts += " MIPEmphasis=1"  # 1 = feasibility, 0 = balance, 2 = optimality
-        solver_opts += " threads=1"
+        solver_opts += " MIPEmphasis=1 threads=1"
     elif solver.lower() == "gurobi":
-        # Feasibility first in Gurobi
-        solver_opts += " MIPFocus=1"    # 0 = default, 1 = feasibility, 2 = optimality, 3 = best bound
-        solver_opts += " Threads=1"
-
-
+        solver_opts += " MIPFocus=1 Threads=1"
     ampl.setOption(f"{solver}_options", solver_opts)
 
-
-    # solve
+    # solve with stdout/stderr suppressed
     start_time = time.time()
-    ampl.solve()
+    with open(os.devnull, "w") as fnull:
+        old_stdout, old_stderr = sys.stdout, sys.stderr
+        sys.stdout, sys.stderr = fnull, fnull
+        try:
+            ampl.solve()
+        finally:
+            sys.stdout, sys.stderr = old_stdout, old_stderr
     end_time = time.time()
 
     x = ampl.getVariable("x")
@@ -85,34 +85,26 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
         sol_matrix.append(week_row)
 
     elapsed = int(end_time - start_time)
+    solve_result = ampl.getValue("solve_result")
+    obj_val = None
 
-    # Determine status according to your instructions
-    solve_result = ampl.getValue("solve_result")  # 0 = optimal/feasible, >0 = unknown/time limit, <0 = infeasible/UNSAT
-
-    obj_val = None  # as per instructions, obj is None in timeout or UNSAT
-
-    # UNSAT proved
     if solve_result == -1:  # UNSAT
         optimal = True
         sol_matrix = []
-        # keep actual elapsed time
-    # Timeout / no solution within limit
     elif elapsed >= 300:
         elapsed = 300
         optimal = False
         sol_matrix = []
-    else:  # feasible/optimal solution found
+    else:
         optimal = solve_result == 0
-        # objective value if active and solution exists
         try:
             obj_val = float(ampl.getObjective(0).value()) if use_obj else None
         except:
             obj_val = None
 
-    # special case for n=4 (UNSAT)
-    if n == 4:
+    if n == 4:  # special UNSAT case
         sol_matrix = []
-        optimal = True  # proven UNSAT
+        optimal = True
         obj_val = None
         elapsed = 0
 
@@ -124,55 +116,46 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     }
 
 
-
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("n", type=int)
-    parser.add_argument("--solver", type=str, default="gurobi",
-                        help="gurobi | cplex | cbc | all")
+    parser = argparse.ArgumentParser(description="MIP CLI")
+    parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"),
+                        help="Range of team sizes to run (inclusive)")
+    parser.add_argument("--solver", type=str, nargs="+", default=["gurobi"], choices=SOLVERS + ["all"])
     parser.add_argument("--objective", type=str, default="false",
-                        help="true | false | both")
+                        choices=["true", "false", "both"])
     args = parser.parse_args()
 
-    n = args.n
-    solver_choice = args.solver.lower()
+    teams = utils.convert_to_range((args.range[0], args.range[1]))
+    solver_choice = args.solver
     objective_choice = args.objective.lower()
 
-    if objective_choice not in ["true", "false", "both"]:
-        raise ValueError("Invalid --objective flag, must be true | false | both")
+    models = ["MIP/mip_!sb.mod", "MIP/mip_sb.mod"]
 
-    print(f"Running MIP for n={n}, solver={solver_choice}, objective={objective_choice}")
+    for n in teams:
+        print(f"Running MIP for n={n}, solvers={solver_choice}, objective={objective_choice}")
+        results = {}
 
-    # run solvers
-    results = {}
-    models = ["mip_!sb.mod", "mip_sb.mod"]
+        solvers_to_run = SOLVERS if "all" in solver_choice else solver_choice
+        for sol in solvers_to_run:
+            for model in models:
+                model_suffix = "_sb" if "_sb" in model else "_!sb"
 
-    solvers_to_run = SOLVERS if solver_choice == "all" else [solver_choice]
-    for sol in solvers_to_run:
-        if sol not in SOLVERS:
-            raise ValueError(f"Unknown solver: {sol}")
+                if objective_choice == "both":
+                    results[f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
+                    results[f"{sol}_!obj{model_suffix}"] = run_single_solver(n, sol, False, model)
+                else:
+                    use_obj = objective_choice == "true"
+                    key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_!obj{model_suffix}"
+                    results[key] = run_single_solver(n, sol, use_obj, model)
 
-        for model in models:
-            model_suffix = "_sb" if "_sb" in model else "_!sb"
+        out_dir = os.path.abspath("../res/MIP")
+        os.makedirs(out_dir, exist_ok=True)
+        out_path = os.path.join(out_dir, f"{n}.json")
 
-            # handle objective "both"
-            if objective_choice == "both":
-                results[f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
-                results[f"{sol}_!obj{model_suffix}"] = run_single_solver(n, sol, False, model)
-            else:
-                use_obj = objective_choice == "true"
-                key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_!obj{model_suffix}"
-                results[key] = run_single_solver(n, sol, use_obj, model)
+        with open(out_path, "w") as f:
+            json.dump(results, f, indent=4)
 
-    # save output
-    out_dir = os.path.abspath("../../res/MIP")
-    os.makedirs(out_dir, exist_ok=True)
-    out_path = os.path.join(out_dir, f"{n}.json")
-
-    with open(out_path, "w") as f:
-        json.dump(results, f, indent=4)
-
-    print(f"Results saved to {out_path}")
+        print(f"Results saved to res/MIP/{n}.json")
 
 
 if __name__ == "__main__":
