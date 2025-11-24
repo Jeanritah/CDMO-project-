@@ -141,6 +141,6 @@ for n in instances:
 
     out_path = f"res/SAT/{n}.json"
     with open(out_path, "w") as f:
-        json.dump({"z3_!obj_!opt": result}, f, indent=2)
+        json.dump({"z3_!obj_!sb": result}, f, indent=2)
 
     print(f"Saved.")
