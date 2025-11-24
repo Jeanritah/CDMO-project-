@@ -12,6 +12,8 @@ services:
       - ./:/CDMO                     # Sync project folder
       - ./res:/CDMO/res              # Persist results
       - ./source:/CDMO/source        # Persist model/code
+    env_file:
+      - .env
 
     # Enable interactive bash by default
     tty: true
