@@ -17,9 +17,7 @@ def at_most_k(vs,k):
     return AtMost(*vs,k)
 
 
-# ==========================================================
-#                SOLVER WITH STRONG FAST SB
-# ==========================================================
+# Solver
 def solve_tournament_sat(n):
     assert n % 2 == 0
     W = n - 1
@@ -31,7 +29,7 @@ def solve_tournament_sat(n):
     per  = [[[Bool(f"per_{i}_{w}_{p}") for p in range(P)]
              for w in range(W)] for i in range(n)]
 
-    # imbalance
+    # Imbalance
     home_count = [
         Sum([If(home[i][j][w],1,0)
              for j in range(n) for w in range(W) if j!=i])
@@ -44,9 +42,7 @@ def solve_tournament_sat(n):
     s = Solver()
     s.set("timeout", 300000)
 
-    # ------------------------------------------------------
     # BASE CONSTRAINTS
-    # ------------------------------------------------------
     # no self games
     for i in range(n):
         for w in range(W):
@@ -91,20 +87,13 @@ def solve_tournament_sat(n):
             s.add(at_most_k([per[i][w][p] for w in range(W)], 2))
 
 
-    # ==========================================================
-    #                FAST STRONG SYMMETRY BREAKING
-    # ==========================================================
+    # Symmetry breaking
 
-    # -----------------------------
     # SB1: Fix (1,n) in week 0, 1 home
-    # -----------------------------
     s.add(home[0][n-1][0] == True)
     s.add(home[n-1][0][0] == False)
 
-    # -----------------------------
     # SB2: Fix all week-0 pairings
-    # (i, n-i) for i = 1..n/2-1
-    # -----------------------------
     for i in range(1, n//2):
         j = n-1-i
         # force EXACT orientation, avoid OR()
@@ -116,9 +105,7 @@ def solve_tournament_sat(n):
             s.add(home[i][j][w] == False)
             s.add(home[j][i][w] == False)
 
-    # ------------------------------------------------------
-    # SOLVE EARLY FEASIBILITY
-    # ------------------------------------------------------
+    # Early feasibility
     t0 = time.time()
     r = s.check()
 
@@ -144,9 +131,7 @@ def solve_tournament_sat(n):
             "sol": extract_solution(n,W,P,m0,per,home)
         }
 
-    # ------------------------------------------------------
-    # BINARY SEARCH FOR BEST IMBALANCE
-    # ------------------------------------------------------
+    # Binary search
     low, high = 0, 2
     best_M = None
     best_model = None
@@ -203,7 +188,7 @@ def extract_solution(n,W,P,m,per,home):
     return sol
 
 
-# Run
+# Instances
 instances = [6,8,10,12,14,16,18]
 
 for n in instances:
