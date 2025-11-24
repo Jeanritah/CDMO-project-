@@ -195,5 +195,5 @@ for n in instances:
     print(f"\nSolving optimized SB model for n={n}")
     result = solve_tournament_sat(n)
     with open(f"res/SAT/{n}.json","w") as f:
-        json.dump({"z3_sb_opt":result}, f, indent=2)
+        json.dump({"z3_obj_sb":result}, f, indent=2)
     print("Saved.")
