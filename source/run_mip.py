@@ -23,7 +23,7 @@ import sys
 from amplpy import ampl_notebook  # type: ignore
 from utils import utils
 
-SOLVERS = ["gurobi", "cplex"]
+SOLVERS = ["gurobi", "cplex" , "scip"]
 
 # ------------------------------------------------------------
 # FIX: Absolute model directory for Docker & local consistency
@@ -67,11 +67,16 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     ampl.setOption("quiet", True)
 
     solver_opts = "TimeLimit=300"
+
     if solver.lower() == "cplex":
         solver_opts += " MIPEmphasis=1 threads=1"
     elif solver.lower() == "gurobi":
         solver_opts += " MIPFocus=1 Threads=1"
+    elif solver.lower() == "scip":
+        ampl.setOption('threads', 1)
+
     ampl.setOption(f"{solver}_options", solver_opts)
+
 
     # solve with stdout/stderr suppressed
     start_time = time.time()
@@ -126,6 +131,7 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
         optimal = True
         obj_val = None
         elapsed = 0
+
 
     return {
         "time": elapsed,

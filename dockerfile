@@ -58,8 +58,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 ARG AMPL_LICENSE_UUID
 ENV AMPL_LICENSE_UUID=${AMPL_LICENSE_UUID}
 RUN python3 -m amplpy.modules install gurobi \
-    && python3 -m amplpy.modules install cbc \
     && python3 -m amplpy.modules install cplex \
+    && python3 -m amplpy.modules install scip \
     && python3 -m amplpy.modules activate $AMPL_LICENSE_UUID
 
 # Volumes for code and results
