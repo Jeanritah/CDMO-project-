@@ -7,28 +7,34 @@
 
 # MISSING TASKS
 
-- [ ] missing tables for ashmi?
+THIS EVENING - ONGOING:
+- [ ] run ciplex for ashmi
+- [ ] run SMT for Jean without optimization
 
-- [ ] finish connecting jean's part
+TONIGHT/TOMORROW MORNING
+- [ ] run sat for Angela
 
-- [x] connect angela's part
-- [x] check that the docker works for Angela's part
-- [ ] adjust tables for angela
-
+TOMORROW
+- [ ] missing scip tables for ashmi
+- [ ] tables for jean: from python3 source/run_smt.py --range 2 12 --obj false --sb true 
+- [ ] check the 300 seconds issue with optimization functions (whether you gave or not a lower bound to the optimization function or not)
 - [ ] end your report part!
 - [ ] adjust the final readme
-
-- [ ] check the 300 seconds issue with optimization functions (whether you gave or not a lower bound to the optimization function or not)
-- [ ] run ciplex for ashmi
-- [ ] run sat for Angela
-- [ ] run SMT for Jean without optimization
-- [ ] run SMT for Jean with optimization
 
 - [ ] unisci output di log fra i vari programmi!
   - Running CP model with solver gecode for obj=decision, sb=sb, strategy=base
   (no strategy if the solver has no strategy)
   - Result saved under 'z3_obj_!sb' to res/SAT/8.json
 
+TOMORROW EVENING:
+- [ ] finish connecting jean's part
+- [ ] run SMT for Jean with optimization: `python3 source/run_smt.py --range 2 12 --obj true --sb both` 
+- [ ] check checklist on notion!
+
+COMPLETED:
+- [x] adjust tables for angela
+- [x] connect angela's part
+- [x] check that the docker works for Angela's part
 - [x] adjust tables for ashmi if necessary and generate them
 - [x] connect ashmi part
 - [x] check that the docker works for jean's part

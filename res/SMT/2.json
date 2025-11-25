@@ -1,0 +1,15 @@
+{
+  "z3_!obj_sb": {
+    "time": 0,
+    "optimal": true,
+    "obj": null,
+    "sol": [
+      [
+        [
+          1,
+          2
+        ]
+      ]
+    ]
+  }
+}
