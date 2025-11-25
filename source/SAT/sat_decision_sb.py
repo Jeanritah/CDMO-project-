@@ -1,5 +1,4 @@
 # Imports
-!pip install z3-solver
 import os
 os.makedirs("res/SAT", exist_ok=True)
 
@@ -18,7 +17,7 @@ def at_most_k(vs,k):
 
 
 # Solver
-def solve_tournament_sat_noopt(n):
+def solve_decision_sb(n):
     assert n % 2 == 0
     W = n - 1         # weeks
     P = n // 2        # periods
@@ -32,7 +31,7 @@ def solve_tournament_sat_noopt(n):
 
     # Solver
     s = Solver()
-    s.set("timeout", 300000)    # 5 min wall timeout
+    s.set("timeout", 300000) 
 
     # Base constraints
 
@@ -90,7 +89,7 @@ def solve_tournament_sat_noopt(n):
     for i in range(1, n//2):
         j = n - 1 - i
 
-        # Fix the ORIENTATION to avoid branching
+        # Fix the orientation to avoid branching
         s.add(home[i][j][0] == True)
         s.add(home[j][i][0] == False)
 
@@ -105,7 +104,7 @@ def solve_tournament_sat_noopt(n):
 
     if result != sat:
         return {"time": int(time.time()-t0), "optimal": True,
-                "obj": None, "sol": None}
+                "obj": None, "sol": []}
 
     m = s.model()
     sol = extract_solution(n, W, P, m, per, home)
@@ -138,14 +137,3 @@ def extract_solution(n,W,P,m,per,home):
                 sol[p][w] = [t2, t1]
 
     return sol
-
-
-# Instances
-instances=[6,8,10,12,14,16,18]
-
-for n in instances:
-    print(f"\nSolving SB model for n = {n}")
-    result = solve_tournament_sat_noopt(n)
-    with open(f"res/SAT/{n}.json","w") as f:
-        json.dump({"z3_!obj_sb":result}, f, indent=2)
-    print("Saved.")
