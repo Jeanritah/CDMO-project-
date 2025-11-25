@@ -1,5 +1,4 @@
 # Imports
-!pip install z3-solver
 import os
 os.makedirs("res/SAT", exist_ok=True)
 
@@ -17,7 +16,7 @@ def at_most_k(vs, k):
     return AtMost(*vs, k)
 
 
-def solve_tournament_sat(n):
+def solve_opt_no_sb(n):
 
     assert n % 2 == 0
     W = n - 1
@@ -115,7 +114,7 @@ def solve_tournament_sat(n):
     while low <= high:
 
         if time.time() - t0 > 300:
-            return {"time": 300, "optimal": False, "obj": None, "sol": None}
+            return {"time": 300, "optimal": False, "obj": None, "sol": []}
 
         mid = (low + high) // 2
 
@@ -138,7 +137,7 @@ def solve_tournament_sat(n):
 
     if best_model is None:
         return {"time": int(time.time() - t0),
-                "optimal": False, "obj": None, "sol": None}
+                "optimal": False, "obj": None, "sol": []}
 
     dt = int(time.time() - t0)
     sol = extract_solution(n, W, P, best_model, per, home)
@@ -161,16 +160,3 @@ def extract_solution(n, W, P, m, per, home):
             else:
                 sol[p][w] = [t2, t1]
     return sol
-
-
-# Instances
-instances = [6, 8, 10, 12, 14, 16, 18]
-
-for n in instances:
-    print(f"Solving SAT model for n = {n}")
-    result = solve_tournament_sat(n)
-
-    with open(f"res/SAT/{n}.json", "w") as f:
-        json.dump({"z3_obj_!sb": result}, f, indent=2)
-
-    print("Saved.")
