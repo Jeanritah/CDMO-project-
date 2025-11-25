@@ -8,11 +8,12 @@
 # MISSING TASKS
 
 THIS EVENING - ONGOING:
-- [ ] run ciplex for ashmi
-- [ ] run SMT for Jean without optimization
+- [x] run ciplex for ashmi
+- [x] run SMT for Jean without optimization
 
-TONIGHT/TOMORROW MORNING
-- [ ] run sat for Angela
+TOMORROW MORNING
+- [ ] make tables for angela
+- [ ] check that there is timeout for angela
 
 TOMORROW
 - [ ] missing scip tables for ashmi
