@@ -1,47 +1,23 @@
 {
-    "gurobi_obj_!sb": {
+    "scip_obj_!sb": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "gurobi_!obj_!sb": {
+    "scip_!obj_!sb": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "gurobi_obj_sb": {
+    "scip_obj_sb": {
         "time": 300,
         "optimal": false,
         "obj": null,
         "sol": []
     },
-    "gurobi_!obj_sb": {
-        "time": 300,
-        "optimal": false,
-        "obj": null,
-        "sol": []
-    },
-    "cplex_obj_!sb": {
-        "time": 300,
-        "optimal": false,
-        "obj": null,
-        "sol": []
-    },
-    "cplex_!obj_!sb": {
-        "time": 300,
-        "optimal": false,
-        "obj": null,
-        "sol": []
-    },
-    "cplex_obj_sb": {
-        "time": 300,
-        "optimal": false,
-        "obj": null,
-        "sol": []
-    },
-    "cplex_!obj_sb": {
+    "scip_!obj_sb": {
         "time": 300,
         "optimal": false,
         "obj": null,

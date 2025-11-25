@@ -1,13 +1,15 @@
-\begin{table}[ht]
+\begin{table}[h!]
 \centering
-\begin{tabular}{l|cc}
+\begin{tabular}{l|c|c}
 Teams & \multicolumn{1}{c}{z3+sb} & \multicolumn{1}{c}{z3+!sb} \\
   & default & default \\
 \hline
-2 & N/A & N/A \\
-4 & N/A & N/A \\
-6 & N/A & N/A \\
-8 & N/A & N/A \\
+2 & 0 & 0 \\
+4 & UNSAT & UNSAT \\
+6 & 0 & 0 \\
+8 & 0 & 1 \\
+10 & 75 & 315 \\
+12 & N/A & N/A \\
 \end{tabular}
 \caption{Results for z3 on model SMT (decision)}
 \label{tab:z3_SMT_!obj}

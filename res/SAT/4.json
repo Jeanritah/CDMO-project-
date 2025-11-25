@@ -1,25 +1,19 @@
 {
-    "scip_obj_!sb": {
+    "z3_!obj_sb": {
         "time": 0,
         "optimal": true,
         "obj": null,
         "sol": []
     },
-    "scip_!obj_!sb": {
+    "z3_!obj_!sb": {
         "time": 0,
         "optimal": true,
         "obj": null,
         "sol": []
     },
-    "scip_obj_sb": {
-        "time": 0,
-        "optimal": true,
-        "obj": null,
-        "sol": []
-    },
-    "scip_!obj_sb": {
-        "time": 0,
-        "optimal": true,
+    "z3_obj_sb": {
+        "time": 300,
+        "optimal": false,
         "obj": null,
         "sol": []
     }
