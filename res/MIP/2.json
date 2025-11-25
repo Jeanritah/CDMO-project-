@@ -1,5 +1,5 @@
 {
-    "gurobi_obj__!sb": {
+    "gurobi_obj_!sb": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -12,7 +12,7 @@
             ]
         ]
     },
-    "gurobi_!obj__!sb": {
+    "gurobi_!obj_!sb": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -25,7 +25,7 @@
             ]
         ]
     },
-    "gurobi_obj__sb": {
+    "gurobi_obj_sb": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -38,7 +38,7 @@
             ]
         ]
     },
-    "gurobi_!obj__sb": {
+    "gurobi_!obj_sb": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -51,7 +51,7 @@
             ]
         ]
     },
-    "cplex_obj__!sb": {
+    "cplex_obj_!sb": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -64,7 +64,7 @@
             ]
         ]
     },
-    "cplex_!obj__!sb": {
+    "cplex_!obj_!sb": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -77,7 +77,7 @@
             ]
         ]
     },
-    "cplex_obj__sb": {
+    "cplex_obj_sb": {
         "time": 0,
         "optimal": true,
         "obj": null,
@@ -90,7 +90,7 @@
             ]
         ]
     },
-    "cplex_!obj__sb": {
+    "cplex_!obj_sb": {
         "time": 0,
         "optimal": true,
         "obj": null,

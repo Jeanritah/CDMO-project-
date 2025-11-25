@@ -32,6 +32,7 @@ def load_instance_data(mode: str, team_size: int, base_dir: str = "res") -> Opti
     Expects: {base_dir}/{mode}/{team_size}.json
     """
     path = os.path.join(base_dir, mode, f"{team_size}.json")
+    # print("Loading data from:", path)
     if not os.path.isfile(path):
         return None
     try:
@@ -173,6 +174,7 @@ def build_table_for_solver_mode(
 
     body_lines: List[str] = []
     for team_size in teams:
+        # print("team_size:", team_size)
         row_cells = [str(team_size)]
         data = load_instance_data(mode, team_size, base_dir=base_res_dir)
         for sb_flag in sb_flags:
