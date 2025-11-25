@@ -7,7 +7,7 @@ services:
         AMPL_LICENSE_UUID: ${AMPL_LICENSE_UUID}  # Pass license key as build arg
     image: cdmo-env:latest          # Keeps the built image cached
 
-    container_name: cdmo-dev
+    container_name: cdmo_dev
 
     # Mount your working directory so edits on host show inside the container
     volumes:
