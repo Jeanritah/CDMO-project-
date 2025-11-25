@@ -7,7 +7,7 @@
 
 # MISSING TASKS
 
-- [ ] adjust tables for ashmi if necessary and generate them
+- [ ] missing tables for ashmi?
 
 - [ ] finish connecting jean's part
 
@@ -18,6 +18,7 @@
 - [ ] end your report part!
 - [ ] adjust the final readme
 
+- [x] adjust tables for ashmi if necessary and generate them
 - [x] connect ashmi part
 - [x] check that the docker works for jean's part
 - [x] check that the docker works for Ashmi's part
