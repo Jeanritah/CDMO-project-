@@ -1,27 +1,15 @@
-"""
-run_<model>.py
-================
-Module for the <MODEL> approach.
-
-This file defines a `main()` function that is compatible with source/main.py.
-
-Expected Function Signature:
-----------------------------
-def main(input_path: str) -> dict:
-    Reads the input file, runs the solver, and returns a dictionary with the results.
-
-output: "Result saved to {output_path}"
-"""
 import argparse
 from typing import List
 from SMT.models.smt_decision_sb import decision_sb
 from SMT.models.smt_optimization_sb import optimization_sb
+from SMT.models.smt_decision_no_sb import  test_without_symmetry
 from utils import utils
 
-# TODO add missing models
+# TODO add missing model
 model_functions = {
    "smt_decision_sb": decision_sb,
    "smt_optimization_sb": optimization_sb,
+   "smt_decision_!sb":  test_without_symmetry,
     }
 
 def main(teams: List[int], obj_flags: List[str]=["decision", "optimization"], sb_flags: List[str]= ["sb", "!sb"]):

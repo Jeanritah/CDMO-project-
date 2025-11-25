@@ -18,6 +18,12 @@
 - [ ] end your report part!
 - [ ] adjust the final readme
 
+- [ ] check the 300 seconds issue with optimization functions (whether you gave or not a lower bound to the optimization function or not)
+- [ ] run ciplex for ashmi
+- [ ] run sat for Angela
+- [ ] run SMT for Jean without optimization
+- [ ] run SMT for Jean with optimization
+
 - [x] adjust tables for ashmi if necessary and generate them
 - [x] connect ashmi part
 - [x] check that the docker works for jean's part

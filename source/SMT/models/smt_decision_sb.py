@@ -169,7 +169,7 @@ def decision_sb(n):
 
     # # print(f"⏱ Runtime: {runtime:.3f} seconds")
 
-    result_key = "z3_!obj_smt"
+    result_key = "z3_!obj_sb"
 
     if result == sat:
         # print("✅ SAT - Valid solution found!")

@@ -3,10 +3,10 @@ from pathlib import Path
 from typing import List
 from utils import utils
 
-from decision_no_sb import solve_decision_no_sb
-from decision_sb import solve_decision_sb
-from opt_no_sb import solve_opt_no_sb
-from opt_sb import solve_opt_sb
+from SAT.sat_decision_no_sb import solve_decision_no_sb
+from SAT.sat_decision_sb import solve_decision_sb
+from SAT.sat_opt_no_sb import solve_opt_no_sb
+from SAT.sat_optimization_sb import solve_opt_sb
 
 
 def normalize_obj_flags(obj: str) -> List[str]:

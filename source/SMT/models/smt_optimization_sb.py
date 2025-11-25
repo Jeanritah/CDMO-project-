@@ -93,7 +93,7 @@ def optimization_sb(n):
 
     # print(f"⏱ Runtime: {runtime:.3f} seconds")
 
-    result_key = "z3_obj_smt"
+    result_key = "z3_obj_sb"
 
     if result == sat:
         # print("✅ SAT - Feasible solution found (objective minimized).")
