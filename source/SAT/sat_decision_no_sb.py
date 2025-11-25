@@ -1,4 +1,3 @@
-!pip install z3-solver
 import os
 os.makedirs("res/SAT", exist_ok=True)
 
@@ -18,7 +17,7 @@ def at_most_k(vs, k):
     return AtMost(*vs, k)
 
 #SAT decision model
-def solve_tournament_sat(n):
+def solve_decision_no_sb(n):
     assert n % 2 == 0
     W = n - 1
     P = n // 2
@@ -93,7 +92,7 @@ def solve_tournament_sat(n):
             "time": 300,
             "optimal": False,
             "obj": None,
-            "sol": None
+            "sol": []
         }
 
     # UNSAT proven
@@ -102,7 +101,7 @@ def solve_tournament_sat(n):
             "time": t_int,
             "optimal": True,
             "obj": None,
-            "sol": None
+            "sol": []
         }
 
     # SAT case
@@ -131,16 +130,3 @@ def solve_tournament_sat(n):
         "obj": None,
         "sol": sol
     }
-
-#Instances
-instances = [6, 8, 10, 12, 14, 16, 18]
-
-for n in instances:
-    print(f"Solving SAT decision model for n = {n}")
-    result = solve_tournament_sat(n)
-
-    out_path = f"res/SAT/{n}.json"
-    with open(out_path, "w") as f:
-        json.dump({"z3_!obj_!sb": result}, f, indent=2)
-
-    print(f"Saved.")
