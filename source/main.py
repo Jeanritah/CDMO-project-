@@ -81,14 +81,15 @@ def main():
         "SMT": run_smt_main,
     }
 
-    results = {}
+    # results = {}
 
     for mode in args.mode:
         teams = utils.convert_to_range(args.range)
           
-        result = model_functions[mode](teams)
-        results[mode] = result
-        print(f"{mode} result:", result)
+        # result = 
+        model_functions[mode](teams)
+        # results[mode] = result
+        # print(f"{mode} result:", result)
 
         if args.check:
             print(f"\n=== Checking {mode} solution ===")

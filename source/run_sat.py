@@ -35,21 +35,21 @@ SOLVER_MAP = {
 }
 
 
-def main(teams: List[int], sb_flags: List[str], obj_flags: List[str]) -> None:
+def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[str]=["decision", "optimization"]) -> None:
 
     out_dir = Path("res/SAT")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print("\n=== SAT Runner ===")
-    print("Teams:", teams)
-    print("Objectives:", obj_flags)
-    print("Symmetry-breaking:", sb_flags)
+    # print("\n=== SAT Runner ===")
+    # print("Teams:", teams)
+    # print("Objectives:", obj_flags)
+    # print("Symmetry-breaking:", sb_flags)
 
     for obj in obj_flags:
         for sb in sb_flags:
 
             solver_fun = SOLVER_MAP[(obj, sb)]
-            print(f"\Running obj={obj}, sb={sb}")
+            print(f"Running SAT with obj={obj}, sb={sb}")
 
             for n in teams:
                 print(f"Solving n={n}")

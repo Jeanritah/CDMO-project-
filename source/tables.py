@@ -297,15 +297,15 @@ def main():
         },
         "SAT": {
             "solvers": {
-                "kissat": ["base", "phase-saving"],
-                "cadical": ["base"]
+                "z3": ["default"]
             },
             "sb_flags": ["sb", "!sb"]
         },
         "MIP": {
             "solvers": {
                 "gurobi": ["default"],
-                "cplex": ["default"]
+                "cplex": ["default"],
+                "scip": ["default"]
 
             },
             "sb_flags": ["sb", "!sb"]

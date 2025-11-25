@@ -11,8 +11,8 @@
 
 - [ ] finish connecting jean's part
 
-- [ ] connect angela's part
-- [ ] check that the docker works for Angela's part
+- [x] connect angela's part
+- [x] check that the docker works for Angela's part
 - [ ] adjust tables for angela
 
 - [ ] end your report part!
@@ -23,6 +23,11 @@
 - [ ] run sat for Angela
 - [ ] run SMT for Jean without optimization
 - [ ] run SMT for Jean with optimization
+
+- [ ] unisci output di log fra i vari programmi!
+  - Running CP model with solver gecode for obj=decision, sb=sb, strategy=base
+  (no strategy if the solver has no strategy)
+  - Result saved under 'z3_obj_!sb' to res/SAT/8.json
 
 - [x] adjust tables for ashmi if necessary and generate them
 - [x] connect ashmi part
