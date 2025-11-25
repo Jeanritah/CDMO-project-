@@ -1,31 +1,32 @@
 import ast
 import json
 import os
+from typing import List, Tuple
 
 #trying to do a pull request for demo purposes
 
-def save_result(end_time:float, sol:str, file_path, obj=None, optimal=True, solver_name="gecode"):
+def save_result(tot_time:int, sol:str, file_path:str, obj=None, solver_name="gecode"):
     """
     Save the result to a JSON file under a solver key (e.g. 'gecode', 'chuffed').
     If the file exists, update or add the solver result.
 
     Args:
         solver_name (str): Name of the solver (used as key in the JSON file).
-        end_time (float): The time the computation ended.
+        tot_time (int): The time the computation took in seconds.
         sol (any): The solution to be saved.
         file_path (str): Path to the JSON file.
         obj (float, optional): Objective function value. Defaults to None without an objective function,
-        optimal (bool, optional): Whether the solution is optimal. Defaults to True.
     """
-    #TODO check whether time is optimal or not and eventually override default value
-    #TODO By the definition of the floor function, the correct way to approach this problem is:
-    # divide the time in milliseconds by 1000 (if your solver returns time in milliseconds)
-    # apply the function floor to it
 
     sol = ast.literal_eval(str(sol))
 
+    if tot_time < 300:
+        optimal = True
+    else:
+        optimal = False
+
     new_result = {
-        "time": end_time,
+        "time": tot_time,
         "optimal": optimal,
         "obj": obj,
         "sol": sol
@@ -46,7 +47,16 @@ def save_result(end_time:float, sol:str, file_path, obj=None, optimal=True, solv
     # Update or add new solver result
     data[solver_name] = new_result
 
-    #TODO check how the overwriting works (in case of multiple solvers)
     # Write back to file
     with open(file_path, "w") as outfile:
         json.dump(data, outfile, indent=4)
+
+def convert_to_range(value_range: Tuple[int, int]) -> List[int]:
+    """
+    Convert (lower, upper) bounds to an inclusive list of even integers.
+    Ensures both bounds are even, then steps by 2.
+    """
+    lower, upper = value_range
+    lower = lower + (lower % 2)     # ensure even
+    upper = upper - (upper % 2)     # ensure even
+    return list(range(lower, upper + 1, 2))
