@@ -4,5 +4,11 @@
     "optimal": false,
     "obj": null,
     "sol": []
+  },
+  "z3_!obj_!sb": {
+    "time": 300,
+    "optimal": false,
+    "obj": null,
+    "sol": []
   }
 }
