@@ -1,5 +1,4 @@
 # Imports
-!pip install z3-solver
 import os
 os.makedirs("res/SAT", exist_ok=True)
 
@@ -14,11 +13,11 @@ def exactly_k(vs,k):
     return And(AtLeast(*vs,k), AtMost(*vs,k))
 
 def at_most_k(vs,k):
-    return AtMost(*vs,k)
+  return AtMost(*vs,k)
 
 
 # Solver
-def solve_tournament_sat(n):
+def solve_opt_sb(n):
     assert n % 2 == 0
     W = n - 1
     P = n // 2
@@ -96,7 +95,6 @@ def solve_tournament_sat(n):
     # SB2: Fix all week-0 pairings
     for i in range(1, n//2):
         j = n-1-i
-        # force EXACT orientation, avoid OR()
         s.add(home[i][j][0] == True)
         s.add(home[j][i][0] == False)
 
@@ -110,7 +108,7 @@ def solve_tournament_sat(n):
     r = s.check()
 
     if r != sat:
-        return {"time":300, "optimal":False, "sol":None}
+        return {"time":300, "optimal":False, "sol":[]}
 
     m0 = s.model()
 
@@ -186,14 +184,3 @@ def extract_solution(n,W,P,m,per,home):
             else:
                 sol[p][w] = [t2,t1]
     return sol
-
-
-# Instances
-instances = [6,8,10,12,14,16,18]
-
-for n in instances:
-    print(f"\nSolving optimized SB model for n={n}")
-    result = solve_tournament_sat(n)
-    with open(f"res/SAT/{n}.json","w") as f:
-        json.dump({"z3_obj_sb":result}, f, indent=2)
-    print("Saved.")
