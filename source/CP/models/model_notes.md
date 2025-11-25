@@ -7,17 +7,20 @@
 
 # MISSING TASKS
 
+- [ ] adjust tables for ashmi if necessary and generate them
+
 - [ ] finish connecting jean's part
-- [ ] connect ashmi part
+
 - [ ] connect angela's part
-- [ ] adjust tables for ashmi
-- [ ] adjust tables for angela
-- [ ] end your report part!
-- [ ] check that the docker works for jean's part
-- [ ] check that the docker works for Ashmi's part
 - [ ] check that the docker works for Angela's part
+- [ ] adjust tables for angela
+
+- [ ] end your report part!
 - [ ] adjust the final readme
 
+- [x] connect ashmi part
+- [x] check that the docker works for jean's part
+- [x] check that the docker works for Ashmi's part
 - [x] connect jean part
 - [x] adjust jean's part so that result in json is saved following the general naming rules
 - [x] adjust tables for jean, why no result is printed
