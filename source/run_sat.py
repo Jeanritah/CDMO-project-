@@ -90,8 +90,8 @@ if __name__ == "__main__":
     parser.add_argument("--sb", type=str, default="BOTH",
         help="sb | !sb | both")
 
-    parser.add_argument("--search", nargs="+", type=str, default=["base"])
-    parser.add_argument("--solver", nargs="+", type=str, default=["z3"])
+    # parser.add_argument("--search", nargs="+", type=str, default=["base"])
+    # parser.add_argument("--solver", nargs="+", type=str, default=["z3"])
 
     args = parser.parse_args()
 
@@ -101,18 +101,4 @@ if __name__ == "__main__":
 
     main(teams, sb_flags, obj_flags)
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="SAT CLI")
-    parser.add_argument(
-        "--range",
-        type=int,
-        nargs=2,
-        required=False,
-        metavar=("LOWER", "UPPER"),
-        help="(ignored) Range required by main.py"
-    )
-    args = parser.parse_args()
-    if args.range is None:
-        main((0.0, 1.0))
-    else:
-        main(tuple(args.range))
+#TODO check that after the if main deletion the code still works

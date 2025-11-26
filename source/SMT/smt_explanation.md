@@ -20,14 +20,32 @@ No other dependencies are required.
 ## **2. File Structure**
 
 ```
-CDMO-project/
-│
-├── smt_aligned.py
-├── smt_optimized.py
-├── smt_experiments_final.py
-├── validate_solutions.py
-│
-└── res/SMT/n.json     (generated results)
+CDMO-PROJECT/
+├── .vscode/
+├── output/
+├── res/
+│   ├── CP/
+│   ├── MIP/
+│   ├── SAT/
+│   └── SMT/
+├── source/
+│   ├── CP/
+│   │   └── models/
+│   ├── MIP/
+│   ├── SAT/
+│   ├── SMT/
+│   └── utils/
+│       ├── __init__.py
+│       ├── utils.py
+│       ├── main.py
+│       ├── run_cp.py
+│       ├── run_mip.py
+│       ├── run_sat.py
+│       ├── run_smt.py
+│       ├── solution_checker.py
+│       └── tables.py
+├── venv/
+└── .dockerignore
 ```
 
 ---

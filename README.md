@@ -1,85 +1,134 @@
 # Build and Run Instructions
 
-## How to use docker:
+This project implements four modelling approaches (**CP**, **SAT**, **SMT**, **MIP**).
+All experiments—single-instance execution or full-batch runs—can be reproduced **without modifying the source code**, using only command-line arguments.
 
-0. You need Python, pip and docker installed.
-1. Run the setup script in order to build the container
-    (This step is needed everytime the code is edited).
+## 1. Project Structure
 
-    On windows CMD:
-    ```ps
+```
+source/
+|___CP/
+    SAT/
+    SMT/
+    MIP/
+    main.py
+    run_cp.py
+    run_sat.py
+    run_smt.py
+    run_mip.py
+    solution_checker.py
+Dockerfile
+setup.sh
+setup.bat
+README.md
+```
+
+Each model is implemented inside its own subfolder (`source/CP`, `source/SMT`, etc.).
+The `Dockerfile` builds an image capable of running all models.
+
+## 2. Building and Running the Docker Environment
+
+0. You need Python, pip and docker installed. 
+1. Run the setup script in order to build the container (This step is needed everytime the code is edited). On windows CMD:
+```ps
     setup.bat
-    ```
-    On MacOS/Linux:
-    ```ps
+```
+On MacOS/Linux:
+```ps
     bash setup.sh
-    ```
+```
 2. Now you can execute from the terminal commands like:
-    ```ps
+```ps
     python source/main.py --mode CP SMT MIP SAT --range 1 45 --check
     python source/run_cp.py --range 1 45 --obj true
-    ```
+```
 3. To stop the container use the following commands:
-    ```ps
+```ps
     exit
     docker-compose stop
-    ```
-    In alternative to `docker-compose stop` the command `docker-compose down`
-    can be used to DELETE the container from your machine.
-
-This project can be executed either **from the top-level `main.py`** 
-(recommended) or by running **individual solvers** directly .
-
-## 1 Running All Solvers via `main.py`
-
-The `main.py` script provides a unified interface for running all models for one or multiple approaches (CP, SAT, SMT, MIP) and optionally checking their solutions.
-
-**Command Examples:**
-
-Running all models with validity check:
-```ps
-python source/main.py --mode CP SMT MIP SAT --range 1 45 --check
 ```
-Running just one approach, for ex. CP, without validity check:
-```ps
-python source/main.py --mode CP --range 1 45 --check
-```
-<span style="color: red;"><b>⚠️DO NOT RUN THE FOLLOWING COMMAND:⚠️</span>
-```bash
-cd ./source/
-python main.py --mode CP --range 1 45 --check
-```
+In alternative to docker-compose stop the command docker-compose down can be used to DELETE the container from your machine.
 
-**Explanation of arguments:**
+## 3. Running the Project
 
-* `--mode`: Specify one or more approaches to run. Choices: `CP`, `MIP`, `SAT`, `SMT`.
-* `--range`: Provide the instance range as two numbers (`LOWER UPPER`).
-* `--check`: Optional flag to check solution's validity after solving.
+The project can be executed in two ways:
 
-This command will run **all selected approaches** on the specified range and check the results automatically.
+- **3.1. Running all solver** via a the unified `main.py` interface
+- **3.2. Individual solver scripts** (`run_cp.py`, `run_sat.py`, `run_smt.py`, `run_mip.py`)
 
-## 2️ Running Individual Solvers
+### **3.1. Running All Solvers**
 
-Each solver can also be run independently. This can be useful for testing or debugging a single solver.
-
-**Command Example (Windows, CP solver):**
+`main.py` provides a single command to reproduce all experimental results.
 
 ```ps
-python source/run_cp.py --range 1 45
+python source/main.py --mode CP SAT SMT MIP --range 1 18 --check
 ```
 
-**Arguments:**
-<!-- TODO add and unify arguments in all solvers-->
+This command:
 
-* `--range`: Instance range to solve (`LOWER UPPER`).
+* Runs every solver (**CP, SAT, SMT, MIP**)
+* On all instances in the range `[1, 18]`
+* Checks each generated solution
+* Produces structured result files in each solver’s output directory
 
-## 3️ Solution Checking
+### 3.2. Running a Single Model on a Single Instance
 
-To check the validity of solver outputs separately:
+Below are examples to run a model on a single instance for each solver:
 
+**CP Example**
+
+```ps
+python source/run_cp.py --range 12 12 --solver chuffed --search ff --obj true --sb false
+```
+
+**SAT Example**
+
+```ps
+python source/run_sat.py --range 7 7 --obj false --sb both
+```
+
+**SMT Example**
+
+```ps
+python source/run_smt.py --range 3 3 --obj true
+```
+
+**MIP Example**
+
+```ps
+python source/run_mip.py --range 5 5 --solver gurobi --obj both
+```
+
+### Arguments reference
+
+**Common to All Solvers**
+
+| Argument  | Meaning                                 | Accepted Values         | Required |
+| --------- | --------------------------------------- | ----------------------- | -------- |
+| `--range` | Instance interval (`LOWER UPPER`)       | two integers            | **yes**  |
+| `--obj`   | Whether to run objective model variants | `true`, `false`, `both` | no       |
+| `--sb`    | Whether to enable symmetry breaking     | `true`, `false`, `both` | no       |
+
+**Arguments Specific to CP**
+
+| Argument   | Description       | Values                              |
+| ---------- | ----------------- | ----------------------------------- |
+| `--solver` | CP solver backend | `gecode`, `chuffed`                 |
+| `--search` | Search heuristic  | `base`, `ff`, `DWD+min`, `DWD+rand` |
+
+**Arguments Specific to MIP**
+
+| Argument   | Description        | Values                    |
+| ---------- | ------------------ | ------------------------- |
+| `--solver` | MIP solver backend | `scip`, `cplex`, `gurobi` |
+
+## 4. Solution Validation
+
+To separately validate the outputs produced by the different approaches, run the following command:
 ```ps
 python source/solution_checker.py <path_to_solution_directory>
 ```
-`<path_to_solution_directory>` is the directory containing `.json` solution files generated by the solvers.
+Here, <path_to_solution_directory> refers to the directory that contains the .json solution files generated by the solvers.
 
 # Project Overview
+

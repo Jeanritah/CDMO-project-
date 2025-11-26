@@ -234,8 +234,10 @@ def main_cli():
     parser = argparse.ArgumentParser(description="MIP CLI")
     parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"))
     parser.add_argument("--solver", type=str, nargs="+", default=["gurobi"], choices=SOLVERS + ["all"])
-    parser.add_argument("--objective", type=str, default="false",
+    parser.add_argument("--obj", type=str, default="false",
                         choices=["true", "false", "both"])
+    
+    #TODO add sb argument
     args = parser.parse_args()
 
     teams = utils.convert_to_range((args.range[0], args.range[1]))
