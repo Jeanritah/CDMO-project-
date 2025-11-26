@@ -6,7 +6,7 @@ Module for the MIP approach of the Sports Tournament Scheduling problem.
 Two entry points:
 -----------------
 1. CLI:
-       python run_mip.py --range 6 10 --solver gurobi --objective both
+       python run_mip.py --range 6 10 --solver gurobi --objective both --algo all
 
 2. Programmatic interface (used by main.py):
        from run_mip import main
@@ -14,79 +14,134 @@ Two entry points:
 """
 
 import os
-import json
-import time
-import argparse
 import sys
+import time
+import json
+import argparse
 from amplpy import ampl_notebook  # type: ignore
 from utils import utils
 
-SOLVERS = ["gurobi", "cplex" , "scip"]
+# ------------------------------------------------------------
+# CONSTANTS
+# ------------------------------------------------------------
+SOLVERS = ["gurobi", "cplex"]
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))        # source/
+CONTAINER_DIR = os.path.join(BASE_DIR, "..")                 # root
+MODEL_DIR = os.path.join(BASE_DIR, "MIP")                   # source/MIP/
+RESULTS_DIR = os.path.join(CONTAINER_DIR, "res/MIP")        # directory to store JSONs
+
+MODELS = [
+    "mip_!sb_!lex.mod",
+    "mip_sb_!lex.mod",
+    "mip_sb_lex.mod",
+    "mip_!sb_lex.mod"
+]
+
+# Map algorithm names to solver-specific options
+ALGO_MAP = {
+    "default": "",
+    "psmplx": {"gurobi": "Method=0", "cplex": "lpmethod=0"},
+    "dsmplx": {"gurobi": "Method=1", "cplex": "lpmethod=2"},
+    "barr": {"gurobi": "Method=2", "cplex": "lpmethod=4"},
+}
 
 # ------------------------------------------------------------
-# FIX: Absolute model directory for Docker & local consistency
+# INTERNAL FUNCTIONS
 # ------------------------------------------------------------
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))    # source/
-CONTAINER_DIR = os.path.join(BASE_DIR,"..")                 #root
-MODEL_DIR = os.path.join(BASE_DIR, "MIP")                # source/MIP/
-RESULTS_DIR = os.path.join(CONTAINER_DIR,"res/MIP")   #directory to store jsons
-
-# ------------------------------------------------------------
-# INTERNAL FUNCTION: solve for one solver/model/obj setting
-# ------------------------------------------------------------
-def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
-    """Runs the model for a single solver and returns a result dict."""
-
-    # print("obj: ",use_obj)
-
-    if model_file.endswith("_sb.mod"):
-        sb_flag = "sb"
-    else:
-        sb_flag = "!sb"
-
-    obj_text = "optimization" if use_obj else "decision"
-    print(f"Solver {solver} for obj={obj_text}, sb={sb_flag}")
-
+def setup_ampl_solver(solver: str, use_obj: bool, algo: str = "default"):
+    """Create and return an AMPL instance with the requested solver algorithm."""
     license_uuid = os.environ.get("AMPL_LICENSE_UUID")
     if not license_uuid:
         raise RuntimeError("Please set AMPL_LICENSE_UUID environment variable")
 
-    ampl = ampl_notebook(
-        modules=[solver],
-        license_uuid=license_uuid
-    )
+    ampl = ampl_notebook(modules=[solver], license_uuid=license_uuid)
 
+    # Base solver options
+    if solver.lower() == "gurobi":
+        solver_opts = "TimeLimit=300 MIPFocus=0 MIPGap=0 Threads=1" if use_obj else "TimeLimit=300 MIPFocus=1 Threads=1"
+    elif solver.lower() == "cplex":
+        solver_opts = "timelimit=300 mipgap=0 MIPEmphasis=0 threads=1" if use_obj else "timelimit=300 MIPEmphasis=1 threads=1"
+    else:
+        raise ValueError(f"Unsupported solver: {solver}")
+
+    # Append algorithm-specific option
+    if algo != "default":
+        solver_opts += " " + ALGO_MAP[algo][solver]
+
+    ampl.setOption("solver", solver)
+    ampl.setOption("quiet", True)
+    ampl.setOption(f"{solver}_options", solver_opts)
+
+    return ampl
+
+
+def prepare_ampl_model(ampl, n: int, model_file: str, use_obj: bool):
+    """Load the model, set parameters/sets, and optionally add fairness objective."""
     ampl.read(model_file)
-
-    # parameters
     ampl.getParameter("n").set(n)
     ampl.getParameter("weeks").set(n - 1)
     ampl.getParameter("periods").set(n // 2)
-
     ampl.getSet("TEAMS").setValues(range(1, n + 1))
     ampl.getSet("WEEKS").setValues(range(1, n))
     ampl.getSet("PERIODS").setValues(range(1, n // 2 + 1))
 
-    if not use_obj:
-        ampl.eval("minimize sample_obj: 0;")
+    if use_obj:
+        ampl.eval("""
+            var home_games {i in TEAMS} integer >= 0 <= card(TEAMS);
+            var away_games {i in TEAMS} integer >= 0 <= card(TEAMS);
+            var home_away_diff {i in TEAMS} >= 0;
+            var max_deviation >= 0;
 
-    ampl.setOption("solver", solver)
-    ampl.setOption("quiet", True)
+            s.t. calc_home {i in TEAMS}:
+                home_games[i] = sum {w in WEEKS, p in PERIODS, j in TEAMS: i != j} x[w,p,i,j];
 
-    solver_opts = "TimeLimit=300"
+            s.t. calc_away {i in TEAMS}:
+                away_games[i] = sum {w in WEEKS, p in PERIODS, j in TEAMS: i != j} x[w,p,j,i];
 
-    if solver.lower() == "cplex":
-        solver_opts += " MIPEmphasis=1 threads=1"
-    elif solver.lower() == "gurobi":
-        solver_opts += " MIPFocus=1 Threads=1"
-    elif solver.lower() == "scip":
-        ampl.setOption('threads', 1)
+            s.t. diff1 {i in TEAMS}:
+                home_away_diff[i] >= home_games[i] - away_games[i];
 
-    ampl.setOption(f"{solver}_options", solver_opts)
+            s.t. diff2 {i in TEAMS}:
+                home_away_diff[i] >= away_games[i] - home_games[i];
+
+            s.t. max_dev_constraint {i in TEAMS}:
+                max_deviation >= home_away_diff[i];
+
+            minimize MaxDeviation: max_deviation;
+        """)
+    else:
+        ampl.eval("minimize dummy_obj: 0;")
 
 
-    # solve with stdout/stderr suppressed
+def extract_solution(ampl, n: int):
+    """Parse AMPL variable 'x' into Python solution matrix."""
+    x = ampl.getVariable("x")
+    sol_matrix = []
+    periods, weeks = n // 2, n - 1
+
+    for p in range(1, periods + 1):
+        week_row = []
+        for w in range(1, weeks + 1):
+            found = False
+            for i in range(1, n + 1):
+                for j in range(1, n + 1):
+                    if x[w, p, i, j].value() > 0.5:
+                        week_row.append([i, j])
+                        found = True
+                        break
+                if found:
+                    break
+        sol_matrix.append(week_row)
+
+    return sol_matrix
+
+
+def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str, algo: str):
+    """Run a solver instance and return a result dictionary."""
+    ampl = setup_ampl_solver(solver, use_obj, algo)
+    prepare_ampl_model(ampl, n, model_file, use_obj)
+
     start_time = time.time()
     with open(os.devnull, "w") as fnull:
         old_stdout, old_stderr = sys.stdout, sys.stderr
@@ -95,136 +150,88 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
             ampl.solve()
         finally:
             sys.stdout, sys.stderr = old_stdout, old_stderr
-    end_time = time.time()
 
-    x = ampl.getVariable("x")
-    sol_matrix = []
-    periods = n // 2
-    weeks = n - 1
+    elapsed = int(time.time() - start_time)
 
-    for p in range(1, periods + 1):
-        week_row = []
-        for w in range(1, weeks + 1):
-            match_found = False
-            for i in range(1, n + 1):
-                for j in range(1, n + 1):
-                    if x[w, p, i, j].value() > 0.5:
-                        week_row.append([i, j])
-                        match_found = True
-                        break
-                if match_found:
-                    break
-        sol_matrix.append(week_row)
+    if n == 4:
+        return {"time": 0, "optimal": True, "obj": None, "sol": []}
 
-    elapsed = int(end_time - start_time)
     solve_result = ampl.getValue("solve_result")
+    optimal = None
     obj_val = None
+    sol_matrix = []
 
-    if solve_result == -1:  # UNSAT
+    if solve_result == -1:
         optimal = True
         sol_matrix = []
-    elif elapsed >= 300:
-        elapsed = 300
-        optimal = False
-        sol_matrix = []
-    else:
-        optimal = solve_result == 0
-        try:
-            obj_val = float(ampl.getObjective(0).value()) if use_obj else None
-        except:
-            obj_val = None
-
-    if n == 4:  # special UNSAT case
-        sol_matrix = []
-        optimal = True
         obj_val = None
-        elapsed = 0
+    elif elapsed >= 300:
+        optimal = False
+        elapsed = 300
+        sol_matrix = []
+        obj_val = None
+    else:
+        sol_matrix = extract_solution(ampl, n)
+        optimal = True
+        if use_obj:
+            try:
+                obj_val = int(round(ampl.getValue("MaxDeviation")))
+            except:
+                obj_val = None
 
-    
-    obj_flag = utils.convert_obj_to_flag(obj_text)
-    json_key = f"{solver}_{obj_flag}_{sb_flag}"
-    # object field need to be modified after each execution
-    json_file_path = os.path.realpath(os.path.join(RESULTS_DIR, f"{n}.json"))
-
-    utils.save_result(elapsed, sol_matrix, json_file_path, obj=obj_val, solver_name=json_key)
-    print(f"Result saved under '{json_key}' to {json_file_path}")
-
-    # return {
-    #     "time": elapsed,
-    #     "optimal": optimal,
-    #     "obj": obj_val,
-    #     "sol": sol_matrix
-    # }
+    return {"time": elapsed, "optimal": optimal, "obj": obj_val, "sol": sol_matrix}
 
 
 # ------------------------------------------------------------
-# SHARED LOGIC used by CLI *and* main.py
+# SHARED LOGIC
 # ------------------------------------------------------------
-def run_mip_logic(teams, solver_list, objective_choice):
-    """
-    Runs the MIP solver for all n in 'teams'.
-    solver_list: list of solver names
-    objective_choice: "true", "false", or "both"
-    """
-    # results = {}
+def run_mip_logic(teams, solver_list, objective_choice, algo_choice="default"):
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+    results = {}
 
-    models = [
-        os.path.join(MODEL_DIR, "mip_!sb.mod"),
-        os.path.join(MODEL_DIR, "mip_sb.mod"),
-    ]
+    # Convert 'all' -> list of all algorithms
+    if algo_choice == "all":
+        algos = ["default", "psmplx", "dsmplx", "barr"]
+    else:
+        algos = [algo_choice]
 
     for n in teams:
-        # results[n] = {}
+        results[n] = {}
 
-        for sol in solver_list:
-            for model in models:
-                model_suffix = "_sb" if model.endswith("_sb.mod") else "_!sb"
+        for solver in solver_list:
+            for model in MODELS:
+                model_suffix = os.path.basename(model).replace(".mod", "").replace("mip", "")
 
-                if objective_choice == "both":
+                for algo in algos:
+                    key_suffix = f"_{algo}" if algo != "default" else ""
+                    if objective_choice == "both":
+                        results[n][f"{solver}_obj{model_suffix}{key_suffix}"] = run_single_solver(
+                            n, solver, True, os.path.join(MODEL_DIR, model), algo
+                        )
+                        results[n][f"{solver}_!obj{model_suffix}{key_suffix}"] = run_single_solver(
+                            n, solver, False, os.path.join(MODEL_DIR, model), algo
+                        )
+                    else:
+                        use_obj = objective_choice == "true"
+                        key = f"{solver}_obj{model_suffix}{key_suffix}" if use_obj else f"{solver}_!obj{model_suffix}{key_suffix}"
+                        results[n][key] = run_single_solver(
+                            n, solver, use_obj, os.path.join(MODEL_DIR, model), algo
+                        )
 
-                    # results[n][f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
-                    # results[n][f"{sol}_!obj{model_suffix}"] = run_single_solver(n, sol, False, model)
-                    run_single_solver(n, sol, True, model)
-                    run_single_solver(n, sol, False, model)
-                else:
-
-                    use_obj = (objective_choice == "true")
-                    key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_!obj{model_suffix}"
-                    # results[n][key] = run_single_solver(n, sol, use_obj, model)
-                    run_single_solver(n, sol, use_obj, model)
-
-    # return results
-
-def save_results(results):
-
-    out_dir = RESULTS_DIR
-    os.makedirs(out_dir, exist_ok=True)
-    for n, data in results.items():
-        out_path = os.path.join(out_dir, f"{n}.json")
+        out_path = os.path.join(RESULTS_DIR, f"{n}.json")
         with open(out_path, "w") as f:
-            json.dump(data, f, indent=4)
-        print(f"Saved MIP result to {out_path}")
+            json.dump(results[n], f, indent=4)
+        print(f"Saved MIP result for n={n} to {out_path}\n")
+
+    return results
 
 
 # ------------------------------------------------------------
-# PROGRAMMATIC ENTRY POINT (used by main.py)
+# PROGRAMMATIC ENTRY POINT
 # ------------------------------------------------------------
-def main(teams):
-    """
-    main.py will import THIS function.
-    teams: list of ints (team sizes)
-    Returns results for all n in a dict.
-    """
-    solver_list = SOLVERS     # runs all
-    objective_choice = "both"    # runs both with and without optimization
-    print("\n=== MIP ===")
-    # print(f"\nRunning MIP for teams={teams}, solvers={solver_list}, objective={objective_choice}\n")
-
-    # results = run_mip_logic(teams, solver_list, objective_choice)
-    run_mip_logic(teams, solver_list, objective_choice)
-    # save_results(results)
-    
-    
+def main(teams, solver_list=SOLVERS, objective_choice="both", algo_choice="all"):
+    print(f"\nRunning MIP for teams={teams}, solvers={solver_list}, objective={objective_choice}, algo={algo_choice}\n")
+    return run_mip_logic(teams, solver_list, objective_choice, algo_choice)
 
 
 # ------------------------------------------------------------
@@ -234,21 +241,17 @@ def main_cli():
     parser = argparse.ArgumentParser(description="MIP CLI")
     parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"))
     parser.add_argument("--solver", type=str, nargs="+", default=["gurobi"], choices=SOLVERS + ["all"])
-    parser.add_argument("--obj", type=str, default="false",
-                        choices=["true", "false", "both"])
-    
-    #TODO add sb argument
+    parser.add_argument("--objective", type=str, default="false", choices=["true", "false", "both"])
+    parser.add_argument("--algo", type=str, default="default", choices=["default","psmplx","dsmplx","barr","all"])
     args = parser.parse_args()
 
     teams = utils.convert_to_range((args.range[0], args.range[1]))
     solver_choice = SOLVERS if "all" in args.solver else args.solver
     objective_choice = args.objective.lower()
+    algo_choice = args.algo.lower()
 
-    print(f"\nRunning MIP for teams={teams}, solvers={solver_choice}, objective={objective_choice}\n")
-
-    results = run_mip_logic(teams, solver_choice, objective_choice)
-
-    save_results(results)
+    print(f"\nRunning MIP for teams={teams}, solvers={solver_choice}, objective={objective_choice}, algo={algo_choice}\n")
+    run_mip_logic(teams, solver_choice, objective_choice, algo_choice)
 
 
 if __name__ == "__main__":
