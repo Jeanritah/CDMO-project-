@@ -13,11 +13,13 @@ model_functions = {
     }
 
 def main(teams: List[int], obj_flags: List[str]=["decision", "optimization"], sb_flags: List[str]= ["sb", "!sb"]):
+    print("\n=== SMT ===")
+
     for obj in obj_flags:
         for sb in sb_flags:
             for t in teams:
                 model_name = f"smt_{obj}_{sb}"
-                print(f"Running model with solver: z3 for obj: {obj}, sb: {sb}")
+                print(f"Solver z3 for obj={obj}, sb={sb}")
                 model_functions[model_name](t)  
 
 if __name__ == "__main__":
