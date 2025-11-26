@@ -40,7 +40,7 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
     out_dir = Path("res/SAT")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # print("\n=== SAT Runner ===")
+    print("\n=== SAT ===")
     # print("Teams:", teams)
     # print("Objectives:", obj_flags)
     # print("Symmetry-breaking:", sb_flags)
@@ -49,10 +49,10 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
         for sb in sb_flags:
 
             solver_fun = SOLVER_MAP[(obj, sb)]
-            print(f"Running SAT with obj={obj}, sb={sb}")
+            print(f"Solver z3 for obj={obj}, sb={sb}")
 
             for n in teams:
-                print(f"Solving n={n}")
+                # print(f"Solving n={n}")
 
                 result = solver_fun(n)
 

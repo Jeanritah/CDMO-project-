@@ -142,8 +142,7 @@ def save_to_json(n, result_key, time_sec, optimal, obj_value, solution):
     with open(filename, "w") as f:
         json.dump(data, f, indent=2)
 
-    print(f"Result saved to {filename}")
-    # print(f"Result saved under key '{result_key}' in: {filename}")
+    print(f"Result saved under '{result_key}' to {filename}")
 
 
 def decision_sb(n):

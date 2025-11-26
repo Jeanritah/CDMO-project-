@@ -38,6 +38,16 @@ RESULTS_DIR = os.path.join(CONTAINER_DIR,"res/MIP")   #directory to store jsons
 def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
     """Runs the model for a single solver and returns a result dict."""
 
+    # print("obj: ",use_obj)
+
+    if model_file.endswith("_sb.mod"):
+        sb_flag = "sb"
+    else:
+        sb_flag = "!sb"
+
+    obj_text = "optimization" if use_obj else "decision"
+    print(f"Solver {solver} for obj={obj_text}, sb={sb_flag}")
+
     license_uuid = os.environ.get("AMPL_LICENSE_UUID")
     if not license_uuid:
         raise RuntimeError("Please set AMPL_LICENSE_UUID environment variable")
@@ -130,13 +140,21 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str):
         obj_val = None
         elapsed = 0
 
+    
+    obj_flag = utils.convert_obj_to_flag(obj_text)
+    json_key = f"{solver}_{obj_flag}_{sb_flag}"
+    # object field need to be modified after each execution
+    json_file_path = os.path.realpath(os.path.join(RESULTS_DIR, f"{n}.json"))
 
-    return {
-        "time": elapsed,
-        "optimal": optimal,
-        "obj": obj_val,
-        "sol": sol_matrix
-    }
+    utils.save_result(elapsed, sol_matrix, json_file_path, obj=obj_val, solver_name=json_key)
+    print(f"Result saved under '{json_key}' to {json_file_path}")
+
+    # return {
+    #     "time": elapsed,
+    #     "optimal": optimal,
+    #     "obj": obj_val,
+    #     "sol": sol_matrix
+    # }
 
 
 # ------------------------------------------------------------
@@ -148,7 +166,7 @@ def run_mip_logic(teams, solver_list, objective_choice):
     solver_list: list of solver names
     objective_choice: "true", "false", or "both"
     """
-    results = {}
+    # results = {}
 
     models = [
         os.path.join(MODEL_DIR, "mip_!sb.mod"),
@@ -156,7 +174,7 @@ def run_mip_logic(teams, solver_list, objective_choice):
     ]
 
     for n in teams:
-        results[n] = {}
+        # results[n] = {}
 
         for sol in solver_list:
             for model in models:
@@ -164,15 +182,18 @@ def run_mip_logic(teams, solver_list, objective_choice):
 
                 if objective_choice == "both":
 
-                    results[n][f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
-                    results[n][f"{sol}_!obj{model_suffix}"] = run_single_solver(n, sol, False, model)
+                    # results[n][f"{sol}_obj{model_suffix}"] = run_single_solver(n, sol, True, model)
+                    # results[n][f"{sol}_!obj{model_suffix}"] = run_single_solver(n, sol, False, model)
+                    run_single_solver(n, sol, True, model)
+                    run_single_solver(n, sol, False, model)
                 else:
 
                     use_obj = (objective_choice == "true")
                     key = f"{sol}_obj{model_suffix}" if use_obj else f"{sol}_!obj{model_suffix}"
-                    results[n][key] = run_single_solver(n, sol, use_obj, model)
+                    # results[n][key] = run_single_solver(n, sol, use_obj, model)
+                    run_single_solver(n, sol, use_obj, model)
 
-    return results
+    # return results
 
 def save_results(results):
 
@@ -196,10 +217,12 @@ def main(teams):
     """
     solver_list = SOLVERS     # runs all
     objective_choice = "both"    # runs both with and without optimization
-    print(f"\nRunning MIP for teams={teams}, solvers={solver_list}, objective={objective_choice}\n")
+    print("\n=== MIP ===")
+    # print(f"\nRunning MIP for teams={teams}, solvers={solver_list}, objective={objective_choice}\n")
 
-    results = run_mip_logic(teams, solver_list, objective_choice)
-    save_results(results)
+    # results = run_mip_logic(teams, solver_list, objective_choice)
+    run_mip_logic(teams, solver_list, objective_choice)
+    # save_results(results)
     
     
 

@@ -22,6 +22,8 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
     dir_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "CP/models")
     # print(f"Model path: {dir_path}")
 
+    print("\n=== CP ===")
+
     for s_name in solver_names:
         for obj in obj_flags:
             for sb in sb_flags:
@@ -30,7 +32,9 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
                         continue
 
                     model_path = os.path.join(os.path.join(dir_path, f"{obj}"), f"cp_{sb}_{strategy}.mzn")
-                    print(f"Running model with solver: {s_name} for obj: {obj}, sb: {sb}, strategy: {strategy}")
+                    
+                    print(f"Solver {s_name} for obj={obj}, sb={sb}, strategy={strategy}")
+
                     for t in teams:
                         '''
                         Possible parameters to consider:
@@ -98,9 +102,10 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
                                 obj_value = None
                                 array_res = ast.literal_eval(str(result.solution))
                             
+                        json_key = f"{s_name}_{utils.convert_obj_to_flag(obj)}_{sb}_{strategy}"
                         # object field need to be modified after each execution
-                        utils.save_result(seconds, array_res, json_file_path, obj=obj_value, solver_name=f"{s_name}_{utils.convert_obj_to_flag(obj)}_{sb}_{strategy}")
-                        print(f"Result saved to {json_file_path}")
+                        utils.save_result(seconds, array_res, json_file_path, obj=obj_value, solver_name=json_key)
+                        print(f"Result saved under '{json_key}' to {json_file_path}")
 
 if __name__ == "__main__":
 
