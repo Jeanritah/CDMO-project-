@@ -3,13 +3,15 @@ from typing import List
 from SMT.models.smt_decision_sb import decision_sb
 from SMT.models.smt_optimization_sb import optimization_sb
 from SMT.models.smt_decision_no_sb import  test_without_symmetry
+from SMT.models.smt_optimization_no_sb import run_optimized_no_symmetry
+
 from utils import utils
 
-# TODO add missing model
 model_functions = {
    "smt_decision_sb": decision_sb,
    "smt_optimization_sb": optimization_sb,
    "smt_decision_!sb":  test_without_symmetry,
+   "smt_optimization_!sb":  run_optimized_no_symmetry,
     }
 
 def main(teams: List[int], obj_flags: List[str]=["decision", "optimization"], sb_flags: List[str]= ["sb", "!sb"]):
