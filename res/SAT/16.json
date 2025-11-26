@@ -1,10 +1,4 @@
 {
-    "z3_!obj_sb": {
-        "time": 42,
-        "optimal": true,
-        "obj": null,
-        "sol": []
-    },
     "z3_!obj_!sb": {
         "time": 34,
         "optimal": true,

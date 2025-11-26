@@ -8,6 +8,12 @@
 # MISSING TASKS
 
 TODAY:
+- RERUN File: 16.json FOR SAT AND SMT
+
+  Approach: z3_!obj_sb
+    Status: INVALID
+    Reason: The solution cannot be empty!!!
+
 - [ ] check checklist on notion!
 - [ ] unisci output di log fra i vari programmi!
   - Running CP model with solver gecode for obj=decision, sb=sb, strategy=base
