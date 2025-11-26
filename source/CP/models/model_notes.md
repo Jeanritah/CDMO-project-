@@ -8,11 +8,6 @@
 # MISSING TASKS
 
 TODAY:
-- [ ] re-run File: 16.json FOR SAT
-
-  Approach: z3_!obj_sb
-    Status: INVALID
-    Reason: The solution cannot be empty!!!
 
 - [ ] end your report part!
 - [ ] adjust the final readme
