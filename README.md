@@ -6,21 +6,33 @@ All experiments—single-instance execution or full-batch runs—can be reproduc
 ## 1. Project Structure
 
 ```
-source/
-|___CP/
-    SAT/
-    SMT/
-    MIP/
-    main.py
-    run_cp.py
-    run_sat.py
-    run_smt.py
-    run_mip.py
-    solution_checker.py
-Dockerfile
-setup.sh
-setup.bat
-README.md
+CDMO-PROJECT/
+├── output/
+├── res/
+│   ├── CP/
+│   ├── MIP/
+│   ├── SAT/
+│   └── SMT/
+├── source/
+│   ├── CP/
+│   ├── MIP/
+│   ├── SAT/
+│   ├── SMT/
+│   ├── utils/
+│   |   ├── __init__.py
+│   |   ├── utils.py
+|   ├── main.py
+│   ├── run_cp.py
+│   ├── run_mip.py
+│   ├── run_sat.py
+│   ├── run_smt.py
+│   ├── solution_checker.py
+│   └── tables.py
+├── Dockerfile
+├── docker-compose.yml
+├── setup.bat
+├── setup.bash
+└── ...
 ```
 
 Each model is implemented inside its own subfolder (`source/CP`, `source/SMT`, etc.).
@@ -56,7 +68,7 @@ The project can be executed in two ways:
 - **3.1. Running all solver** via a the unified `main.py` interface
 - **3.2. Individual solver scripts** (`run_cp.py`, `run_sat.py`, `run_smt.py`, `run_mip.py`)
 
-### **3.1. Running All Solvers**
+### 3.1. Running All Solvers
 
 `main.py` provides a single command to reproduce all experimental results.
 
@@ -132,3 +144,25 @@ Here, <path_to_solution_directory> refers to the directory that contains the .js
 
 # Project Overview
 
+This project investigates the **Single Round Robin (SRR)** sport-tournament scheduling problem from a combinatorial-optimisation perspective.
+In an SRR tournament, every team must play every other team exactly once across (n-1) weeks, with (n/2) matches played in parallel each week.
+We formalise the problem using a common set of instance variables (teams, weeks, periods, slots) shared across all modelling approaches.
+
+The core decision variable assigns a team to each match position ((p,w,s)), and the schedule must satisfy four structural constraints:
+
+1. **Even number of teams**
+2. **Each pair of teams meets exactly once**
+3. **Each team plays exactly one match per week**
+4. **No team appears more than twice in the same period**
+
+The optimisation objective minimises the maximum imbalance between home and away games for any team.
+
+To study this problem, we implement and compare **four modelling paradigms**:
+
+* **Constraint Programming (CP)**
+* **Boolean Satisfiability (SAT)**
+* **Satisfiability Modulo Theories (SMT)**
+* **Mixed-Integer Programming (MIP)**
+
+Each solver is equipped with objective and symmetry-breaking variants, unified under a single command-line interface.
+All experiments are reproducible using the provided Docker environment and were run under controlled conditions (single thread, 300-second time limit per instance) on an Intel i7-1165G7 host machine.
