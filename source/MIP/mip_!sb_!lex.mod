@@ -40,5 +40,5 @@ s.t. max_two_per_period {i in TEAMS, p in PERIODS}:
     sum {w in WEEKS, j in TEAMS} (x[w,p,i,j] + x[w,p,j,i]) <= 2;
 
 
-# Dummy objective
-maximize dummy_obj: 0;
+# Sample objective : will be replaced by python incase objective is used or else by a dummy objective
+maximize sample_obj: 0;

@@ -44,5 +44,5 @@ s.t. max_two_per_period {i in TEAMS, p in PERIODS}:
 s.t. fix_first_match:
     x[1,1,1,2] = 1;
 
-# Dummy objective
-maximize dummy_obj: 0;
+# Sample objective : will be replaced by python incase objective is used or else by a dummy objective
+maximize sample_obj: 0;
