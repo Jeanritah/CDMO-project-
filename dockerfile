@@ -59,7 +59,6 @@ ARG AMPL_LICENSE_UUID
 ENV AMPL_LICENSE_UUID=${AMPL_LICENSE_UUID}
 RUN python -m amplpy.modules install gurobi \
     && python -m amplpy.modules install cplex \
-    && python -m amplpy.modules install scip \
     && python -m amplpy.modules activate $AMPL_LICENSE_UUID
 
 # Volumes for code and results
