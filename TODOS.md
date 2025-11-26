@@ -1,12 +1,10 @@
 # THIS EVENING: @esthy13
-- [ ] add algorithms to tables
-  ![alt text](image.png)
 - [ ] end your report part
 - [ ] check the 300 seconds issue with optimization functions (whether you gave or not a lower bound to the optimization function or not)
+- [ ] 22 entry for each cp/n.json --> check !!
 
 # TOMORROW: @esthy13
 - [ ] missing tables for ashmi for objective function for all three solvers
-- [ ] finish to connect jean's part
 - [ ] run SMT for Jean with optimization: `python3 source/run_smt.py --range 2 12 --obj true --sb both` 
 
 # MISSING TASKS FROM NOTION (EVERYBODY)
@@ -33,6 +31,9 @@
 - [ ]  Verify all solvers produce valid outputs for tested n
 
 # COMPLETED:
+- [x] finish to connect jean's part
+- [x] add algorithms to tables
+  ![alt text](image.png)
 - [x] adjust the final readme
 - [x] update tables for Angela with a new upperbound limit
 - [x] unisci output di log fra i vari programmi!
