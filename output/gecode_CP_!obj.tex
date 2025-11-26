@@ -1,13 +1,13 @@
-\begin{table}[ht]
+\begin{table}[h!]
 \centering
-\begin{tabular}{l|cccccccc}
+\begin{tabular}{l|cccc|cccc}
 Teams & \multicolumn{4}{c}{gecode+sb} & \multicolumn{4}{c}{gecode+!sb} \\
   & base & ff & DWD+min & DWD+rand & base & ff & DWD+min & DWD+rand \\
 \hline
-2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-4 & UNSAT & UNSAT & UNSAT & UNSAT & UNSAT & UNSAT & UNSAT & UNSAT \\
-6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+12 & 0 & 0 & 3 & 0 & N/A & N/A & 7 & 45 \\
+14 & 40 & 56 & N/A & 21 & N/A & N/A & N/A & N/A \\
 \end{tabular}
 \caption{Results for gecode on model CP (decision)}
 \label{tab:gecode_CP_!obj}
