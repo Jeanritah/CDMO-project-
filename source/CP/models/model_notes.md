@@ -8,7 +8,7 @@
 # MISSING TASKS
 
 TODAY:
-- [ ] re-run File: 16.json FOR SAT AND SMT
+- [ ] re-run File: 16.json FOR SAT
 
   Approach: z3_!obj_sb
     Status: INVALID
