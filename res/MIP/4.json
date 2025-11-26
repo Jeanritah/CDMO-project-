@@ -1,23 +1,383 @@
 {
-    "scip_obj_!sb": {
+    "gurobi_obj_!sb_!lex": {
         "time": 0,
         "optimal": true,
         "obj": null,
         "sol": []
     },
-    "scip_!obj_!sb": {
+    "gurobi_!obj_!sb_!lex": {
         "time": 0,
         "optimal": true,
         "obj": null,
         "sol": []
     },
-    "scip_obj_sb": {
+    "gurobi_obj_!sb_!lex_psmplx": {
         "time": 0,
         "optimal": true,
         "obj": null,
         "sol": []
     },
-    "scip_!obj_sb": {
+    "gurobi_!obj_!sb_!lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_!sb_!lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_!sb_!lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_!sb_!lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_!sb_!lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_sb_!lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_sb_!lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_sb_!lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_sb_!lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_sb_!lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_sb_!lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_sb_!lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_sb_!lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_sb_lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_sb_lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_sb_lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_sb_lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_sb_lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_sb_lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_sb_lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_sb_lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_!sb_lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_!sb_lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_!sb_lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_!sb_lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_!sb_lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_!sb_lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_obj_!sb_lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gurobi_!obj_!sb_lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_!sb_!lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_!sb_!lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_!sb_!lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_!sb_!lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_!sb_!lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_!sb_!lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_!sb_!lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_!sb_!lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_sb_!lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_sb_!lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_sb_!lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_sb_!lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_sb_!lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_sb_!lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_sb_!lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_sb_!lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_sb_lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_sb_lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_sb_lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_sb_lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_sb_lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_sb_lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_sb_lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_sb_lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_!sb_lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_!sb_lex": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_!sb_lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_!sb_lex_psmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_!sb_lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_!sb_lex_dsmplx": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_obj_!sb_lex_barr": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "cplex_!obj_!sb_lex_barr": {
         "time": 0,
         "optimal": true,
         "obj": null,
