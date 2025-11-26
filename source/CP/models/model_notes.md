@@ -7,32 +7,30 @@
 
 # MISSING TASKS
 
-THIS EVENING - ONGOING:
-- [x] run ciplex for ashmi
-- [x] run SMT for Jean without optimization
-
-TOMORROW MORNING
-- [ ] make tables for angela
-- [ ] check that there is timeout for angela
-
-TOMORROW
-- [ ] missing scip tables for ashmi
-- [ ] tables for jean: from python3 source/run_smt.py --range 2 12 --obj false --sb true 
-- [ ] check the 300 seconds issue with optimization functions (whether you gave or not a lower bound to the optimization function or not)
-- [ ] end your report part!
-- [ ] adjust the final readme
-
+TODAY:
+- [ ] check checklist on notion!
 - [ ] unisci output di log fra i vari programmi!
   - Running CP model with solver gecode for obj=decision, sb=sb, strategy=base
   (no strategy if the solver has no strategy)
   - Result saved under 'z3_obj_!sb' to res/SAT/8.json
+- [ ] end your report part!
+- [ ] adjust the final readme
+- [ ] check the 300 seconds issue with optimization functions (whether you gave or not a lower bound to the optimization function or not)
+- [ ] update tables for Angela with a new upperbound limit
 
-TOMORROW EVENING:
+
+TOMORROW:
+- [ ] missing tables for ashmi for objective function for all three solvers
 - [ ] finish connecting jean's part
 - [ ] run SMT for Jean with optimization: `python3 source/run_smt.py --range 2 12 --obj true --sb both` 
-- [ ] check checklist on notion!
+
 
 COMPLETED:
+- [x] tables for jean: from python3 source/run_smt.py --range 2 12 --obj false --sb true 
+- [x] make tables for angela
+- [x] check that there is timeout for angela
+- [x] run ciplex for ashmi
+- [x] run SMT for Jean without optimization
 - [x] adjust tables for angela
 - [x] connect angela's part
 - [x] check that the docker works for Angela's part

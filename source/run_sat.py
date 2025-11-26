@@ -105,7 +105,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="SAT CLI")
     parser.add_argument(
         "--range",
-        type=float,
+        type=int,
         nargs=2,
         required=False,
         metavar=("LOWER", "UPPER"),
