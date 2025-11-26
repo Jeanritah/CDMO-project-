@@ -1,5 +1,6 @@
 # THIS EVENING: @esthy13
-  
+- [ ] add algorithms to tables
+  ![alt text](image.png)
 - [ ] end your report part
 - [ ] check the 300 seconds issue with optimization functions (whether you gave or not a lower bound to the optimization function or not)
 
