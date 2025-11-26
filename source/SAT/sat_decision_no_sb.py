@@ -52,7 +52,7 @@ def solve_decision_no_sb(n):
                 for w in range(W):
                     s.add(Implies(home[i][j][w], Not(home[j][i][w])))
 
-    # (4) Restored: If i plays j in week w then they must share the same period
+    # (4) If i plays j in week w then they must share the same period
     for i in range(n):
         for j in range(n):
             if i != j:
