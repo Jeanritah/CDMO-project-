@@ -8,30 +8,29 @@
 # MISSING TASKS
 
 TODAY:
-- RERUN File: 16.json FOR SAT AND SMT
+- [ ] re-run File: 16.json FOR SAT AND SMT
 
   Approach: z3_!obj_sb
     Status: INVALID
     Reason: The solution cannot be empty!!!
 
-- [ ] check checklist on notion!
-- [ ] unisci output di log fra i vari programmi!
-  - Running CP model with solver gecode for obj=decision, sb=sb, strategy=base
-  (no strategy if the solver has no strategy)
-  - Result saved under 'z3_obj_!sb' to res/SAT/8.json
 - [ ] end your report part!
 - [ ] adjust the final readme
 - [ ] check the 300 seconds issue with optimization functions (whether you gave or not a lower bound to the optimization function or not)
-- [ ] update tables for Angela with a new upperbound limit
-
 
 TOMORROW:
 - [ ] missing tables for ashmi for objective function for all three solvers
-- [ ] finish connecting jean's part
+- [ ] finish to connect jean's part
 - [ ] run SMT for Jean with optimization: `python3 source/run_smt.py --range 2 12 --obj true --sb both` 
 
 
 COMPLETED:
+- [x] update tables for Angela with a new upperbound limit
+- [x] unisci output di log fra i vari programmi!
+  - Running CP model with solver gecode for obj=decision, sb=sb, strategy=base
+  (no strategy if the solver has no strategy)
+  - Result saved under 'z3_obj_!sb' to res/SAT/8.json
+- [x] check checklist on notion!
 - [x] tables for jean: from python3 source/run_smt.py --range 2 12 --obj false --sb true 
 - [x] make tables for angela
 - [x] check that there is timeout for angela
