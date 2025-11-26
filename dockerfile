@@ -45,7 +45,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* /tmp/get-pip.py
 
 # Make python3 point to python3.11
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
 
 # Copy project files
 COPY . /CDMO
@@ -57,9 +57,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # License key is read from environment variable
 ARG AMPL_LICENSE_UUID
 ENV AMPL_LICENSE_UUID=${AMPL_LICENSE_UUID}
-RUN python3 -m amplpy.modules install gurobi \
-    && python3 -m amplpy.modules install cplex \
-    && python3 -m amplpy.modules activate $AMPL_LICENSE_UUID
+RUN python -m amplpy.modules install gurobi \
+    && python -m amplpy.modules install cplex \
+    && python -m amplpy.modules activate $AMPL_LICENSE_UUID
 
 # Volumes for code and results
 VOLUME ["/CDMO/res"]
