@@ -1,7 +1,7 @@
 # THIS EVENING: @esthy13
-- [ ] end your report part + write down conclusion section
+- [ ] end your report part + write down conclusion section (check in your report that all constraints are actually there)
 - [ ] 22 entry for each cp/n.json --> check !!
-- [ ] run angela part (EVERYTHING) + generate tables
+- [x] run angela part (EVERYTHING) + generate tables
 - [ ] try to shrink the introduction
 - [ ] add key syntax for json files in the README
 

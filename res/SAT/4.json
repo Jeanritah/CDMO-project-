@@ -12,8 +12,8 @@
         "sol": []
     },
     "z3_obj_sb": {
-        "time": 300,
-        "optimal": false,
+        "time": 0,
+        "optimal": true,
         "obj": null,
         "sol": []
     },
