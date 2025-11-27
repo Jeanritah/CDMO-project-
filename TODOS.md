@@ -1,39 +1,39 @@
 # THIS EVENING: @esthy13
-- [ ] end your report part
+- [ ] end your report part + write down conclusion section
 - [ ] 22 entry for each cp/n.json --> check !!
-- [ ] run angela part (EVERYTHING)
+- [ ] run angela part (EVERYTHING) + generate tables
 
-# TOMORROW: @esthy13
-- [ ] missing tables for ashmi for objective function for all three solvers
-- [ ] run SMT for Jean with optimization: `python3 source/run_smt.py --range 2 12 --obj true --sb both` 
+# MISSING TASKS
+- [ ] @ashmi less verbose in the report, focus on important details
+- [ ] @asmi @angela add Cnum to the constraints in the report
 
 # THIS MEETING:
-- [ ] Conclusion report: compare results in each validation section and conclusion section of the report
+- [x] Conclusion report defined: compare results in each validation section and conclusion section of the report
 
-# MISSING TASKS FROM NOTION (EVERYBODY)
-
-- [ ] @ashmi less verbose in the report, focus on important details
-- [x] consistency across variables name for all models and report
+# SUBMISSION CHECKLIST (EVERYBODY)
+- [ ]  Name your submission folder as CDMO Proj LastnameName1 ... LastnameNameK and upload its tgz or zip compressed archive. When working as a group, it suffices that only one group member submits the project, provided that the following information is provided in the submission comments:
+  • all the members’ names, lastnames and UniBo e-mail addresses;
+  • the impossible dates and time for discussion due to a hard constraint (like another exam, medical appointment, employment, urgent family matter).
 - [ ]  file limit of 20 MB (use 7zip)
 - [ ]  zip should include activation key
-- [ ]  update readme file:
-    - [ ]  The instructions should concisely explain how to reproduce the result of a
+
+# COMPLETED:
+- [x] missing tables for ashmi for objective function for all three solvers
+- [x] run SMT for Jean with optimization: `python3 source/run_smt.py --range 2 12 --obj true --sb both` 
+- [x] consistency across variables name for all models and report
+- [x]  update readme file:
+    - [x]  The instructions should concisely explain how to reproduce the result of a
     single model on a specific instance, without modifying the source code of your
     project; for instance, you could provide a script that takes as input arguments
     the instance number and/or the approach chosen. Moreover, you should also
     provide a way to run all the models on all the possible instances automatically,
     aiming to generate all the feasible results with a single operation.
-- [ ]  Name your submission folder as CDMO Proj LastnameName1 ... LastnameNameK and upload its tgz or zip compressed archive. When working as a group, it suffices that only one group member submits the project, provided that the following information is provided in the submission comments:
-  • all the members’ names, lastnames and UniBo e-mail addresses;
-  • the impossible dates and time for discussion due to a hard constraint (like another exam, medical appointment, employment, urgent family matter).
-- [ ]  Ensure UNSAT is produced for n=4 across all models
-- [ ]  Any submission where the .json files containing the solutions:
+- [x]  Ensure UNSAT is produced for n=4 across all models
+- [x]  Any submission where the .json files containing the solutions:
   • cannot be processed by the checker, or
   • contain errors reported by the checker will be automatically rejected.
-- [ ]  Run official checker on ALL generated JSON files
-- [ ]  Verify all solvers produce valid outputs for tested n
-
-# COMPLETED:
+- [x]  Run official checker on ALL generated JSON files
+- [x]  Verify all solvers produce valid outputs for tested n
 - [x] finish to connect jean's part
 - [x] add algorithms to tables
   ![alt text](image.png)
