@@ -108,7 +108,7 @@ python source/run_smt.py --range 3 3 --obj true
 **MIP Example**
 
 ```ps
-python source/run_mip.py --range 2 6 --solver gurobi --objective both --algo dsmplx
+python source/run_mip.py --range 2 6 --solver gurobi --obj both --algo dsmplx
 ```
 
 ### Arguments reference
@@ -130,9 +130,11 @@ python source/run_mip.py --range 2 6 --solver gurobi --objective both --algo dsm
 
 **Arguments Specific to MIP**
 
-| Argument   | Description        | Values                    |
-| ---------- | ------------------ | ------------------------- |
-| `--solver` | MIP solver backend | `scip`, `cplex`, `gurobi` |
+| Argument   | Description                          | Values                                  |
+| ---------- | ------------------------------------ | --------------------------------------- |
+| `--solver` | MIP solver backend                    | `cplex`, `gurobi`, `all`               |
+| `--algo`   | Solver algorithm option               | `default`, `psmplx`, `dsmplx`, `barr`, `all` |
+
 
 ## 4. Solution Validation
 
