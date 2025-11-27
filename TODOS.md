@@ -2,10 +2,13 @@
 - [ ] end your report part + write down conclusion section
 - [ ] 22 entry for each cp/n.json --> check !!
 - [ ] run angela part (EVERYTHING) + generate tables
+- [ ] try to shrink the introduction
+- [ ] add key syntax for json files in the README
 
 # MISSING TASKS
 - [ ] @ashmi less verbose in the report, focus on important details
 - [ ] @asmi @angela add Cnum to the constraints in the report
+- [ ] @jean check that the naming of the variables between the report and the code is consistent
 
 # THIS MEETING:
 - [x] Conclusion report defined: compare results in each validation section and conclusion section of the report
