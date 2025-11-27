@@ -49,11 +49,10 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
         for sb in sb_flags:
 
             solver_fun = SOLVER_MAP[(obj, sb)]
-            print(f"Solver z3 for obj={obj}, sb={sb}")
 
             for n in teams:
                 # print(f"Solving n={n}")
-
+                print(f"Solver z3 for obj={obj}, sb={sb}")
                 result = solver_fun(n)
 
                 time_val = result.get("time", 300)
@@ -89,6 +88,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--sb", type=str, default="BOTH",
         help="sb | !sb | both")
+    # change the argument for sb and obj
 
     # parser.add_argument("--search", nargs="+", type=str, default=["base"])
     # parser.add_argument("--solver", nargs="+", type=str, default=["z3"])

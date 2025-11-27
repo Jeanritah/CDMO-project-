@@ -70,9 +70,6 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
                         # UNSATISFIABLE
                         # UNKNOWN
 
-
-                        # print(result.statistics)
-
                         # Save result to JSON---------------------------------------------------
                         if f"{result.status}" == "UNSATISFIABLE":
                             seconds = 0

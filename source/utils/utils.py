@@ -74,7 +74,7 @@ def extract_sb_flags(sb: str) -> str:
 def extract_obj_flags(objective: str) -> str:
     objective = objective.upper()
     if objective == "TRUE":
-        flags = ["decision"]
+        flags = ["optimization"]
     elif objective == "BOTH":
         flags = ["decision", "optimization"]
     else:  # objective == "FALSE"
