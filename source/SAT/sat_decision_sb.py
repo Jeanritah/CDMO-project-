@@ -19,8 +19,8 @@ def at_most_k(vs,k):
 # Solver
 def solve_decision_sb(n):
     assert n % 2 == 0
-    W = n - 1         # weeks
-    P = n // 2        # periods
+    W = n - 1        
+    P = n // 2        
 
     # Variables
     home = [[[Bool(f"home_{i}_{j}_{w}") for w in range(W)]
@@ -31,7 +31,7 @@ def solve_decision_sb(n):
 
     # Solver
     s = Solver()
-    s.set("timeout", 300000) 
+    s.set("timeout", 300000)
 
     # Base constraints
 
@@ -46,7 +46,7 @@ def solve_decision_sb(n):
             s.add(exactly_one([Or(home[i][j][w], home[j][i][w])
                                for w in range(W)]))
 
-    # Match, same period
+    # Match implies same period
     for i in range(n):
         for j in range(n):
             if i != j:
@@ -55,7 +55,7 @@ def solve_decision_sb(n):
                         s.add(Implies(home[i][j][w],
                                       per[i][w][p] == per[j][w][p]))
 
-    # One match per week
+    # One match per week per team
     for i in range(n):
         for w in range(W):
             s.add(exactly_one([
@@ -68,12 +68,12 @@ def solve_decision_sb(n):
         for w in range(W):
             s.add(exactly_one([per[i][w][p] for p in range(P)]))
 
-    # Exactly 2 teams per period
+    # Exactly two teams per period per week
     for w in range(W):
         for p in range(P):
             s.add(exactly_k([per[i][w][p] for i in range(n)], 2))
 
-    # At most 2 uses of same period per team
+    # Each team uses each period at most twice
     for i in range(n):
         for p in range(P):
             s.add(at_most_k([per[i][w][p] for w in range(W)], 2))
@@ -81,24 +81,15 @@ def solve_decision_sb(n):
 
     # Symmetry breaking
 
-    # SB1: Fix match (1,n) in week 0, team 1 home
-    s.add(home[0][n-1][0] == True)
-    s.add(home[n-1][0][0] == False)
-
-    # SB2: Fix all week 0 pairings (1,n), (2,n-1),...
-    for i in range(1, n//2):
+    # Fix canonical circle-method pairings in week 0, smaller index team plays home
+    for i in range(n // 2):
         j = n - 1 - i
-
-        # Fix the orientation to avoid branching
         s.add(home[i][j][0] == True)
         s.add(home[j][i][0] == False)
 
-        # Forbid these pairs from occurring in other weeks
-        for w in range(1, W):
-            s.add(home[i][j][w] == False)
-            s.add(home[j][i][w] == False)
 
-    # Solve
+    # -Solving
+
     t0 = time.time()
     result = s.check()
 
@@ -117,8 +108,8 @@ def solve_decision_sb(n):
     }
 
 
-# Solution
-def extract_solution(n,W,P,m,per,home):
+# Solution extraction
+def extract_solution(n, W, P, m, per, home):
     sol = [[None for _ in range(W)] for _ in range(P)]
 
     for w in range(W):
