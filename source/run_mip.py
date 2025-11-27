@@ -6,7 +6,7 @@ Module for the MIP approach of the Sports Tournament Scheduling problem.
 Two entry points:
 -----------------
 1. CLI:
-       python run_mip.py --range 6 10 --solver gurobi --obj both --algo all
+       python run_mip.py --range 6 10 --solver gurobi --obj both --algo all --sb both
 
 2. Programmatic interface (used by main.py):
        from run_mip import main
@@ -185,9 +185,21 @@ def run_single_solver(n: int, solver: str, use_obj: bool, model_file: str, algo:
 # ------------------------------------------------------------
 # SHARED LOGIC
 # ------------------------------------------------------------
-def run_mip_logic(teams, solver_list, objective_choice, algo_choice="default"):
+def run_mip_logic(teams, solver_list, objective_choice, algo_choice="default", sb_choice="both"):
     os.makedirs(RESULTS_DIR, exist_ok=True)
     results = {}
+
+    # Filter models according to sb_choice
+    if sb_choice == "true":
+        models_to_run = [
+            "mip_sb_!lex.mod",
+            "mip_sb_lex.mod",
+            "mip_!sb_lex.mod"
+        ]
+    elif sb_choice == "false":
+        models_to_run = ["mip_!sb_!lex.mod"]
+    else:
+        models_to_run = MODELS
 
     # Convert 'all' -> list of all algorithms
     if algo_choice == "all":
@@ -197,9 +209,8 @@ def run_mip_logic(teams, solver_list, objective_choice, algo_choice="default"):
 
     for n in teams:
         results[n] = {}
-
         for solver in solver_list:
-            for model in MODELS:
+            for model in models_to_run:
                 model_suffix = os.path.basename(model).replace(".mod", "").replace("mip", "")
 
                 for algo in algos:
@@ -229,9 +240,9 @@ def run_mip_logic(teams, solver_list, objective_choice, algo_choice="default"):
 # ------------------------------------------------------------
 # PROGRAMMATIC ENTRY POINT
 # ------------------------------------------------------------
-def main(teams, solver_list=SOLVERS, objective_choice="both", algo_choice="all"):
-    print(f"\nRunning MIP for teams={teams}, solvers={solver_list}, objective={objective_choice}, algo={algo_choice}\n")
-    return run_mip_logic(teams, solver_list, objective_choice, algo_choice)
+def main(teams, solver_list=SOLVERS, objective_choice="both", algo_choice="all", sb_choice="both"):
+    print(f"\nRunning MIP for teams={teams}, solvers={solver_list}, objective={objective_choice}, algo={algo_choice}, sb={sb_choice}\n")
+    return run_mip_logic(teams, solver_list, objective_choice, algo_choice, sb_choice)
 
 # ------------------------------------------------------------
 # CLI ENTRY POINT
@@ -242,16 +253,18 @@ def main_cli():
     parser.add_argument("--solver", type=str, nargs="+", default=["gurobi"], choices=SOLVERS + ["all"])
     parser.add_argument("--obj", type=str, default="false", choices=["true", "false", "both"])
     parser.add_argument("--algo", type=str, default="default", choices=["default","psmplx","dsmplx","barr","all"])
+    parser.add_argument("--sb", type=str, default="both", choices=["true","false","both"],
+                        help="Select models with/without symmetry-breaking: true=sb only, false=!sb only, both=all")
     args = parser.parse_args()
 
     teams = utils.convert_to_range((args.range[0], args.range[1]))
     solver_choice = SOLVERS if "all" in args.solver else args.solver
     objective_choice = args.obj.lower()
     algo_choice = args.algo.lower()
+    sb_choice = args.sb.lower()
 
-    print(f"\nRunning MIP for teams={teams}, solvers={solver_choice}, objective={objective_choice}, algo={algo_choice}\n")
-    run_mip_logic(teams, solver_choice, objective_choice, algo_choice)
-
+    print(f"\nRunning MIP for teams={teams}, solvers={solver_choice}, objective={objective_choice}, algo={algo_choice}, sb={sb_choice}\n")
+    run_mip_logic(teams, solver_choice, objective_choice, algo_choice, sb_choice)
 
 
 if __name__ == "__main__":
