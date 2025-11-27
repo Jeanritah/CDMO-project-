@@ -6,7 +6,7 @@ Module for the MIP approach of the Sports Tournament Scheduling problem.
 Two entry points:
 -----------------
 1. CLI:
-       python run_mip.py --range 6 10 --solver gurobi --objective both --algo all
+       python run_mip.py --range 6 10 --solver gurobi --obj both --algo all
 
 2. Programmatic interface (used by main.py):
        from run_mip import main
@@ -233,7 +233,6 @@ def main(teams, solver_list=SOLVERS, objective_choice="both", algo_choice="all")
     print(f"\nRunning MIP for teams={teams}, solvers={solver_list}, objective={objective_choice}, algo={algo_choice}\n")
     return run_mip_logic(teams, solver_list, objective_choice, algo_choice)
 
-
 # ------------------------------------------------------------
 # CLI ENTRY POINT
 # ------------------------------------------------------------
@@ -241,17 +240,18 @@ def main_cli():
     parser = argparse.ArgumentParser(description="MIP CLI")
     parser.add_argument("--range", type=int, nargs=2, required=True, metavar=("LOWER", "UPPER"))
     parser.add_argument("--solver", type=str, nargs="+", default=["gurobi"], choices=SOLVERS + ["all"])
-    parser.add_argument("--objective", type=str, default="false", choices=["true", "false", "both"])
+    parser.add_argument("--obj", type=str, default="false", choices=["true", "false", "both"])
     parser.add_argument("--algo", type=str, default="default", choices=["default","psmplx","dsmplx","barr","all"])
     args = parser.parse_args()
 
     teams = utils.convert_to_range((args.range[0], args.range[1]))
     solver_choice = SOLVERS if "all" in args.solver else args.solver
-    objective_choice = args.objective.lower()
+    objective_choice = args.obj.lower()
     algo_choice = args.algo.lower()
 
     print(f"\nRunning MIP for teams={teams}, solvers={solver_choice}, objective={objective_choice}, algo={algo_choice}\n")
     run_mip_logic(teams, solver_choice, objective_choice, algo_choice)
+
 
 
 if __name__ == "__main__":
