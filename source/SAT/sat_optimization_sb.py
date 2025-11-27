@@ -13,7 +13,7 @@ def exactly_k(vs,k):
     return And(AtLeast(*vs,k), AtMost(*vs,k))
 
 def at_most_k(vs,k):
-  return AtMost(*vs,k)
+    return AtMost(*vs,k)
 
 
 # Solver
@@ -41,7 +41,8 @@ def solve_opt_sb(n):
     s = Solver()
     s.set("timeout", 300000)
 
-    # BASE CONSTRAINTS
+    # Base constraints
+
     # no self games
     for i in range(n):
         for w in range(W):
@@ -75,7 +76,7 @@ def solve_opt_sb(n):
         for w in range(W):
             s.add(exactly_one([per[i][w][p] for p in range(P)]))
 
-    # exactly two teams per period per week
+    # exactly two teams per period
     for w in range(W):
         for p in range(P):
             s.add(exactly_k([per[i][w][p] for i in range(n)], 2))
@@ -86,29 +87,27 @@ def solve_opt_sb(n):
             s.add(at_most_k([per[i][w][p] for w in range(W)], 2))
 
 
-    # Symmetry breaking
+    # Symmetry breaking constraint
 
-    # SB1: Fix (1,n) in week 0, 1 home
-    s.add(home[0][n-1][0] == True)
-    s.add(home[n-1][0][0] == False)
-
-    # SB2: Fix all week-0 pairings
-    for i in range(1, n//2):
-        j = n-1-i
+    # Canonical circle-method pairings for week 0
+    for i in range(n // 2):
+        j = n - 1 - i
         s.add(home[i][j][0] == True)
         s.add(home[j][i][0] == False)
 
-        # forbid them anywhere else
-        for w in range(1, W):
-            s.add(home[i][j][w] == False)
-            s.add(home[j][i][w] == False)
 
-    # Early feasibility
+    # Early feasibility check
+
     t0 = time.time()
     r = s.check()
 
     if r != sat:
-        return {"time":300, "optimal":False, "sol":[]}
+        return {
+            "time": int(time.time()-t0),
+            "optimal": False,
+            "obj": None,
+            "sol": []
+        }
 
     m0 = s.model()
 
@@ -130,6 +129,7 @@ def solve_opt_sb(n):
         }
 
     # Binary search
+
     low, high = 0, 2
     best_M = None
     best_model = None
