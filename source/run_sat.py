@@ -87,7 +87,7 @@ if __name__ == "__main__":
         help="decision | optimization | both")
 
     parser.add_argument("--sb", type=str, default="BOTH",
-        help="sb | !sb | both")
+        help="true | false | both")
     # change the argument for sb and obj
 
     # parser.add_argument("--search", nargs="+", type=str, default=["base"])

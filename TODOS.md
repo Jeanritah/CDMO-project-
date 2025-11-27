@@ -1,16 +1,19 @@
 # THIS EVENING: @esthy13
 - [ ] end your report part
-- [ ] check the 300 seconds issue with optimization functions (whether you gave or not a lower bound to the optimization function or not)
 - [ ] 22 entry for each cp/n.json --> check !!
+- [ ] run angela part (EVERYTHING)
 
 # TOMORROW: @esthy13
 - [ ] missing tables for ashmi for objective function for all three solvers
 - [ ] run SMT for Jean with optimization: `python3 source/run_smt.py --range 2 12 --obj true --sb both` 
 
+# THIS MEETING:
+- [ ] Conclusion report: compare results in each validation section and conclusion section of the report
+
 # MISSING TASKS FROM NOTION (EVERYBODY)
 
-- [ ]  🔁complete sequential run of the whole code → compare results in each validation section and conclusion section of the report
-- [ ]  consistency across variables name for all models and report
+- [ ] @ashmi less verbose in the report, focus on important details
+- [x] consistency across variables name for all models and report
 - [ ]  file limit of 20 MB (use 7zip)
 - [ ]  zip should include activation key
 - [ ]  update readme file:
