@@ -7,4 +7,4 @@ echo "Starting container..."
 docker-compose up -d
 
 echo "Entering container..."
-docker exec -it cdmo_dev bash
+docker exec -it cdmo-dev bash
