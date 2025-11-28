@@ -17,8 +17,8 @@ array[Periods, Weeks, Slots] of var Teams: srr;
 array[Weeks, Periods] of var Periods: perm;
 array[Periods, Weeks, Slots] of var Teams: team;
 array[Periods, Weeks] of var bool: swap;
-array[Teams] of var 0..weeks: home_count;
-var 0..weeks: max_deviation;
+array[Teams] of var 1..weeks: home_count;
+var 1..weeks: max_deviation;
 
 % CONSTRAINTS-------------------------------------------------------------------
 

@@ -14,8 +14,8 @@ set of int: Slots = 1..slots;
 
 % DECISION VARIABLES------------------------------------------------------------
 array[Periods, Weeks, Slots] of var Teams: team;
-array[Teams] of var 0..weeks: home_count;
-var 0..weeks: max_deviation;
+array[Teams] of var 1..weeks: home_count;
+var 1..weeks: max_deviation;
 
 % CONSTRAINTS-------------------------------------------------------------------
 
