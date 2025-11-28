@@ -1,17 +1,11 @@
 # THIS EVENING: @esthy13
-- [ ] end your report part + write down conclusion section (check in your report that all constraints are actually there)
+- [ ] check constraint numbering in the report
 - [ ] 22 entry for each cp/n.json --> check !!
-- [x] run angela part (EVERYTHING) + generate tables
-- [ ] try to shrink the introduction
-- [ ] add key syntax for json files in the README
 
 # MISSING TASKS
 - [ ] @ashmi less verbose in the report, focus on important details
 - [ ] @asmi @angela add Cnum to the constraints in the report
 - [ ] @jean check that the naming of the variables between the report and the code is consistent
-
-# THIS MEETING:
-- [x] Conclusion report defined: compare results in each validation section and conclusion section of the report
 
 # SUBMISSION CHECKLIST (EVERYBODY)
 - [ ]  Name your submission folder as CDMO Proj LastnameName1 ... LastnameNameK and upload its tgz or zip compressed archive. When working as a group, it suffices that only one group member submits the project, provided that the following information is provided in the submission comments:
@@ -21,6 +15,11 @@
 - [ ]  zip should include activation key
 
 # COMPLETED:
+- [x] Conclusion report defined: compare results in each validation section and conclusion section of the report
+- [x] add key syntax for json files in the README
+- [x] end your report part + write down conclusion section (check in your report that all constraints are actually there)
+- [x] run angela part (EVERYTHING) + generate tables
+- [x] try to shrink the introduction
 - [x] missing tables for ashmi for objective function for all three solvers
 - [x] run SMT for Jean with optimization: `python3 source/run_smt.py --range 2 12 --obj true --sb both` 
 - [x] consistency across variables name for all models and report

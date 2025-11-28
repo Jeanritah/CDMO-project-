@@ -209,3 +209,6 @@ __marimo__/
 .DS_Store
 res/.DS_Store
 source/.DS_Store
+
+# Testing files
+check_json_elements.py
