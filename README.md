@@ -166,6 +166,26 @@ To generate **decision-mode tables** instead omit `--obj`:
 ```ps
 python source/tables.py --range 1 18 --models CP
 ```
+## 6. Output File Naming
+
+JSON results use the following key pattern:
+
+```
+<solver>_<obj>_<sb>_<lex>_<strategy>.json
+```
+
+Where:
+
+* `solver` – solver backend (e.g., `gurobi`, `gecode`)
+* `obj` – `obj` for objective, `!obj` for decision
+* `sb` – `sb` if symmetry-breaking enabled, `!sb` if disabled
+* `lex` – `lex` if lexicographic ordering applied, `!lex` otherwise
+* `strategy` – solver strategy or algorithm (`base`, `ff`, `psmplx`, etc.)
+
+**Examples:**
+
+* `gurobi_obj_!sb_!lex_psmplx.json` → Gurobi, objective, no symmetry-breaking, no lex, primal simplex
+* `gecode_!obj_sb_base.json` → Gecode, decision mode, symmetry-breaking, base strategy
 
 ### Example Output
 
@@ -190,7 +210,7 @@ containing:
 | 12    | 0                  | 0               | 0                      | 38                   | 12                | N/A                      |
 | 14    | 0                  | 9               | 5                      | 27                   | N/A               | N/A                      |
 
-<!-- TODO explain values in the cells -->
+Columns are labeled with the different tried approaches, while cells contain the runtime in seconds (in the decision version) or the best objective value (in the optimization version), found by the given approach on the given instance, using a certain search strategy. If the instance is solved to optimality, the objective value is emphasized in bold. If the instance is proved to be unsatisfiable, it's indicated as ’UNSAT’. If no answer is obtained within the time limit, it's indicated with a ’N/A’.
 
 # Project Overview
 
