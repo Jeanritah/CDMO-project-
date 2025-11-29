@@ -105,7 +105,7 @@ def create_smt_solver_no_symmetry(n):
 
 def test_without_symmetry(n):
     """
-    Build NO-SB solver, solve, print solution (if any),
+    Building  NO-SB solver, solve, print solution (if any),
     and save JSON under res/SMT/n.json using key 'z3_smt_decision_noSB'.
     """
     print(f"\n=== TESTING SMT DECISION MODEL WITHOUT SYMMETRY for n={n} ===")

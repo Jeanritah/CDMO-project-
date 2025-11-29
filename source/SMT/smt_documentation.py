@@ -3,9 +3,9 @@ import json
 import os
 
 def generate_comprehensive_analysis():
-    """Generate comprehensive analysis for your report"""
+    """Generating comprehensive analysis for  report"""
     
-    # All your experimental data
+    # All the  experimental data
     data = {
         "n": [6, 8, 10, 12, 14],
         "smt_original": [0.000, 1.000, 140.000, 300, 300],
@@ -58,7 +58,7 @@ def generate_comprehensive_analysis():
             print(f"| {n:2} | {'Timeout':>14} | {'Timeout':>15} | {'N/A':>11} |")
     
     print("\n" + "="*70)
-    print("KEY FINDINGS FOR YOUR REPORT")
+    print("KEY FINDINGS FOR the REPORT")
     print("="*70)
     
     print("\n1. PERFORMANCE PATTERNS:")
@@ -83,7 +83,7 @@ def generate_comprehensive_analysis():
     print("   - For large instances, CP is the only option")
 
 def generate_technical_insights():
-    """Generate technical insights for your report discussion"""
+    """Generating  technical insights for the  report discussion"""
     
     print("\n" + "="*70)
     print("TECHNICAL INSIGHTS FOR DISCUSSION SECTION")
@@ -149,7 +149,7 @@ def generate_conclusion_recommendations():
     print("4. Compare with MIP approaches")
 
 def create_report_ready_tables():
-    """Create nicely formatted tables for copy-paste into report"""
+    """Creating  formatted tables for the report"""
     
     print("\n" + "="*70)
     print("REPORT-READY TABLES (Copy these directly)")
