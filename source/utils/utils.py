@@ -5,7 +5,7 @@ from typing import List, Tuple
 
 #trying to do a pull request for demo purposes
 
-def save_result(tot_time:int, sol:str, file_path:str, obj=None, solver_name="gecode"):
+def save_result(tot_time:int, sol:str, file_path:str, solver_name: str, obj=None):
     """
     Save the result to a JSON file under a solver key (e.g. 'gecode', 'chuffed').
     If the file exists, update or add the solver result.

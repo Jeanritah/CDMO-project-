@@ -103,7 +103,57 @@
             ]
         ]
     },
+    "gecode_obj_sb_base": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_obj_sb_ff": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_obj_sb_DWD+min": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
     "gecode_obj_sb_DWD+rand": {
+        "time": 0,
+        "optimal": true,
+        "obj": null,
+        "sol": []
+    },
+    "gecode_obj_!sb_base": {
+        "time": 0,
+        "optimal": true,
+        "obj": "1",
+        "sol": [
+            [
+                [
+                    1,
+                    2
+                ]
+            ]
+        ]
+    },
+    "gecode_obj_!sb_ff": {
+        "time": 0,
+        "optimal": true,
+        "obj": "1",
+        "sol": [
+            [
+                [
+                    1,
+                    2
+                ]
+            ]
+        ]
+    },
+    "gecode_obj_!sb_DWD+min": {
         "time": 0,
         "optimal": true,
         "obj": "1",
@@ -210,41 +260,20 @@
     "chuffed_obj_sb_base": {
         "time": 0,
         "optimal": true,
-        "obj": "1",
-        "sol": [
-            [
-                [
-                    2,
-                    1
-                ]
-            ]
-        ]
+        "obj": null,
+        "sol": []
     },
     "chuffed_obj_sb_ff": {
         "time": 0,
         "optimal": true,
-        "obj": "1",
-        "sol": [
-            [
-                [
-                    1,
-                    2
-                ]
-            ]
-        ]
+        "obj": null,
+        "sol": []
     },
     "chuffed_obj_sb_DWD+min": {
         "time": 0,
         "optimal": true,
-        "obj": "1",
-        "sol": [
-            [
-                [
-                    1,
-                    2
-                ]
-            ]
-        ]
+        "obj": null,
+        "sol": []
     },
     "chuffed_obj_!sb_base": {
         "time": 0,
