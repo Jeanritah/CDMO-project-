@@ -6,7 +6,7 @@ from z3 import *
 import argparse
 import time
 
-# Reuse model-building + JSON utilities from the decision file
+# Reusing model-building + JSON utilities from the decision file
 from smt_aligned import create_smt_solver, extract_solution, save_to_json
 
 
@@ -25,10 +25,10 @@ def create_optimized_model(n):
     """
     print(f"Creating OPTIMIZED SMT model for n={n} teams...")
 
-    # First, build the plain decision model (constraints only)
+    # building  the plain decision model (constraints only)
     base_solver, T, weeks, periods = create_smt_solver(n)
 
-    # Create an Optimize instance and copy all decision constraints
+    # Creating  an Optimize instance and copy all decision constraints
     opt = Optimize()
     for c in base_solver.assertions():
         opt.add(c)
@@ -106,7 +106,7 @@ def run_optimized(n):
             D_val = None
         print(f"🎯 Max home/away imbalance D* = {D_val}")
 
-        # Pretty-print schedule by weeks
+        # print schedule by weeks
         print("\n🏆 OPTIMAL SCHEDULE (grouped by weeks)")
         print("=" * 50)
         for w in range(weeks):

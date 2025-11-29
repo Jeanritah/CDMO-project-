@@ -17,7 +17,7 @@ from z3 import *
 import argparse
 import time
 
-# Reuse helpers from the aligned (with symmetry) model
+# Reusing  helpers from the aligned (with symmetry) model
 from smt_aligned import extract_solution, save_to_json
 
 

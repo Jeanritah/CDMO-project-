@@ -230,5 +230,3 @@ For n=4 teams, we have:
 But we need exactly 6 unique games (4×3/2 = 6)
 
 This means every possible game must be scheduled
-
-Let me create a specialized solution for n=4 and improve the model:

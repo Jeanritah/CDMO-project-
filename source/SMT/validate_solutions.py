@@ -14,8 +14,8 @@ def validate_with_checker():
         if os.path.exists(json_file):
             print(f"\nChecking n={n}...")
             
-            # Run the solution checker (assuming it's in the project root)
-            checker_path = "../../solution_checker.py"  # Adjust if needed
+            # Running  the solution checker (assuming it's in the project root)
+            checker_path = "../../solution_checker.py"  
             if os.path.exists(checker_path):
                 result = subprocess.run(
                     ["python", checker_path, "../../res/SMT/"], 

@@ -32,10 +32,10 @@ def create_optimized_model_no_symmetry(n):
     """
     print(f"Creating OPTIMIZED SMT model WITHOUT symmetry for n={n} teams...")
 
-    # Build base NO-SB SMT model with all constraints
+    # Building  base NO-SB SMT model with all constraints
     base_solver, T, weeks, periods = create_smt_solver_no_symmetry(n)
 
-    # Copy constraints into Optimize()
+    # Copying  constraints into Optimize()
     opt = Optimize()
     for c in base_solver.assertions():
         opt.add(c)
@@ -72,7 +72,7 @@ def create_optimized_model_no_symmetry(n):
 
 
 def run_optimized_no_symmetry(n):
-    """Run NO-SB optimization and save result in JSON."""
+    """Running  NO-SB optimization and save result in JSON."""
     print(f"\n=== SMT OPTIMIZATION MODEL WITHOUT SYMMETRY for n={n} ===")
 
     if n % 2 != 0 or n < 2:
