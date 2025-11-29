@@ -100,5 +100,3 @@ if __name__ == "__main__":
     obj_flags = normalize_obj_flags(args.obj)
 
     main(teams, sb_flags, obj_flags)
-
-#TODO check that after the if main deletion the code still works

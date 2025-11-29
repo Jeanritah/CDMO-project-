@@ -23,9 +23,6 @@ array[Periods, Weeks, Slots] of var Teams: team;
 % C1 n must be even
 constraint n mod 2 = 0;
 
-% C2
-%TODO or redundant? or just in the basic model?
-
 % C3 every team plays once a week
 constraint
   forall(w in Weeks) (
