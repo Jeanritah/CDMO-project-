@@ -31,10 +31,8 @@ Each of these files must expose a top-level function:
 which:
 - takes as arguments:
     - n a range of instances to be solved,
-    - solver's name,
-    - (eventually other solver-specific parameters),
 - returns for each instance:
-output: "Result saved to {output_path}"
+output: "Result saved under '{json_key}' to {json_file_path}"
 """
 
 import argparse

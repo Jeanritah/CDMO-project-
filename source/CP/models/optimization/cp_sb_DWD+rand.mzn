@@ -1,4 +1,4 @@
-% indomain_rand does not work with chuffed
+
 include "globals.mzn";
 
 % INSTANCE VARIABLES------------------------------------------------------------

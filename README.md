@@ -49,6 +49,12 @@ On MacOS/Linux:
 ```ps
     bash setup.sh
 ```
+macOS users: If running ./setup.sh gives errors like command not found or unknown docker command: "compose build\r", it may be due to Windows-style line endings.
+Fix it by running:
+```ps
+sed -i '' 's/\r$//' setup.sh
+chmod +x setup.sh
+```
 2. Now you can execute from the terminal commands like:
 ```ps
     python source/main.py --mode CP SMT MIP SAT --range 1 45 --check

@@ -15,7 +15,7 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
         teams (List[int]): list of teams to run the model on
         sb (str): whtether to use models with symmetry breaking (TRUE) or not 
                 (FALSE) or both (BOTH)
-        search_strategy (str): models with specific search strategy to be used: "base", "FF", "BFS", etc.
+        search_strategy (str): models with specific search strategy to be used: "base", "ff", "DWD+min", "DWD+rand"
         solver_names (List[str], optional): Default solvers when running all instances = ["gecode", "chuffed"].
     """
 
@@ -36,15 +36,6 @@ def main(teams: List[int], sb_flags: List[str]=["sb", "!sb"], obj_flags: List[st
                     print(f"Solver {s_name} for obj={obj}, sb={sb}, strategy={strategy}")
 
                     for t in teams:
-                        '''
-                        Possible parameters to consider:
-                        - solver name: for chuffed certain models cannot be runned (we already know this)
-                        - sb = True/False
-                        - search strategy: which one? base, ff, DWD+min, DWD+rand
-                        REMBER you should be able to run just one model with one search strategy
-                        and solver, or all models with all search strategies,
-                        think of a modular solution
-                        '''
                         # print(model_path)
                         sts = Model(model_path)
                         # Find the MiniZinc solver configuration for Gecode
