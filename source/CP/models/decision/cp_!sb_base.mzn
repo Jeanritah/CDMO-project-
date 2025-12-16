@@ -21,7 +21,7 @@ array[Periods, Weeks, Slots] of var Teams: team;
 % C1 n must be even
 constraint n mod 2 = 0;
 
-% C2
+% C2 every team plays with every other team only once
 constraint alldifferent([team[p,w,1]*n + team[p,w,2] | p in Periods, w in Weeks]);
 constraint forall(p in Periods, w in Weeks) (team[p,w,1] < team[p,w,2]);
 
