@@ -93,6 +93,8 @@ solve :: seq_search(
   | w in Weeks ]
 ) ::restart_luby(100)
 satisfy;
+% seq_searh is a structured, week-by-week search on the permutation variables
+% reduces symmetry effects across weeks, that's why it performs better than a flat int search
 
 output [
   "[" ++

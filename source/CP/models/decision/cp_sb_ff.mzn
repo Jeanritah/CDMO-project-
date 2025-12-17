@@ -91,7 +91,8 @@ solve :: seq_search(
   complete) 
   | w in Weeks ]
 ) satisfy;
-
+% seq_searh is a structured, week-by-week search on the permutation variables
+% reduces symmetry effects across weeks, that's why it performs better than a flat int search
 output [
   "[" ++
     join(",", [
