@@ -64,20 +64,19 @@ constraint
         else srr[p,w-1,2] + 1 endif )
   );
 
-% ------------------------------
-% Permutation of period slots each week
-% ------------------------------
-% C6
+
+% C6 Each period from srr[p,w,s] is mapped to a single period in team[p,w,s]
+% no two matches in the same week are assigned to the same period
 constraint
   forall(w in Weeks) (
     alldifferent([perm[w,p] | p in Periods])
   );
 
-% C7
+% C7 Break period symmetries
 constraint
   forall(p in Periods) ( perm[1,p] = p );
 
-% C8
+% C8 Channelling constraints 
 constraint
   forall(w in Weeks, p in Periods) (
     team[perm[w,p], w, 1] = srr[p,w,1] /\

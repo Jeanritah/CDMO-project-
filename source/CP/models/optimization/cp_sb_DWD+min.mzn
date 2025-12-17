@@ -67,6 +67,8 @@ constraint
   );
 
 % C6 Each period from srr[p,w,s] is mapped to a single period in team[p,w,s]
+% no two matches in the same week are assigned to the same period
+
 constraint
   forall(w in Weeks) (
     alldifferent([perm[w,p] | p in Periods])
